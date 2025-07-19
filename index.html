@@ -1,94 +1,148 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chittransh | Personal Portfolio</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <script src="https://kit.fontawesome.com/your-fontawesome-kit.js" crossorigin="anonymous"></script> </head>
-<body>
-
-    <nav class="navbar">
-        <div class="container">
-            <a href="#" class="nav-logo">Chittransh</a>
-            <ul class="nav-menu">
-                <li><a href="#about">About</a></li>
-                <li><a href="#projects">Projects</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
-        </div>
-    </nav>
-
-    <header class="hero">
-        <div class="container">
-            <div class="hero-content">
-                <h1 class="fade-in">Hi, I'm <span class="highlight">Chittransh</span>.</h1>
-                <p class="fade-in">I'm a student based in India. Welcome to my personal space on the web.</p>
-                <a href="#projects" class="btn fade-in">View My Work</a>
-            </div>
-        </div>
-    </header>
-
-    <main>
-        <section id="about" class="about-section hidden">
-            <div class="container">
-                <h2>About Me</h2>
-                <div class="about-content">
-                    <img src="IMG_20250707_130804.png" alt="My Photo" class="profile-pic">
-                    <p>Hello! I'm a passionate and creative student with a love for building beautiful and functional things. I specialize in nothing. When I'm not coding or designing, you can find me exploring new technologies, reading books, or enjoying a cup of coffee. ☕</p>
-                </div>
-            </div>
-        </section>
-
-        <section id="projects" class="projects-section hidden">
-            <div class="container">
-                <h2>My Projects</h2>
-                <div class="project-grid">
-                    <div class="project-card">
-                        <img src="https://via.placeholder.com/400x250" alt="Project 1 Screenshot">
-                        <h3>Project Title 1</h3>
-                        <p>A brief description of your project. What problem does it solve? What technologies did you use?</p>
-                        <a href="#" class="btn-secondary">View Project</a>
-                    </div>
-                    <div class="project-card">
-                        <img src="https://via.placeholder.com/400x250" alt="Project 2 Screenshot">
-                        <h3>Project Title 2</h3>
-                        <p>A brief description of your project. What problem does it solve? What technologies did you use?</p>
-                        <a href="#" class="btn-secondary">View Project</a>
-                    </div>
-                    <div class="project-card">
-                        <img src="https://via.placeholder.com/400x250" alt="Project 3 Screenshot">
-                        <h3>Project Title 3</h3>
-                        <p>A brief description of your project. What problem does it solve? What technologies did you use?</p>
-                        <a href="#" class="btn-secondary">View Project</a>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="contact" class="contact-section hidden">
-            <div class="container">
-                <h2>Get In Touch</h2>
-                <p>I'm currently open to new opportunities. Feel free to send me a message!</p>
-                <form class="contact-form">
-                    <input type="text" name="name" placeholder="Your Name" required>
-                    <input type="email" name="email" placeholder="Your Email" required>
-                    <textarea name="message" placeholder="Your Message" rows="5" required></textarea>
-                    <button type="submit" class="btn">Send Message</button>
-                </form>
-            </div>
-        </section>
-    </main>
-
-    <footer class="footer">
-        <div class="container">
-            <p>&copy; 2025 Chittransh. All Rights Reserved.</p>
-        </div>
-    </footer>
-
-    <script src="script.js"></script>
-</body>
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>
+   Chittransh | Personal Portfolio
+  </title>
+  <link href="style.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com" rel="preconnect"/>
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&amp;display=swap" rel="stylesheet"/>
+  <script crossorigin="anonymous" src="https://kit.fontawesome.com/your-fontawesome-kit.js">
+  </script>
+ </head>
+ <body>
+  <nav class="navbar">
+   <div class="container">
+    <a class="nav-logo" href="#">
+     Chittransh
+    </a>
+    <ul class="nav-menu">
+     <li>
+      <a href="#about">
+       About
+      </a>
+     </li>
+     <li>
+      <a href="#projects">
+       Projects
+      </a>
+     </li>
+     <li>
+      <a href="#contact">
+       Contact
+      </a>
+     </li>
+    </ul>
+   </div>
+  </nav>
+  <header class="hero">
+   <div class="container">
+    <div class="hero-content">
+     <h1 class="fade-in">
+      Hi, I'm
+      <span class="highlight">
+       Chittransh
+      </span>
+      .
+     </h1>
+     <p class="fade-in">
+      I'm a student based in India. Welcome to my personal space on the web.
+     </p>
+     <a class="btn fade-in" href="#projects">
+      View My Work
+     </a>
+    </div>
+   </div>
+  </header>
+  <main>
+   <section class="about-section hidden" id="about">
+    <div class="container">
+     <h2>
+      About Me
+     </h2>
+     <div class="about-content">
+      <img alt="My Photo" class="profile-pic" src="IMG_20250707_130804.png"/>
+      <p>
+       Hello! I'm a passionate and creative student with a love for building beautiful and functional things. I specialize in nothing. When I'm not coding or designing, you can find me exploring new technologies, reading books, or enjoying a cup of coffee. ☕
+      </p>
+     </div>
+    </div>
+   </section>
+   <section class="projects-section hidden" id="projects">
+    <div class="container">
+     <h2>
+      My Projects
+     </h2>
+     <div class="project-grid">
+      <div class="project-card">
+       <img alt="Project 1 Screenshot" src="https://via.placeholder.com/400x250"/>
+       <h3>
+        Project Title 1
+       </h3>
+       <p>
+        A brief description of your project. What problem does it solve? What technologies did you use?
+       </p>
+       <a class="btn-secondary" href="#">
+        View Project
+       </a>
+      </div>
+      <div class="project-card">
+       <img alt="Project 2 Screenshot" src="https://via.placeholder.com/400x250"/>
+       <h3>
+        Project Title 2
+       </h3>
+       <p>
+        A brief description of your project. What problem does it solve? What technologies did you use?
+       </p>
+       <a class="btn-secondary" href="#">
+        View Project
+       </a>
+      </div>
+      <div class="project-card">
+       <img alt="Project 3 Screenshot" src="https://via.placeholder.com/400x250"/>
+       <h3>
+        Project Title 3
+       </h3>
+       <p>
+        A brief description of your project. What problem does it solve? What technologies did you use?
+       </p>
+       <a class="btn-secondary" href="#">
+        View Project
+       </a>
+      </div>
+     </div>
+    </div>
+   </section>
+   <section class="contact-section hidden" id="contact">
+    <div class="container">
+     <h2>
+      Get In Touch
+     </h2>
+     <p>
+      I'm currently open to new opportunities. Feel free to send me a message!
+     </p>
+     <form class="contact-form">
+      <input name="name" placeholder="Your Name" required="" type="text"/>
+      <input name="email" placeholder="Your Email" required="" type="email"/>
+      <textarea name="message" placeholder="Your Message" required="" rows="5"></textarea>
+      <button class="btn" type="submit">
+       Send Message
+      </button>
+     </form>
+    </div>
+   </section>
+  </main>
+  <footer class="footer">
+   <div class="container">
+    <p>
+     © 2025 Chittransh. All Rights Reserved.
+    </p>
+   </div>
+  </footer>
+  <script src="script.js">
+  </script>
+ </body>
 </html>

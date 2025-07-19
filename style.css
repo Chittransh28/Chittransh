@@ -275,3 +275,46 @@ h2 {
         display: none; 
     }
 }
+
+
+/* Responsive Typography */
+body {
+    font-size: 16px;
+    line-height: 1.6;
+    padding: 10px;
+}
+
+/* Images and containers scale fluidly */
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: auto;
+    padding: 10px;
+}
+
+/* Navigation, layout tweaks for small screens */
+@media (max-width: 768px) {
+    body {
+        font-size: 15px;
+    }
+    .container {
+        padding: 5px;
+    }
+    nav ul {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+
+/* Large screen adjustments */
+@media (min-width: 1200px) {
+    body {
+        font-size: 18px;
+    }
+}
