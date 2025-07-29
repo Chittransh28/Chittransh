@@ -137,7 +137,7 @@ body {
 /* For Mobile Phones */
 @media (max-width: 480px) {
     body {
-        /* Allow vertical scrolling on mobile */
+        /* Allow vertical scrolling on mobile  */
         overflow-y: auto; 
         /* Align content to the top to ensure natural scrolling */
         align-items: flex-start;
