@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
 
     // --- Particle.js Configuration ---
-    // Using a different ID to avoid conflicts if both pages were ever combined
+    // Using a different ID to avoid conflicts if both pages were ever combined 
     particlesJS('particles-js-cs', {
         "particles": {
             "number": { "value": 60, "density": { "enable": true, "value_area": 800 } },
