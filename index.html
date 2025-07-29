@@ -1,127 +1,404 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Chittransh | Writer, Learner</title>
-  <meta name="description" content="Chittransh's personal landing page, portfolio, and links.">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chittransh | Neural Hub</title>
+    <link rel="icon" href="/favicon.png" type="image/png" />
 
-  <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
-  <link rel="icon" href="/favicon.png" type="image/png" />
+    <style>
+        /* CSS for the Neural Hub */
+        :root {
+            --bg-color: #0F172A;
+            --card-color: rgba(30, 41, 59, 0.75);
+            --border-color: #334155;
+            --text-bright: #e2e8f0;
+            --text-normal: #cbd5e1;
+            --text-dim: #94a3b8;
+            --accent-color: #38bdf8;
+        }
 
-  <style>
-    body {
-      font-family: 'Inter', sans-serif;
-      background-color: #0F172A;
-      opacity: 0;
-      transition: opacity 1s ease-in-out;
-    }
-    body.loaded {
-      opacity: 1;
-    }
-  </style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-color);
+            color: var(--text-normal);
+        }
+
+        /* 3D Canvas */
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            outline: none;
+            z-index: 1;
+        }
+
+        /* UI Overlay */
+        .ui-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            pointer-events: none; /* Allows clicks to pass through to the canvas */
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
+            padding: 40px;
+        }
+
+        .main-title {
+            text-align: center;
+            pointer-events: all; /* Title can be interacted with */
+        }
+
+        .main-title h1 {
+            font-size: 5rem;
+            font-weight: 900;
+            color: var(--text-bright);
+            letter-spacing: -0.05em;
+            text-shadow: 0 0 20px rgba(56, 189, 248, 0.3);
+        }
+
+        .main-title p {
+            font-size: 1.25rem;
+            color: var(--text-dim);
+            margin-top: 0.5rem;
+        }
+
+        /* Node Labels (CSS-based) */
+        .node-label {
+            pointer-events: all;
+            color: var(--text-bright);
+            background: var(--card-color);
+            border: 1px solid var(--border-color);
+            padding: 8px 16px;
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-shadow: 0 0 10px var(--bg-color);
+        }
+
+        .node-label:hover {
+            background: var(--accent-color);
+            color: var(--bg-color);
+            transform: scale(1.1);
+        }
+        
+        /* Content Panels */
+        .content-panel {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 100%;
+            max-width: 500px;
+            height: 100%;
+            background: var(--card-color);
+            backdrop-filter: blur(15px);
+            border-left: 1px solid var(--border-color);
+            z-index: 10;
+            transform: translateX(100%);
+            transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+            pointer-events: all;
+            overflow-y: auto;
+            padding: 40px;
+        }
+
+        .content-panel.visible {
+            transform: translateX(0%);
+            box-shadow: -10px 0 50px rgba(0,0,0,0.3);
+        }
+        
+        .panel-close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 2rem;
+            color: var(--text-dim);
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .panel-close-btn:hover {
+            color: var(--text-bright);
+            transform: rotate(90deg);
+        }
+
+        .panel-content h2 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--text-bright);
+            margin-bottom: 1rem;
+        }
+
+        .panel-content p {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            color: var(--text-normal);
+            margin-bottom: 1.5rem;
+        }
+        
+        /* Loading Screen */
+        #loader {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg-color);
+            z-index: 999;
+            display: flex; justify-content: center; align-items: center;
+            transition: opacity 0.5s ease;
+        }
+        #loader div {
+            width: 10px; height: 10px;
+            background: var(--accent-color);
+            border-radius: 50%;
+            animation: pulse 1.5s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(0.5); opacity: 0.5; }
+            50% { transform: scale(1.2); opacity: 1; }
+        }
+        
+        @media (max-width: 768px) {
+            .main-title h1 { font-size: 3rem; }
+            .content-panel { max-width: 100%; }
+        }
+    </style>
 </head>
+<body>
+    <div id="loader"><div></div></div>
+    
+    <canvas id="bg-canvas"></canvas>
 
-<body class="text-slate-200 flex flex-col items-center justify-center min-h-screen p-4 sm:p-6 lg:p-8">
+    <div class="ui-container">
+        <div class="main-title">
+            <h1>Chittransh</h1>
+            <p>Developer & Writer</p>
+        </div>
+    </div>
+    
+    <div id="panel-portfolio" class="content-panel">
+        <button class="panel-close-btn">&times;</button>
+        <div class="panel-content">
+            <h2>Portfolio</h2>
+            <p>This is where a curated selection of my projects would be displayed. Each project would have its own detailed description, tech stack, and links to live demos and source code.</p>
+        </div>
+    </div>
+    
+    <div id="panel-blog" class="content-panel">
+        <button class="panel-close-btn">&times;</button>
+        <div class="panel-content">
+            <h2>Blog</h2>
+            <p>A gateway to my articles and thoughts on technology, productivity, and life. This would link to the full blog page you designed earlier, or showcase featured articles directly.</p>
+        </div>
+    </div>
+    
+    <div id="panel-about" class="content-panel">
+        <button class="panel-close-btn">&times;</button>
+        <div class="panel-content">
+            <h2>About</h2>
+            <p>I'm a 22-year-old Indian student, developer, and UPSC aspirant who loves building cool things, writing daily, and constantly learning.</p>
+        </div>
+    </div>
 
-  <div class="w-full max-w-5xl mx-auto flex flex-col items-center text-center">
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+            }
+        }
+    </script>
 
-    <header class="mb-12">
-      <h1 class="text-5xl sm:text-6xl md:text-7xl font-black tracking-tight text-slate-100">
-        Chittransh
-      </h1>
-      <p class="mt-4 text-lg md:text-xl text-slate-400">
-        Developer &nbsp;|&nbsp; Writer &nbsp;|&nbsp; Learner
-      </p>
-      <div class="mt-6 max-w-2xl mx-auto">
-        <p class="text-base text-slate-300">
-          I'm a 22-year-old Indian student, developer, and UPSC aspirant who loves building cool things, writing daily, and constantly learning.
-        </p>
-      </div>
-    </header>
+    <script type="module">
+        import * as THREE from 'three';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+        import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
 
-    <main class="w-full">
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        // --- Basic Setup ---
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.z = 15;
 
-        <a href="https://chittransh.in/portfolio" target="_blank" rel="noopener noreferrer" class="relative group block p-6 min-h-[140px] h-full flex flex-col justify-center bg-slate-800 border-2 border-slate-700 rounded-lg shadow-lg transition-all duration-300 hover:border-sky-500 hover:shadow-sky-500/20 hover:-translate-y-1">
-          <span class="absolute top-3 right-3 bg-yellow-400 text-yellow-900 text-xs font-bold px-2 py-1 rounded-full">Coming Soon</span>
-          <h2 class="text-xl font-bold text-slate-100 flex items-center group-hover:text-sky-400 transition-colors">
-            <span class="text-sky-400 mr-3 group-hover:text-sky-300 transition-colors">→</span>Portfolio
-          </h2>
-          <p class="mt-2 text-slate-400 text-left">View my projects and work.</p>
-        </a>
+        const renderer = new THREE.WebGLRenderer({ canvas: document.querySelector('#bg-canvas'), antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        
+        const labelRenderer = new CSS2DRenderer();
+        labelRenderer.setSize(window.innerWidth, window.innerHeight);
+        labelRenderer.domElement.style.position = 'absolute';
+        labelRenderer.domElement.style.top = '0px';
+        document.body.appendChild(labelRenderer.domElement);
 
-        <a href="https://chittransh.in/blog" target="_blank" rel="noopener noreferrer" class="relative group block p-6 min-h-[140px] h-full flex flex-col justify-center bg-slate-800 border-2 border-slate-700 rounded-lg shadow-lg transition-all duration-300 hover:border-pink-500 hover:shadow-pink-500/20 hover:-translate-y-1">
-          <span class="absolute top-3 right-3 bg-yellow-400 text-yellow-900 text-xs font-bold px-2 py-1 rounded-full">Coming Soon</span>
-          <h2 class="text-xl font-bold text-slate-100 flex items-center group-hover:text-pink-400 transition-colors">
-            <span class="text-pink-400 mr-3 group-hover:text-pink-300 transition-colors">→</span>Blog
-          </h2>
-          <p class="mt-2 text-slate-400 text-left">Read my thoughts and articles.</p>
-        </a>
+        const controls = new OrbitControls(camera, labelRenderer.domElement);
+        controls.enableDamping = true;
+        controls.enablePan = false;
+        controls.enableZoom = false;
+        controls.minDistance = 5;
+        controls.maxDistance = 25;
+        
+        // --- Lighting ---
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
+        scene.add(ambientLight);
+        const pointLight = new THREE.PointLight(0x38bdf8, 2, 100);
+        pointLight.position.set(0, 0, 0);
+        scene.add(pointLight);
 
-        <a href="https://cv.chittransh.in" target="_blank" rel="noopener noreferrer" class="relative group block p-6 min-h-[140px] h-full flex flex-col justify-center bg-slate-800 border-2 border-slate-700 rounded-lg shadow-lg transition-all duration-300 hover:border-teal-500 hover:shadow-teal-500/20 hover:-translate-y-1">
-          <span class="absolute top-3 right-3 bg-yellow-400 text-yellow-900 text-xs font-bold px-2 py-1 rounded-full">Coming Soon</span>
-          <h2 class="text-xl font-bold text-slate-100 flex items-center group-hover:text-teal-400 transition-colors">
-            <span class="text-teal-400 mr-3 group-hover:text-teal-300 transition-colors">→</span>CV
-          </h2>
-          <p class="mt-2 text-slate-400 text-left">Access my professional resume.</p>
-        </a>
+        // --- Core Group (for rotation) ---
+        const coreGroup = new THREE.Group();
+        scene.add(coreGroup);
+        
+        // --- Central Sphere ---
+        const coreGeometry = new THREE.IcosahedronGeometry(2, 3);
+        const coreMaterial = new THREE.MeshStandardMaterial({
+            color: 0x38bdf8,
+            metalness: 0.8,
+            roughness: 0.2,
+            flatShading: true,
+            emissive: 0x38bdf8,
+            emissiveIntensity: 0.2
+        });
+        const coreSphere = new THREE.Mesh(coreGeometry, coreMaterial);
+        coreGroup.add(coreSphere);
 
-        <a href="https://notes.chittransh.in" target="_blank" rel="noopener noreferrer" class="relative group block p-6 min-h-[140px] h-full flex flex-col justify-center bg-slate-800 border-2 border-slate-700 rounded-lg shadow-lg transition-all duration-300 hover:border-fuchsia-500 hover:shadow-fuchsia-500/20 hover:-translate-y-1">
-          <span class="absolute top-3 right-3 bg-yellow-400 text-yellow-900 text-xs font-bold px-2 py-1 rounded-full">Coming Soon</span>
-          <h2 class="text-xl font-bold text-slate-100 flex items-center group-hover:text-fuchsia-400 transition-colors">
-            <span class="text-fuchsia-400 mr-3 group-hover:text-fuchsia-300 transition-colors">→</span>Notes
-          </h2>
-          <p class="mt-2 text-slate-400 text-left">Explore my public notes.</p>
-        </a>
+        // --- Orbiting Nodes ---
+        const nodes = [
+            { name: 'Portfolio', panelId: 'panel-portfolio', distance: 6, color: 0xff7171 },
+            { name: 'Blog', panelId: 'panel-blog', distance: 8, color: 0x71ff88 },
+            { name: 'About', panelId: 'panel-about', distance: 10, color: 0x71d1ff }
+        ];
 
-        <a href="https://shop.chittransh.in" target="_blank" rel="noopener noreferrer" class="relative group block p-6 min-h-[140px] h-full flex flex-col justify-center bg-slate-800 border-2 border-slate-700 rounded-lg shadow-lg transition-all duration-300 hover:border-amber-500 hover:shadow-amber-500/20 hover:-translate-y-1 cursor-pointer">
-          <span class="absolute top-3 right-3 bg-yellow-400 text-yellow-900 text-xs font-bold px-2 py-1 rounded-full">Coming Soon</span>
-          <h2 class="text-xl font-bold text-slate-100 flex items-center group-hover:text-amber-400 transition-colors">
-            <span class="text-amber-400 mr-3 group-hover:text-amber-300 transition-colors">→</span>Shop
-          </h2>
-          <p class="mt-2 text-slate-400 text-left">Digital products and resources.</p>
-        </a>
+        const nodeObjects = [];
+        nodes.forEach((nodeData, i) => {
+            const nodeGroup = new THREE.Group();
+            
+            const geometry = new THREE.TorusKnotGeometry(0.4, 0.1, 100, 16);
+            const material = new THREE.MeshStandardMaterial({ color: nodeData.color, roughness: 0.5, metalness: 0.5 });
+            const nodeMesh = new THREE.Mesh(geometry, material);
+            nodeMesh.userData.panelId = nodeData.panelId;
+            nodeGroup.add(nodeMesh);
 
-        <a href="https://chittransh.in/personal" target="_blank" rel="noopener noreferrer" class="relative group block p-6 min-h-[140px] h-full flex flex-col justify-center bg-slate-800 border-2 border-slate-700 rounded-lg shadow-lg transition-all duration-300 hover:border-purple-500 hover:shadow-purple-500/20 hover:-translate-y-1">
-          <span class="absolute top-3 right-3 bg-yellow-400 text-yellow-900 text-xs font-bold px-2 py-1 rounded-full">Coming Soon</span>
-          <h2 class="text-xl font-bold text-slate-100 flex items-center group-hover:text-purple-400 transition-colors">
-            <span class="text-purple-400 mr-3 group-hover:text-purple-300 transition-colors">→</span>Personal
-          </h2>
-          <p class="mt-2 text-slate-400 text-left">My personal space.</p>
-        </a>
+            const labelDiv = document.createElement('div');
+            labelDiv.className = 'node-label';
+            labelDiv.textContent = nodeData.name;
+            labelDiv.addEventListener('click', () => openPanel(nodeData.panelId));
+            
+            const label = new CSS2DObject(labelDiv);
+            label.position.set(0, 0.8, 0);
+            nodeMesh.add(label);
 
-      </div>
-    </main>
+            nodeObjects.push({ group: nodeGroup, mesh: nodeMesh, distance: nodeData.distance, angle: i * (Math.PI * 2 / nodes.length) });
+            coreGroup.add(nodeGroup);
+        });
 
-    <footer class="mt-16 text-center text-slate-500">
-      <div class="flex justify-center items-center space-x-6">
-        <a href="mailto:contact@chittransh.in" class="transition hover:text-sky-400" title="Email">
-          <!-- Email SVG -->
-        </a>
-        <a href="https://github.com/Chittransh28" target="_blank" rel="noopener noreferrer" class="transition hover:text-sky-400" title="GitHub">
-          <!-- GitHub SVG -->
-        </a>
-        <a href="https://x.com/your-username" target="_blank" rel="noopener noreferrer" class="transition hover:text-sky-400" title="X (Twitter)">
-          <!-- X SVG -->
-        </a>
-        <a href="https://instagram.com/your-username" target="_blank" rel="noopener noreferrer" class="transition hover:text-sky-400" title="Instagram">
-          <!-- Instagram SVG -->
-        </a>
-      </div>
-      <p class="mt-4 text-sm">&copy; 2025 Chittransh. All rights reserved.</p>
-    </footer>
+        // --- Starfield ---
+        const starVertices = [];
+        for (let i = 0; i < 10000; i++) {
+            const x = (Math.random() - 0.5) * 2000;
+            const y = (Math.random() - 0.5) * 2000;
+            const z = (Math.random() - 0.5) * 2000;
+            starVertices.push(x, y, z);
+        }
+        const starGeometry = new THREE.BufferGeometry();
+        starGeometry.setAttribute('position', new THREE.Float32BufferAttribute(starVertices, 3));
+        const starMaterial = new THREE.PointsMaterial({ color: 0x475569, size: 0.2 });
+        const stars = new THREE.Points(starGeometry, starMaterial);
+        scene.add(stars);
 
-  </div>
+        // --- Interactivity ---
+        const raycaster = new THREE.Raycaster();
+        const mouse = new THREE.Vector2();
+        
+        function onMouseMove(event) {
+            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+        }
+        
+        function onClick(event) {
+            raycaster.setFromCamera(mouse, camera);
+            const intersects = raycaster.intersectObjects(nodeObjects.map(o => o.mesh));
+            if (intersects.length > 0) {
+                const panelId = intersects[0].object.userData.panelId;
+                openPanel(panelId);
+            }
+        }
+        
+        window.addEventListener('mousemove', onMouseMove);
+        window.addEventListener('click', onClick);
+        
+        const panels = document.querySelectorAll('.content-panel');
+        const closeButtons = document.querySelectorAll('.panel-close-btn');
 
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      document.body.classList.add('loaded');
-    });
-  </script>
+        function openPanel(panelId) {
+            panels.forEach(p => p.classList.remove('visible'));
+            document.getElementById(panelId).classList.add('visible');
+        }
+
+        closeButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                btn.parentElement.classList.remove('visible');
+            });
+        });
+
+        // --- Animation Loop ---
+        const clock = new THREE.Clock();
+        function animate() {
+            requestAnimationFrame(animate);
+            const elapsedTime = clock.getElapsedTime();
+
+            coreSphere.rotation.y += 0.002;
+            coreSphere.rotation.x += 0.001;
+
+            nodeObjects.forEach(node => {
+                node.angle += 0.005 / Math.sqrt(node.distance);
+                node.group.position.x = Math.cos(node.angle) * node.distance;
+                node.group.position.z = Math.sin(node.angle) * node.distance;
+                node.group.position.y = Math.sin(node.angle * 2) * 1;
+                node.mesh.rotation.y += 0.01;
+            });
+            
+            coreGroup.rotation.y += 0.0005;
+
+            controls.update();
+            renderer.render(scene, camera);
+            labelRenderer.render(scene, camera);
+        }
+        
+        // --- Resize Handling & Loader ---
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            labelRenderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        const loader = document.getElementById('loader');
+        THREE.DefaultLoadingManager.onLoad = () => {
+            loader.style.opacity = '0';
+            setTimeout(() => loader.style.display = 'none', 500);
+        };
+
+        animate();
+
+    </script>
 </body>
 </html>
