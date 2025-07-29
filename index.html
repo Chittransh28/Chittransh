@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chittransh | Neural Hub</title>
+    <title>Chittransh | Live Manuscript</title>
     <link rel="icon" href="/favicon.png" type="image/png" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -11,15 +11,15 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
 
     <style>
-        /* CSS for the Neural Hub */
         :root {
             --bg-color: #0F172A;
-            --card-color: rgba(30, 41, 59, 0.75);
+            --card-color: #1e293b;
             --border-color: #334155;
             --text-bright: #e2e8f0;
             --text-normal: #cbd5e1;
             --text-dim: #94a3b8;
             --accent-color: #38bdf8;
+            --accent-glow: rgba(56, 189, 248, 0.2);
         }
 
         * {
@@ -28,357 +28,306 @@
             padding: 0;
         }
 
-        html, body {
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
+        body {
             font-family: 'Inter', sans-serif;
-            background: var(--bg-color);
+            background-color: var(--bg-color);
             color: var(--text-normal);
+            overflow-x: hidden;
         }
-
-        /* 3D Canvas */
-        #bg-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            outline: none;
-            z-index: 1;
-        }
-
-        /* UI Overlay */
-        .ui-container {
+        
+        /* 1. Canvas Background & Custom Cursor */
+        #background-canvas, #custom-cursor {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 2;
-            pointer-events: none; /* Allows clicks to pass through to the canvas */
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        #custom-cursor {
+            background: radial-gradient(circle, var(--accent-glow) 0%, rgba(56, 189, 248, 0) 50%);
+            border-radius: 50%;
+            transition: transform 0.2s ease-out;
+        }
+
+        /* Main Scrolling Container */
+        .content-wrapper {
+            width: 100%;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* General Section Styling */
+        section {
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
             align-items: center;
-            padding: 40px;
+            gap: 20px;
+            padding: 100px 0;
         }
 
-        .main-title {
-            text-align: center;
-            pointer-events: all; /* Title can be interacted with */
+        /* 2. Scroll-Triggered Animation Setup */
+        [data-animate] {
+            opacity: 0;
+            transform: translateY(50px);
+            clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0 100%);
+            transition: opacity 1s cubic-bezier(0.25, 1, 0.5, 1),
+                        transform 1s cubic-bezier(0.25, 1, 0.5, 1),
+                        clip-path 1s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
-        .main-title h1 {
-            font-size: 5rem;
+        [data-animate].in-view {
+            opacity: 1;
+            transform: translateY(0);
+            clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+        }
+        
+        /* Delay classes for staggered animations */
+        .delay-1 { transition-delay: 0.1s; }
+        .delay-2 { transition-delay: 0.2s; }
+        .delay-3 { transition-delay: 0.3s; }
+
+        /* Typography & Content Styling */
+        .hero-section .text-content { grid-column: 1 / 13; text-align: center; }
+        h1 {
+            font-size: clamp(2.5rem, 8vw, 6rem); /* Fluid typography */
             font-weight: 900;
             color: var(--text-bright);
             letter-spacing: -0.05em;
-            text-shadow: 0 0 20px rgba(56, 189, 248, 0.3);
         }
-
-        .main-title p {
-            font-size: 1.25rem;
+        .hero-section p {
+            font-size: clamp(1rem, 3vw, 1.25rem);
             color: var(--text-dim);
-            margin-top: 0.5rem;
+            margin-top: 1rem;
         }
-
-        /* Node Labels (CSS-based) */
-        .node-label {
-            pointer-events: all;
+        
+        .section-heading {
+            grid-column: 1 / -1;
+            font-size: 3rem;
             color: var(--text-bright);
-            background: var(--card-color);
-            border: 1px solid var(--border-color);
-            padding: 8px 16px;
-            border-radius: 8px;
-            backdrop-filter: blur(10px);
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-shadow: 0 0 10px var(--bg-color);
-        }
-
-        .node-label:hover {
-            background: var(--accent-color);
-            color: var(--bg-color);
-            transform: scale(1.1);
-        }
-        
-        /* Content Panels */
-        .content-panel {
-            position: fixed;
-            top: 0;
-            right: 0;
-            width: 100%;
-            max-width: 500px;
-            height: 100%;
-            background: var(--card-color);
-            backdrop-filter: blur(15px);
-            border-left: 1px solid var(--border-color);
-            z-index: 10;
-            transform: translateX(100%);
-            transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
-            pointer-events: all;
-            overflow-y: auto;
-            padding: 40px;
-        }
-
-        .content-panel.visible {
-            transform: translateX(0%);
-            box-shadow: -10px 0 50px rgba(0,0,0,0.3);
-        }
-        
-        .panel-close-btn {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            font-size: 2rem;
-            color: var(--text-dim);
-            background: none;
-            border: none;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .panel-close-btn:hover {
-            color: var(--text-bright);
-            transform: rotate(90deg);
-        }
-
-        .panel-content h2 {
-            font-size: 2.5rem;
             font-weight: 900;
-            color: var(--text-bright);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        .card {
+            grid-column: span 6;
+            background: var(--card-color);
+            padding: 30px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .card h3 {
+            font-size: 1.75rem;
+            color: var(--accent-color);
             margin-bottom: 1rem;
         }
-
-        .panel-content p {
-            font-size: 1.1rem;
+        
+        .card p {
             line-height: 1.7;
-            color: var(--text-normal);
-            margin-bottom: 1.5rem;
         }
         
-        /* Loading Screen */
-        #loader {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--bg-color);
-            z-index: 999;
-            display: flex; justify-content: center; align-items: center;
-            transition: opacity 0.5s ease;
-        }
-        #loader div {
-            width: 10px; height: 10px;
-            background: var(--accent-color);
-            border-radius: 50%;
-            animation: pulse 1.5s infinite ease-in-out;
+        /* 3. Draggable Note Styling */
+        .draggable-note {
+            position: absolute;
+            background: #facc15; /* Yellow sticky note color */
+            color: #422006;
+            padding: 20px;
+            border-radius: 4px;
+            box-shadow: 5px 5px 15px rgba(0,0,0,0.2);
+            width: 200px;
+            font-weight: 500;
+            cursor: grab;
+            user-select: none;
+            z-index: 10;
         }
 
-        @keyframes pulse {
-            0%, 100% { transform: scale(0.5); opacity: 0.5; }
-            50% { transform: scale(1.2); opacity: 1; }
+        .draggable-note.dragging {
+            cursor: grabbing;
+            box-shadow: 10px 10px 30px rgba(0,0,0,0.3);
+            transform: scale(1.05);
         }
         
+        #note-1 { top: 25vh; left: 10vw; transform: rotate(-5deg); }
+        #note-2 { top: 120vh; left: 70vw; transform: rotate(3deg); }
+
         @media (max-width: 768px) {
-            .main-title h1 { font-size: 3rem; }
-            .content-panel { max-width: 100%; }
+            section {
+                grid-template-columns: 1fr;
+            }
+            .card { grid-column: span 1; }
+            .draggable-note { display: none; } /* Hide notes on mobile */
         }
+
     </style>
 </head>
 <body>
-    <div id="loader"><div></div></div>
+
+    <canvas id="background-canvas"></canvas>
+    <div id="custom-cursor"></div>
+
+    <div id="note-1" class="draggable-note" data-animate>A thought is a thread in the grand tapestry of the mind.</div>
+    <div id="note-2" class="draggable-note" data-animate>Drag me around!</div>
+
+    <main class="content-wrapper">
+        <section class="hero-section">
+            <div class="text-content">
+                <h1 data-animate>The Live Manuscript</h1>
+                <p data-animate class="delay-1">An exploration of interactive web design.</p>
+            </div>
+        </section>
+
+        <section class="portfolio-section">
+            <h2 data-animate class="section-heading">Projects</h2>
+            <div data-animate class="card delay-1">
+                <h3>Neural Hub</h3>
+                <p>A conceptual 3D portfolio demonstrating the use of WebGL with Three.js to create an interactive orbital system of projects and ideas.</p>
+            </div>
+            <div data-animate class="card delay-2">
+                <h3>Interactive Blog</h3>
+                <p>A modern, filterable blog interface with real-time search, category filtering, and a responsive grid layout, all built within a single file.</p>
+            </div>
+        </section>
+        
+        <section class="about-section">
+            <h2 data-animate class="section-heading">About</h2>
+            <div data-animate class="card delay-1" style="grid-column: 1 / 13; text-align: center;">
+                <h3>Chittransh</h3>
+                <p>I'm a 22-year-old Indian student, developer, and UPSC aspirant who loves building cool things, writing daily, and constantly learning.</p>
+            </div>
+        </section>
+    </main>
     
-    <canvas id="bg-canvas"></canvas>
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
 
-    <div class="ui-container">
-        <div class="main-title">
-            <h1>Chittransh</h1>
-            <p>Developer & Writer</p>
-        </div>
-    </div>
-    
-    <div id="panel-portfolio" class="content-panel">
-        <button class="panel-close-btn">&times;</button>
-        <div class="panel-content">
-            <h2>Portfolio</h2>
-            <p>This is where a curated selection of my projects would be displayed. Each project would have its own detailed description, tech stack, and links to live demos and source code.</p>
-        </div>
-    </div>
-    
-    <div id="panel-blog" class="content-panel">
-        <button class="panel-close-btn">&times;</button>
-        <div class="panel-content">
-            <h2>Blog</h2>
-            <p>A gateway to my articles and thoughts on technology, productivity, and life. This would link to the full blog page you designed earlier, or showcase featured articles directly.</p>
-        </div>
-    </div>
-    
-    <div id="panel-about" class="content-panel">
-        <button class="panel-close-btn">&times;</button>
-        <div class="panel-content">
-            <h2>About</h2>
-            <p>I'm a 22-year-old Indian student, developer, and UPSC aspirant who loves building cool things, writing daily, and constantly learning.</p>
-        </div>
-    </div>
+        // --- 1. Custom Cursor Effect ---
+        const cursor = document.getElementById('custom-cursor');
+        window.addEventListener('mousemove', (e) => {
+            const size = 200;
+            cursor.style.transform = `translate(${e.clientX - size / 2}px, ${e.clientY - size / 2}px)`;
+            cursor.style.width = `${size}px`;
+            cursor.style.height = `${size}px`;
+        });
 
-    <script type="module">
-  import * as THREE from 'https://unpkg.com/three@0.160.0/build/three.module.js';
-  import { OrbitControls } from 'https://unpkg.com/three@0.160.0/examples/jsm/controls/OrbitControls.js';
-  import { CSS2DRenderer, CSS2DObject } from 'https://unpkg.com/three@0.160.0/examples/jsm/renderers/CSS2DRenderer.js';
+        // --- 2. Generative Canvas Background ---
+        const canvas = document.getElementById('background-canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
 
-  // --- Basic Setup ---
-  const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-  camera.position.z = 15;
+        let particles = [];
+        const particleCount = Math.floor(canvas.width / 50);
 
-  const renderer = new THREE.WebGLRenderer({ canvas: document.querySelector('#bg-canvas'), antialias: true });
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.setPixelRatio(window.devicePixelRatio);
+        class Particle {
+            constructor(x, y) {
+                this.x = x; this.y = y;
+                this.size = Math.random() * 2 + 1;
+                this.speedX = Math.random() * 1 - 0.5;
+                this.speedY = Math.random() * 1 - 0.5;
+            }
+            update() {
+                if (this.x > canvas.width || this.x < 0) this.speedX *= -1;
+                if (this.y > canvas.height || this.y < 0) this.speedY *= -1;
+                this.x += this.speedX;
+                this.y += this.speedY;
+            }
+            draw() {
+                ctx.fillStyle = '#334155';
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
 
-  const labelRenderer = new CSS2DRenderer();
-  labelRenderer.setSize(window.innerWidth, window.innerHeight);
-  labelRenderer.domElement.style.position = 'absolute';
-  labelRenderer.domElement.style.top = '0px';
-  document.body.appendChild(labelRenderer.domElement);
+        function initParticles() {
+            particles = [];
+            for (let i = 0; i < particleCount; i++) {
+                particles.push(new Particle(Math.random() * canvas.width, Math.random() * canvas.height));
+            }
+        }
 
-  const controls = new OrbitControls(camera, labelRenderer.domElement);
-  controls.enableDamping = true;
-  controls.enablePan = false;
-  controls.enableZoom = false;
+        function handleParticles() {
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update();
+                particles[i].draw();
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    if (distance < 150) {
+                        ctx.strokeStyle = `rgba(51, 65, 85, ${1 - distance / 150})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
 
-  const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
-  scene.add(ambientLight);
-  const pointLight = new THREE.PointLight(0x38bdf8, 2, 100);
-  pointLight.position.set(0, 0, 0);
-  scene.add(pointLight);
+        function animateCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            handleParticles();
+            requestAnimationFrame(animateCanvas);
+        }
+        
+        initParticles();
+        animateCanvas();
 
-  const coreGroup = new THREE.Group();
-  scene.add(coreGroup);
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            initParticles();
+        });
 
-  const coreGeometry = new THREE.IcosahedronGeometry(2, 3);
-  const coreMaterial = new THREE.MeshStandardMaterial({
-    color: 0x38bdf8,
-    metalness: 0.8,
-    roughness: 0.2,
-    flatShading: true,
-    emissive: 0x38bdf8,
-    emissiveIntensity: 0.2
-  });
-  const coreSphere = new THREE.Mesh(coreGeometry, coreMaterial);
-  coreGroup.add(coreSphere);
 
-  const nodes = [
-    { name: 'Portfolio', panelId: 'panel-portfolio', distance: 6, color: 0xff7171 },
-    { name: 'Blog', panelId: 'panel-blog', distance: 8, color: 0x71ff88 },
-    { name: 'About', panelId: 'panel-about', distance: 10, color: 0x71d1ff }
-  ];
+        // --- 3. Scroll-Triggered Animations ---
+        const animatedElements = document.querySelectorAll('[data-animate]');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('in-view');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        animatedElements.forEach(el => observer.observe(el));
 
-  const nodeObjects = [];
-  nodes.forEach((nodeData, i) => {
-    const nodeGroup = new THREE.Group();
 
-    const geometry = new THREE.TorusKnotGeometry(0.4, 0.1, 100, 16);
-    const material = new THREE.MeshStandardMaterial({ color: nodeData.color, roughness: 0.5, metalness: 0.5 });
-    const nodeMesh = new THREE.Mesh(geometry, material);
-    nodeMesh.userData.panelId = nodeData.panelId;
-    nodeGroup.add(nodeMesh);
+        // --- 4. Draggable Notes ---
+        const notes = document.querySelectorAll('.draggable-note');
+        notes.forEach(note => {
+            let isDragging = false;
+            let offsetX, offsetY;
 
-    const labelDiv = document.createElement('div');
-    labelDiv.className = 'node-label';
-    labelDiv.textContent = nodeData.name;
-    labelDiv.addEventListener('click', () => openPanel(nodeData.panelId));
+            note.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                offsetX = e.clientX - note.getBoundingClientRect().left;
+                offsetY = e.clientY - note.getBoundingClientRect().top;
+                note.classList.add('dragging');
+            });
+            
+            window.addEventListener('mouseup', () => {
+                isDragging = false;
+                note.classList.remove('dragging');
+            });
+            
+            window.addEventListener('mousemove', (e) => {
+                if (isDragging) {
+                    note.style.left = `${e.clientX - offsetX}px`;
+                    note.style.top = `${e.clientY - offsetY}px`;
+                }
+            });
+        });
 
-    const label = new CSS2DObject(labelDiv);
-    label.position.set(0, 0.8, 0);
-    nodeMesh.add(label);
-
-    nodeObjects.push({ group: nodeGroup, mesh: nodeMesh, distance: nodeData.distance, angle: i * (Math.PI * 2 / nodes.length) });
-    coreGroup.add(nodeGroup);
-  });
-
-  const starVertices = [];
-  for (let i = 0; i < 10000; i++) {
-    const x = (Math.random() - 0.5) * 2000;
-    const y = (Math.random() - 0.5) * 2000;
-    const z = (Math.random() - 0.5) * 2000;
-    starVertices.push(x, y, z);
-  }
-  const starGeometry = new THREE.BufferGeometry();
-  starGeometry.setAttribute('position', new THREE.Float32BufferAttribute(starVertices, 3));
-  const starMaterial = new THREE.PointsMaterial({ color: 0x475569, size: 0.2 });
-  const stars = new THREE.Points(starGeometry, starMaterial);
-  scene.add(stars);
-
-  const raycaster = new THREE.Raycaster();
-  const mouse = new THREE.Vector2();
-
-  function onMouseMove(event) {
-    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-  }
-
-  function onClick(event) {
-    raycaster.setFromCamera(mouse, camera);
-    const intersects = raycaster.intersectObjects(nodeObjects.map(o => o.mesh));
-    if (intersects.length > 0) {
-      const panelId = intersects[0].object.userData.panelId;
-      openPanel(panelId);
-    }
-  }
-
-  window.addEventListener('mousemove', onMouseMove);
-  window.addEventListener('click', onClick);
-
-  const panels = document.querySelectorAll('.content-panel');
-  const closeButtons = document.querySelectorAll('.panel-close-btn');
-
-  function openPanel(panelId) {
-    panels.forEach(p => p.classList.remove('visible'));
-    document.getElementById(panelId).classList.add('visible');
-  }
-
-  closeButtons.forEach(btn => {
-    btn.addEventListener('click', () => {
-      btn.parentElement.classList.remove('visible');
     });
-  });
-
-  const clock = new THREE.Clock();
-  function animate() {
-    requestAnimationFrame(animate);
-    const elapsedTime = clock.getElapsedTime();
-
-    coreSphere.rotation.y += 0.002;
-    coreSphere.rotation.x += 0.001;
-
-    nodeObjects.forEach(node => {
-      node.angle += 0.005 / Math.sqrt(node.distance);
-      node.group.position.x = Math.cos(node.angle) * node.distance;
-      node.group.position.z = Math.sin(node.angle) * node.distance;
-      node.group.position.y = Math.sin(node.angle * 2) * 1;
-      node.mesh.rotation.y += 0.01;
-    });
-
-    coreGroup.rotation.y += 0.0005;
-
-    controls.update();
-    renderer.render(scene, camera);
-    labelRenderer.render(scene, camera);
-  }
-
-  window.addEventListener('resize', () => {
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    labelRenderer.setSize(window.innerWidth, window.innerHeight);
-  });
-
-  const loader = document.getElementById('loader');
-  THREE.DefaultLoadingManager.onLoad = () => {
-    loader.style.opacity = '0';
-    setTimeout(() => loader.style.display = 'none', 500);
-  };
-
-  animate();
-</script>
+    </script>
 </body>
 </html>
