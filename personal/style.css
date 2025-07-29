@@ -1,0 +1,139 @@
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: #f0f2f5;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 50px;
+    margin: 0;
+    min-height: 100vh;
+}
+
+.checklist-container {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 500px;
+}
+
+h1 {
+    text-align: center;
+    color: #1c1e21;
+    margin-top: 0;
+}
+
+#date {
+    text-align: center;
+    color: #606770;
+    margin-bottom: 20px;
+    font-size: 0.9em;
+}
+
+.input-area {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+#task-input {
+    flex-grow: 1;
+    padding: 10px;
+    border: 1px solid #dddfe2;
+    border-radius: 6px;
+    font-size: 16px;
+}
+
+#task-input:focus {
+    outline: none;
+    border-color: #1877f2;
+}
+
+#add-task-btn {
+    padding: 10px 20px;
+    background-color: #1877f2;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+#add-task-btn:hover {
+    background-color: #166fe5;
+}
+
+#task-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+#task-list li {
+    display: flex;
+    align-items: center;
+    padding: 12px 5px;
+    border-bottom: 1px solid #e9ebee;
+    font-size: 16px;
+}
+
+#task-list li:last-child {
+    border-bottom: none;
+}
+
+#task-list li.completed span {
+    text-decoration: line-through;
+    color: #8a8d91;
+}
+
+#task-list input[type="checkbox"] {
+    margin-right: 15px;
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+
+#task-list li span {
+    flex-grow: 1;
+}
+
+.delete-btn {
+    background: none;
+    border: none;
+    color: #8a8d91;
+    font-size: 20px;
+    cursor: pointer;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.2s, color 0.2s;
+}
+
+#task-list li:hover .delete-btn {
+    visibility: visible;
+    opacity: 1;
+}
+
+.delete-btn:hover {
+    color: #e74c3c;
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.action-buttons button {
+    padding: 10px 15px;
+    border: 1px solid #dddfe2;
+    background-color: #f5f6f7;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.action-buttons button:hover {
+    background-color: #e9ebee;
+}
