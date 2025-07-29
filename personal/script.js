@@ -1,7 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
 
     // --- !!! IMPORTANT: SET YOUR PIN HERE !!! ---
-    // This is NOT secure storage. It's only a simple gatekeeper for personal use.
     const CORRECT_PIN = '596811';
 
     // --- Element References ---
@@ -9,14 +8,17 @@ document.addEventListener('DOMContentLoaded', function() {
     const loginBox = document.querySelector('.login-box');
     const loginForm = document.getElementById('login-form');
     const pinInput = document.getElementById('pin-input');
+    const errorMessage = document.getElementById('error-message');
     const checklistContainer = document.getElementById('checklist-container');
     const addTaskForm = document.getElementById('add-task-form');
     const taskInput = document.getElementById('task-input');
     const taskList = document.getElementById('task-list');
     const resetButton = document.getElementById('reset-button');
 
-    // --- Particle.js Background ---
-    particlesJS('particles-js-personal', { /* ... Paste your particles.js config from previous files here ... */ });
+    // --- Particle.js Background --- THIS IS THE MISSING CODE
+    particlesJS('particles-js-personal', {
+        "particles": { "number": { "value": 60, "density": { "enable": true, "value_area": 800 } }, "color": { "value": "#8b949e" }, "shape": { "type": "circle" }, "opacity": { "value": 0.4, "random": true, "anim": { "enable": true, "speed": 1, "opacity_min": 0.1, "sync": false } }, "size": { "value": 3, "random": true }, "line_linked": { "enable": true, "distance": 150, "color": "#30363d", "opacity": 0.4, "width": 1 }, "move": { "enable": true, "speed": 2, "direction": "none", "out_mode": "out" } }, "interactivity": { "detect_on": "canvas", "events": { "onhover": { "enable": true, "mode": "grab" }, "resize": true }, "modes": { "grab": { "distance": 140, "line_opacity": 1 } } }, "retina_detect": true
+    });
 
     // --- Authentication Logic ---
     loginForm.addEventListener('submit', function(e) {
@@ -29,12 +31,19 @@ document.addEventListener('DOMContentLoaded', function() {
             checklistContainer.style.display = 'flex';
             loadTasks();
         } else {
+            // Show "Access Denied" message
+            errorMessage.textContent = 'Access Denied';
             loginBox.classList.add('error');
             pinInput.value = '';
             setTimeout(() => {
                 loginBox.classList.remove('error');
             }, 500);
         }
+    });
+    
+    // Clear error message when user starts typing again
+    pinInput.addEventListener('focus', function() {
+        errorMessage.textContent = '';
     });
 
     // --- Checklist Logic ---
@@ -92,11 +101,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const index = parseInt(taskItem.dataset.index);
 
-        // If delete button is clicked
         if (e.target.closest('.delete-button')) {
             tasks.splice(index, 1);
         }
-        // If checkbox is clicked
         else if (e.target.matches('input[type="checkbox"]')) {
             tasks[index].completed = !tasks[index].completed;
         }
