@@ -6,13 +6,31 @@
 }
 /* -- Basic Reset & Body -- */
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { background-color: var(--bg-color); color: var(--primary-color); font-family: var(--font-family); }
-#particles-js-blog { position: fixed; width: 100%; height: 100%; top: 0; left: 0; z-index: -1; }
 
-.container { max-width: 1200px; margin: 0 auto; padding: 3rem 2rem; }
-.blog-header { text-align: center; margin-bottom: 3rem; }
-.blog-header h1 { font-size: 3rem; margin-bottom: 0.5rem; }
-.blog-header p { font-size: 1.1rem; color: #8b949e; }
+body { 
+    /* The background-color is removed from here and applied to the particle container itself for better stacking */
+    color: var(--primary-color); 
+    font-family: var(--font-family); 
+}
+
+#particles-js-blog { 
+    position: fixed; 
+    width: 100%; 
+    height: 100%; 
+    top: 0; 
+    left: 0; 
+    background-color: var(--bg-color); /* Add the background color here */
+    z-index: -1; /* This is the key change from -1 */
+}
+
+.container { 
+    max-width: 1200px; 
+    margin: 0 auto; 
+    padding: 3rem 2rem; 
+    position: relative; /* Add this */
+    z-index: 1;         /* And this, to lift the content up */
+}
+
 
 /* -- Filter & Search Controls -- */
 .filter-controls { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: 3rem; }
