@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="theme-dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chittransh | Live Manuscript</title>
+    <title>Chittransh | Component Dashboard</title>
     <link rel="icon" href="/favicon.png" type="image/png" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -12,324 +12,277 @@
 
     <style>
         :root {
+            /* These variables are updated by the theme classes below */
             --bg-color: #0F172A;
-            --card-color: #1e293b;
+            --widget-bg: #1e293b;
             --border-color: #334155;
             --text-bright: #e2e8f0;
             --text-normal: #cbd5e1;
             --text-dim: #94a3b8;
             --accent-color: #38bdf8;
-            --accent-glow: rgba(56, 189, 248, 0.2);
+            --accent-text: #0F172A;
+        }
+        
+        html.theme-light {
+            --bg-color: #f1f5f9;
+            --widget-bg: #ffffff;
+            --border-color: #e2e8f0;
+            --text-bright: #0f172a;
+            --text-normal: #334155;
+            --text-dim: #64748b;
+        }
+        
+        html.theme-solarized {
+            --bg-color: #002b36;
+            --widget-bg: #073642;
+            --border-color: #586e75;
+            --text-bright: #fdf6e3;
+            --text-normal: #93a1a1;
+            --text-dim: #657b83;
+            --accent-color: #268bd2;
+            --accent-text: #fdf6e3;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
             font-family: 'Inter', sans-serif;
             background-color: var(--bg-color);
             color: var(--text-normal);
-            overflow-x: hidden;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            padding: 2rem;
         }
         
-        /* 1. Canvas Background & Custom Cursor */
-        #background-canvas, #custom-cursor {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 0;
-        }
-        
-        #custom-cursor {
-            z-index: 5;
-            background: radial-gradient(circle, var(--accent-glow) 0%, rgba(56, 189, 248, 0) 50%);
-            border-radius: 50%;
-            transition: transform 0.2s ease-out;
-        }
-
-        /* Main Scrolling Container */
-        .content-wrapper {
-            position: relative;
-            z-index: 2;
-            width: 100%;
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        /* General Section Styling */
-        section {
-            min-height: 100vh;
-            display: grid;
-            grid-template-columns: repeat(12, 1fr);
-            align-items: center;
-            gap: 20px;
-            padding: 100px 0;
-        }
-
-        /* 2. Scroll-Triggered Animation Setup */
-        [data-animate] {
-            opacity: 0;
-            transform: translateY(50px);
-            clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0 100%);
-            transition: opacity 1s cubic-bezier(0.25, 1, 0.5, 1),
-                        transform 1s cubic-bezier(0.25, 1, 0.5, 1),
-                        clip-path 1s cubic-bezier(0.25, 1, 0.5, 1);
-        }
-
-        [data-animate].in-view {
-            opacity: 1;
-            transform: translateY(0);
-            clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
-        }
-        
-        /* Delay classes for staggered animations */
-        .delay-1 { transition-delay: 0.1s; }
-        .delay-2 { transition-delay: 0.2s; }
-        .delay-3 { transition-delay: 0.3s; }
-
-        /* Typography & Content Styling */
-        .hero-section .text-content { grid-column: 1 / 13; text-align: center; }
         h1 {
-            font-size: clamp(2.5rem, 8vw, 6rem); /* Fluid typography */
-            font-weight: 900;
-            color: var(--text-bright);
-            letter-spacing: -0.05em;
-        }
-        .hero-section p {
-            font-size: clamp(1rem, 3vw, 1.25rem);
-            color: var(--text-dim);
-            margin-top: 1rem;
-        }
-        
-        .section-heading {
-            grid-column: 1 / -1;
-            font-size: 3rem;
-            color: var(--text-bright);
-            font-weight: 900;
-            margin-bottom: 2rem;
             text-align: center;
-        }
-        
-        .card {
-            grid-column: span 6;
-            background: var(--card-color);
-            padding: 30px;
-            border-radius: 12px;
-            border: 1px solid var(--border-color);
-        }
-        
-        .card h3 {
-            font-size: 1.75rem;
-            color: var(--accent-color);
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--text-bright);
             margin-bottom: 1rem;
         }
-        
-        .card p {
-            line-height: 1.7;
+
+        /* --- 1. THEME TOGGLER --- */
+        .theme-switcher {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
         }
-        
-        /* 3. Draggable Note Styling */
-        .draggable-note {
-            position: absolute;
-            background: #facc15; /* Yellow sticky note color */
-            color: #422006;
-            padding: 20px;
-            border-radius: 4px;
-            box-shadow: 5px 5px 15px rgba(0,0,0,0.2);
-            width: 200px;
-            font-weight: 500;
-            cursor: grab;
-            user-select: none;
-            z-index: 10;
+        .theme-switcher label {
+            padding: 0.5rem 1rem;
+            background: var(--widget-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 99px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .theme-switcher input { display: none; }
+        .theme-switcher input:checked + label {
+            background: var(--accent-color);
+            color: var(--accent-text);
+            font-weight: 700;
         }
 
-        .draggable-note.dragging {
-            cursor: grabbing;
-            box-shadow: 10px 10px 30px rgba(0,0,0,0.3);
-            transform: scale(1.05);
+        /* --- DASHBOARD LAYOUT --- */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+        }
+
+        .widget {
+            background: var(--widget-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+            /* Allow widgets to be resized by the user */
+            resize: both;
+            overflow: auto;
+            min-width: 300px;
+            min-height: 200px;
         }
         
-        #note-1 { top: 25vh; left: 10vw; transform: rotate(-5deg); }
-        #note-2 { top: 120vh; left: 70vw; transform: rotate(3deg); }
+        .widget-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-bright);
+            margin-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.75rem;
+        }
 
-        @media (max-width: 768px) {
-            section {
-                grid-template-columns: 1fr;
+        /* --- 2. CONTAINER QUERIES WIDGET (Portfolio) --- */
+        .portfolio-widget {
+            container-type: inline-size; /* This is the magic! */
+        }
+        .portfolio-grid {
+            display: grid;
+            gap: 1rem;
+            grid-template-columns: 1fr; /* Default layout (mobile first) */
+        }
+        .portfolio-item { font-weight: 500; }
+        
+        /* If the WIDGET is wider than 500px, change ITS OWN layout */
+        @container (min-width: 500px) {
+            .portfolio-grid {
+                grid-template-columns: 1fr 1fr;
             }
-            .card { grid-column: span 1; }
-            .draggable-note { display: none; } /* Hide notes on mobile */
+        }
+        @container (min-width: 800px) {
+            .portfolio-grid {
+                grid-template-columns: 1fr 1fr 1fr;
+            }
+            .portfolio-widget .widget-title { font-size: 2rem; }
         }
 
+        /* --- 3. CSS :has() WIDGET (Blog) --- */
+        .blog-filters { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem; }
+        .blog-filters label { cursor: pointer; user-select: none; }
+        .blog-filters input { margin-right: 0.25rem; }
+        .blog-post { padding: 0.5rem; border: 1px solid var(--border-color); border-radius: 6px; margin-bottom: 0.5rem; }
+
+        /* The :has() magic! Hides posts if a filter is checked and the post doesn't match */
+        .blog-widget:has(#filter-tech:checked) .blog-post:not([data-category="tech"]) { display: none; }
+        .blog-widget:has(#filter-life:checked) .blog-post:not([data-category="life"]) { display: none; }
+        .blog-widget:has(#filter-productivity:checked) .blog-post:not([data-category="productivity"]) { display: none; }
+
+        /* --- 4. LIVE EDITOR WIDGET --- */
+        .live-editor-widget { display: flex; flex-direction: column; gap: 1rem; }
+        .live-editor-widget textarea {
+            width: 100%;
+            height: 150px;
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-normal);
+            font-family: monospace;
+            padding: 0.5rem;
+        }
+        .live-editor-widget .preview {
+            border: 1px dashed var(--border-color);
+            padding: 1rem;
+            border-radius: 6px;
+            min-height: 100px;
+        }
+        .live-editor-widget .preview h3 { font-size: 1.25rem; color: var(--accent-color); }
+        .live-editor-widget .preview strong { color: var(--text-bright); }
+
+        /* --- 5. POPOVER API WIDGET --- */
+        #info-popover {
+            background: var(--widget-bg);
+            color: var(--text-normal);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        #info-popover::backdrop { background: rgba(0,0,0,0.5); backdrop-filter: blur(5px); }
+        .info-button {
+            background: var(--accent-color);
+            color: var(--accent-text);
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-weight: 700;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
 
-    <canvas id="background-canvas"></canvas>
-    <div id="custom-cursor"></div>
-
-    <div id="note-1" class="draggable-note" data-animate>A thought is a thread in the grand tapestry of the mind.</div>
-    <div id="note-2" class="draggable-note" data-animate>Drag me around!</div>
-
-    <main class="content-wrapper">
-        <section class="hero-section">
-            <div class="text-content">
-                <h1 data-animate>The Live Manuscript</h1>
-                <p data-animate class="delay-1">An exploration of interactive web design.</p>
-            </div>
-        </section>
-
-        <section class="portfolio-section">
-            <h2 data-animate class="section-heading">Projects</h2>
-            <div data-animate class="card delay-1">
-                <h3>Neural Hub</h3>
-                <p>A conceptual 3D portfolio demonstrating the use of WebGL with Three.js to create an interactive orbital system of projects and ideas.</p>
-            </div>
-            <div data-animate class="card delay-2">
-                <h3>Interactive Blog</h3>
-                <p>A modern, filterable blog interface with real-time search, category filtering, and a responsive grid layout, all built within a single file.</p>
-            </div>
-        </section>
-        
-        <section class="about-section">
-            <h2 data-animate class="section-heading">About</h2>
-            <div data-animate class="card delay-1" style="grid-column: 1 / 13; text-align: center;">
-                <h3>Chittransh</h3>
-                <p>I'm a 22-year-old Indian student, developer, and UPSC aspirant who loves building cool things, writing daily, and constantly learning.</p>
-            </div>
-        </section>
-    </main>
+    <h1>Component Dashboard</h1>
     
+    <div class="theme-switcher" id="theme-switcher">
+        <input type="radio" name="theme" id="theme-dark" value="theme-dark" checked>
+        <label for="theme-dark">Dark</label>
+        <input type="radio" name="theme" id="theme-light" value="theme-light">
+        <label for="theme-light">Light</label>
+        <input type="radio" name="theme" id="theme-solarized" value="theme-solarized">
+        <label for="theme-solarized">Solarized</label>
+    </div>
+
+    <div class="dashboard-grid">
+
+        <article class="widget portfolio-widget">
+            <h2 class="widget-title">1. Portfolio (Container Queries)</h2>
+            <p>Resize this widget to see its layout change!</p>
+            <div class="portfolio-grid">
+                <div class="portfolio-item">Neural Hub</div>
+                <div class="portfolio-item">Live Manuscript</div>
+                <div class="portfolio-item">Interactive Blog</div>
+                <div class="portfolio-item">Component Dashboard</div>
+                <div class="portfolio-item">Project E</div>
+                <div class="portfolio-item">Project F</div>
+            </div>
+        </article>
+
+        <article class="widget blog-widget">
+            <h2 class="widget-title">2. Blog Posts (CSS `:has()`)</h2>
+            <div class="blog-filters">
+                <label><input type="radio" name="blog-filter" id="filter-all" checked> All</label>
+                <label><input type="radio" name="blog-filter" id="filter-tech"> Tech</label>
+                <label><input type="radio" name="blog-filter" id="filter-life"> Life</label>
+                <label><input type="radio" name="blog-filter" id="filter-productivity"> Productivity</label>
+            </div>
+            <div class="blog-post" data-category="tech">The Rise of AI</div>
+            <div class="blog-post" data-category="productivity">Minimalist Productivity</div>
+            <div class="blog-post" data-category="tech">CSS Grid vs. Flexbox</div>
+            <div class="blog-post" data-category="life">The Philosophy of Learning</div>
+        </article>
+
+        <article class="widget live-editor-widget">
+            <h2 class="widget-title">3. Live Markdown Editor (JS)</h2>
+            <textarea id="markdown-input" placeholder="Type simple markdown here...">### Hello World!
+* This is a list item.
+* So is **this**.</textarea>
+            <div class="preview" id="markdown-preview"></div>
+        </article>
+        
+        <article class="widget">
+            <h2 class="widget-title">4. Info (Popover API)</h2>
+            <p>Click the button to show a native HTML popover.</p>
+            <button class="info-button" popovertarget="info-popover">Show Info</button>
+            <div id="info-popover" popover>
+                <h3>About This Page</h3>
+                <p>This page uses modern CSS features to create interactive components with minimal JavaScript.</p>
+                <button popovertarget="info-popover" popovertargetaction="hide">Close</button>
+            </div>
+        </article>
+
+    </div>
+
     <script>
     document.addEventListener('DOMContentLoaded', () => {
-
-        // --- 1. Custom Cursor Effect ---
-        const cursor = document.getElementById('custom-cursor');
-        window.addEventListener('mousemove', (e) => {
-            const size = 200;
-            cursor.style.transform = `translate(${e.clientX - size / 2}px, ${e.clientY - size / 2}px)`;
-            cursor.style.width = `${size}px`;
-            cursor.style.height = `${size}px`;
+        // --- 1. THEME SWITCHER SCRIPT ---
+        const themeSwitcher = document.getElementById('theme-switcher');
+        themeSwitcher.addEventListener('change', (event) => {
+            const selectedTheme = event.target.value;
+            document.documentElement.className = selectedTheme;
         });
 
-        // --- 2. Generative Canvas Background ---
-        const canvas = document.getElementById('background-canvas');
-        const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-
-        let particles = [];
-        const particleCount = Math.floor(canvas.width / 50);
-
-        class Particle {
-            constructor(x, y) {
-                this.x = x; this.y = y;
-                this.size = Math.random() * 2 + 1;
-                this.speedX = Math.random() * 1 - 0.5;
-                this.speedY = Math.random() * 1 - 0.5;
-            }
-            update() {
-                if (this.x > canvas.width || this.x < 0) this.speedX *= -1;
-                if (this.y > canvas.height || this.y < 0) this.speedY *= -1;
-                this.x += this.speedX;
-                this.y += this.speedY;
-            }
-            draw() {
-                ctx.fillStyle = '#334155';
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fill();
-            }
-        }
-
-        function initParticles() {
-            particles = [];
-            for (let i = 0; i < particleCount; i++) {
-                particles.push(new Particle(Math.random() * canvas.width, Math.random() * canvas.height));
-            }
-        }
-
-        function handleParticles() {
-            for (let i = 0; i < particles.length; i++) {
-                particles[i].update();
-                particles[i].draw();
-                for (let j = i + 1; j < particles.length; j++) {
-                    const dx = particles[i].x - particles[j].x;
-                    const dy = particles[i].y - particles[j].y;
-                    const distance = Math.sqrt(dx * dx + dy * dy);
-                    if (distance < 150) {
-                        ctx.strokeStyle = `rgba(51, 65, 85, ${1 - distance / 150})`;
-                        ctx.lineWidth = 0.5;
-                        ctx.beginPath();
-                        ctx.moveTo(particles[i].x, particles[i].y);
-                        ctx.lineTo(particles[j].x, particles[j].y);
-                        ctx.stroke();
-                    }
-                }
-            }
-        }
-
-        function animateCanvas() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            handleParticles();
-            requestAnimationFrame(animateCanvas);
+        // --- 2. LIVE MARKDOWN EDITOR SCRIPT ---
+        const markdownInput = document.getElementById('markdown-input');
+        const markdownPreview = document.getElementById('markdown-preview');
+        
+        function simpleMarkdownParser(text) {
+            let html = text
+                .replace(/^### (.*$)/gim, '<h3>$1</h3>') // H3
+                .replace(/^\* (.*$)/gim, '<li>$1</li>')  // List items
+                .replace(/\*\*(.*)\*\*/gim, '<strong>$1</strong>'); // Bold
+            
+            // Wrap list items in a <ul>
+            html = html.replace(/<li>.*<\/li>/gs, '<ul>$&</ul>');
+            
+            return html;
         }
         
-        initParticles();
-        animateCanvas();
-
-        window.addEventListener('resize', () => {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            initParticles();
+        markdownInput.addEventListener('input', () => {
+            markdownPreview.innerHTML = simpleMarkdownParser(markdownInput.value);
         });
 
-
-        // --- 3. Scroll-Triggered Animations ---
-        const animatedElements = document.querySelectorAll('[data-animate]');
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('in-view');
-                    observer.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.1 });
-        animatedElements.forEach(el => observer.observe(el));
-
-
-        // --- 4. Draggable Notes ---
-        const notes = document.querySelectorAll('.draggable-note');
-        notes.forEach(note => {
-            let isDragging = false;
-            let offsetX, offsetY;
-
-            note.addEventListener('mousedown', (e) => {
-                isDragging = true;
-                offsetX = e.clientX - note.getBoundingClientRect().left;
-                offsetY = e.clientY - note.getBoundingClientRect().top;
-                note.classList.add('dragging');
-            });
-            
-            window.addEventListener('mouseup', () => {
-                isDragging = false;
-                note.classList.remove('dragging');
-            });
-            
-            window.addEventListener('mousemove', (e) => {
-                if (isDragging) {
-                    note.style.left = `${e.clientX - offsetX}px`;
-                    note.style.top = `${e.clientY - offsetY}px`;
-                }
-            });
-        });
-
+        // Initial parse
+        markdownPreview.innerHTML = simpleMarkdownParser(markdownInput.value);
     });
     </script>
 </body>
