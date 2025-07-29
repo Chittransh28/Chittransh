@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // --- !!! IMPORTANT: SET YOUR PIN HERE !!! ---
     // This is NOT secure storage. It's only a simple gatekeeper for personal use.
-    const CORRECT_PIN = '1234';
+    const CORRECT_PIN = '596811';
 
     // --- Element References ---
     const loginOverlay = document.getElementById('login-overlay');
