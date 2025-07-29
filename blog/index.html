@@ -5,357 +5,75 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Blog | Chittransh</title>
     <link rel="icon" href="/favicon.png" type="image/png" />
-
+    <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
-
-    <style>
-        /* CSS for the Blog Page */
-        :root {
-            --bg-color: #0F172A;
-            --card-color: #1e293b;
-            --border-color: #334155;
-            --text-bright: #e2e8f0;
-            --text-normal: #cbd5e1;
-            --text-dim: #94a3b8;
-            --accent-color: #38bdf8; /* Sky Blue */
-            --tag-bg: #334155;
-            --tag-text: #e2e8f0;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-normal);
-        }
-
-        /* Interactive Header */
-        .blog-header {
-            position: sticky;
-            top: 0;
-            padding: 40px 20px 20px;
-            text-align: center;
-            z-index: 10;
-            transition: all 0.3s ease;
-            background-color: rgba(15, 23, 42, 0.8);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .blog-header h1 {
-            font-size: 3rem;
-            font-weight: 900;
-            color: var(--text-bright);
-            margin-bottom: 0.5rem;
-        }
-
-        .blog-header p {
-            color: var(--text-dim);
-            font-size: 1.125rem;
-        }
-        
-        /* Main Content Area */
-        .blog-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 40px 20px;
-        }
-
-        /* Filter & Search Section */
-        .filter-section {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            align-items: center;
-            gap: 20px;
-            margin-bottom: 40px;
-        }
-
-        .search-bar {
-            flex-grow: 1;
-            min-width: 250px;
-        }
-        
-        .search-bar input {
-            width: 100%;
-            padding: 12px 15px;
-            background-color: var(--card-color);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            color: var(--text-bright);
-            font-size: 1rem;
-            transition: border-color 0.3s ease;
-        }
-        
-        .search-bar input:focus {
-            outline: none;
-            border-color: var(--accent-color);
-        }
-
-        .category-filters {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .category-filters button {
-            padding: 8px 16px;
-            background-color: var(--tag-bg);
-            color: var(--tag-text);
-            border: 1px solid transparent;
-            border-radius: 20px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .category-filters button:hover {
-            background-color: var(--accent-color);
-            color: var(--bg-color);
-        }
-
-        .category-filters button.active {
-            background-color: var(--accent-color);
-            color: var(--bg-color);
-            border-color: var(--accent-color);
-        }
-
-        /* Blog Grid */
-        .blog-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 30px;
-        }
-
-        .blog-card {
-            background-color: var(--card-color);
-            border-radius: 12px;
-            overflow: hidden;
-            border: 1px solid var(--border-color);
-            text-decoration: none;
-            color: var(--text-normal);
-            display: flex;
-            flex-direction: column;
-            transition: all 0.3s ease;
-        }
-        
-        .blog-card:hover {
-            transform: translateY(-5px);
-            border-color: var(--accent-color);
-        }
-
-        .card-image img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-        }
-        
-        .card-content {
-            padding: 25px;
-            display: flex;
-            flex-direction: column;
-            flex-grow: 1;
-        }
-        
-        .card-category {
-            font-size: 0.875rem;
-            font-weight: 700;
-            color: var(--accent-color);
-            margin-bottom: 10px;
-        }
-
-        .card-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--text-bright);
-            margin-bottom: 15px;
-            line-height: 1.3;
-        }
-
-        .card-excerpt {
-            font-size: 1rem;
-            line-height: 1.6;
-            flex-grow: 1;
-            margin-bottom: 20px;
-        }
-
-        .card-footer {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 0.875rem;
-            color: var(--text-dim);
-        }
-        
-        /* Responsive */
-        @media (max-width: 768px) {
-            .blog-header {
-                padding: 20px;
-            }
-            .blog-header h1 {
-                font-size: 2.5rem;
-            }
-            .filter-section {
-                flex-direction: column;
-                align-items: stretch;
-            }
-        }
-
-    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
 <body>
+    <div id="particles-js-blog"></div>
 
-    <header class="blog-header">
-        <h1>The Digital Logbook</h1>
-        <p>Thoughts on technology, productivity, and life.</p>
-    </header>
+    <main class="container">
+        <header class="blog-header">
+            <h1>The Code & The Cosmos</h1>
+            <p>A collection of thoughts on technology, design, and everything in between.</p>
+        </header>
 
-    <main class="blog-container">
-        <section class="filter-section">
-            <div class="search-bar">
-                <input type="text" id="searchInput" placeholder="Search articles...">
+        <div class="filter-controls">
+            <div class="search-container">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="search-input" placeholder="Search articles...">
             </div>
-            <div class="category-filters">
-                <button class="filter-btn active" data-category="all">All</button>
-                <button class="filter-btn" data-category="tech">Tech</button>
-                <button class="filter-btn" data-category="productivity">Productivity</button>
-                <button class="filter-btn" data-category="life">Life</button>
-            </div>
-        </section>
+            <div class="tags-container" id="tags-container">
+                <button class="tag-filter active" data-tag="all">All</button>
+                <button class="tag-filter" data-tag="tech">Tech</button>
+                <button class="tag-filter" data-tag="design">Design</button>
+                <button class="tag-filter" data-tag="css">CSS</button>
+                <button class="tag-filter" data-tag="js">JavaScript</button>
+                </div>
+        </div>
 
-        <section class="blog-grid" id="blogGrid">
-            </section>
-    </main>
+        <div class="post-grid" id="post-grid">
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const blogPosts = [
-                // Your blog post data goes here
-                // Example:
-                {
-                    image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726a?ixlib=rb-4.0.3&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=400',
-                    category: 'Tech',
-                    title: 'The Rise of AI in Modern Web Development',
-                    excerpt: 'Exploring how artificial intelligence is revolutionizing the way we build and interact with websites and applications.',
-                    date: 'July 28, 2025'
-                },
-                {
-                    image: 'https://images.unsplash.com/photo-1522199755839-a2bacb67c546?ixlib=rb-4.0.3&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=400',
-                    category: 'Productivity',
-                    title: 'My Minimalist Approach to Digital Productivity',
-                    excerpt: 'How to declutter your digital life and focus on what truly matters. A guide to tools and techniques for enhanced focus.',
-                    date: 'July 25, 2025'
-                },
-                {
-                    image: 'https://images.unsplash.com/photo-1457369804613-52c61a468e7d?ixlib=rb-4.0.3&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=400',
-                    category: 'Life',
-                    title: 'The Philosophy of Continuous Learning',
-                    excerpt: 'Why embracing a mindset of lifelong learning is the key to personal and professional growth in a fast-changing world.',
-                    date: 'July 22, 2025'
-                },
-                {
-                    image: 'https://images.unsplash.com/photo-1618477388954-7852f32655ec?ixlib=rb-4.0.3&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=400',
-                    category: 'Tech',
-                    title: 'CSS Grid vs. Flexbox: A Practical Guide',
-                    excerpt: 'A deep dive into the two most powerful layout tools in modern CSS, and when to use each for maximum efficiency.',
-                    date: 'July 18, 2025'
-                },
-                {
-                    image: 'https://images.unsplash.com/photo-1543286386-713bdd548da4?ixlib=rb-4.0.3&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=400',
-                    category: 'Productivity',
-                    title: 'The Power of Time-Blocking Your Day',
-                    excerpt: 'Move from a reactive to a proactive schedule by allocating specific time slots for tasks. Here\'s how to get started.',
-                    date: 'July 15, 2025'
-                },
-                {
-                    image: 'https://images.unsplash.com/photo-1506126613408-4e05960274eA?ixlib=rb-4.0.3&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=400',
-                    category: 'Life',
-                    title: 'Finding Clarity Through Mindful Journaling',
-                    excerpt: 'A simple, effective habit to reduce stress, gain self-awareness, and navigate life\'s complexities with a clearer mind.',
-                    date: 'July 11, 2025'
-                },
-            ];
-
-            const blogGrid = document.getElementById('blogGrid');
-            const searchInput = document.getElementById('searchInput');
-            const filterButtons = document.querySelectorAll('.filter-btn');
-
-            let currentCategory = 'all';
-
-            // Function to display posts
-            function displayPosts(postsToDisplay) {
-                blogGrid.innerHTML = '';
-                if (postsToDisplay.length === 0) {
-                    blogGrid.innerHTML = '<p style="color: var(--text-dim); font-size: 1.2rem; text-align: center; grid-column: 1 / -1;">No articles found.</p>';
-                    return;
-                }
-                postsToDisplay.forEach(post => {
-                    const postElement = document.createElement('a');
-                    postElement.href = '#'; // Link to the full article
-                    postElement.className = 'blog-card';
-                    postElement.innerHTML = `
-                        <div class="card-image">
-                            <img src="${post.image}" alt="${post.title}">
+            <article class="post-card" data-tags="tech css">
+                <a href="post-template.html" class="card-link">
+                    <img src="https://images.unsplash.com/photo-1550063873-ab792950096b?q=80&w=800" alt="Abstract image representing CSS" class="card-image">
+                    <div class="card-content">
+                        <div class="card-meta">
+                            <span class="card-date">July 30, 2025</span>
+                            <span class="card-read-time">7 min read</span>
                         </div>
-                        <div class="card-content">
-                            <span class="card-category">${post.category}</span>
-                            <h3 class="card-title">${post.title}</h3>
-                            <p class="card-excerpt">${post.excerpt}</p>
-                            <div class="card-footer">
-                                <span>${post.date}</span>
-                            </div>
+                        <h2 class="card-title">Pushing the Limits of Modern CSS</h2>
+                        <p class="card-excerpt">Discovering the untapped potential of CSS Grid, custom properties, and animations to build next-generation web interfaces that are both beautiful and performant.</p>
+                        <div class="card-tags">
+                            <span class="tag">Tech</span>
+                            <span class="tag">CSS</span>
                         </div>
-                    `;
-                    blogGrid.appendChild(postElement);
-                });
-            }
+                    </div>
+                </a>
+            </article>
+            <article class="post-card" data-tags="design js">
+                <a href="post-template.html" class="card-link">
+                    <img src="https://images.unsplash.com/photo-1618788372246-7b2ce8454246?q=80&w=800" alt="Abstract image representing design" class="card-image">
+                    <div class="card-content">
+                        <div class="card-meta">
+                            <span class="card-date">July 22, 2025</span>
+                            <span class="card-read-time">5 min read</span>
+                        </div>
+                        <h2 class="card-title">The Art of Interactive Design</h2>
+                        <p class="card-excerpt">Exploring how subtle animations and micro-interactions using JavaScript can dramatically improve user experience and engagement on the web.</p>
+                        <div class="card-tags">
+                            <span class="tag">Design</span>
+                            <span class="tag">JS</span>
+                        </div>
+                    </div>
+                </a>
+            </article>
             
-            // Function to filter and search
-            function filterAndSearch() {
-                const searchTerm = searchInput.value.toLowerCase();
-                
-                let filteredPosts = blogPosts;
-                
-                // Filter by category
-                if (currentCategory !== 'all') {
-                    filteredPosts = filteredPosts.filter(post => post.category.toLowerCase() === currentCategory);
-                }
-                
-                // Filter by search term
-                if (searchTerm) {
-                    filteredPosts = filteredPosts.filter(post => 
-                        post.title.toLowerCase().includes(searchTerm) ||
-                        post.excerpt.toLowerCase().includes(searchTerm)
-                    );
-                }
-
-                displayPosts(filteredPosts);
-            }
-
-            // Event Listeners for category filters
-            filterButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    filterButtons.forEach(btn => btn.classList.remove('active'));
-                    button.classList.add('active');
-                    currentCategory = button.dataset.category;
-                    filterAndSearch();
-                });
-            });
-
-            // Event Listener for search input
-            searchInput.addEventListener('input', filterAndSearch);
-
-            // Initial display of all posts
-            displayPosts(blogPosts);
-        });
-    </script>
-
+            </div>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
