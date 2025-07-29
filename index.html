@@ -1,289 +1,59 @@
-<!DOCTYPE html>
-<html lang="en" class="theme-dark">
+ <!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chittransh | Component Dashboard</title>
+    <title>Chittransh | Personal Space</title>
     <link rel="icon" href="/favicon.png" type="image/png" />
-
+    <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
-
-    <style>
-        :root {
-            /* These variables are updated by the theme classes below */
-            --bg-color: #0F172A;
-            --widget-bg: #1e293b;
-            --border-color: #334155;
-            --text-bright: #e2e8f0;
-            --text-normal: #cbd5e1;
-            --text-dim: #94a3b8;
-            --accent-color: #38bdf8;
-            --accent-text: #0F172A;
-        }
-        
-        html.theme-light {
-            --bg-color: #f1f5f9;
-            --widget-bg: #ffffff;
-            --border-color: #e2e8f0;
-            --text-bright: #0f172a;
-            --text-normal: #334155;
-            --text-dim: #64748b;
-        }
-        
-        html.theme-solarized {
-            --bg-color: #002b36;
-            --widget-bg: #073642;
-            --border-color: #586e75;
-            --text-bright: #fdf6e3;
-            --text-normal: #93a1a1;
-            --text-dim: #657b83;
-            --accent-color: #268bd2;
-            --accent-text: #fdf6e3;
-        }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-normal);
-            transition: background-color 0.3s ease, color 0.3s ease;
-            padding: 2rem;
-        }
-        
-        h1 {
-            text-align: center;
-            font-size: 2.5rem;
-            font-weight: 900;
-            color: var(--text-bright);
-            margin-bottom: 1rem;
-        }
-
-        /* --- 1. THEME TOGGLER --- */
-        .theme-switcher {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            margin-bottom: 2rem;
-        }
-        .theme-switcher label {
-            padding: 0.5rem 1rem;
-            background: var(--widget-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 99px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        .theme-switcher input { display: none; }
-        .theme-switcher input:checked + label {
-            background: var(--accent-color);
-            color: var(--accent-text);
-            font-weight: 700;
-        }
-
-        /* --- DASHBOARD LAYOUT --- */
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 2rem;
-        }
-
-        .widget {
-            background: var(--widget-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 1.5rem;
-            transition: background-color 0.3s ease, border-color 0.3s ease;
-            /* Allow widgets to be resized by the user */
-            resize: both;
-            overflow: auto;
-            min-width: 300px;
-            min-height: 200px;
-        }
-        
-        .widget-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--text-bright);
-            margin-bottom: 1rem;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 0.75rem;
-        }
-
-        /* --- 2. CONTAINER QUERIES WIDGET (Portfolio) --- */
-        .portfolio-widget {
-            container-type: inline-size; /* This is the magic! */
-        }
-        .portfolio-grid {
-            display: grid;
-            gap: 1rem;
-            grid-template-columns: 1fr; /* Default layout (mobile first) */
-        }
-        .portfolio-item { font-weight: 500; }
-        
-        /* If the WIDGET is wider than 500px, change ITS OWN layout */
-        @container (min-width: 500px) {
-            .portfolio-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-        }
-        @container (min-width: 800px) {
-            .portfolio-grid {
-                grid-template-columns: 1fr 1fr 1fr;
-            }
-            .portfolio-widget .widget-title { font-size: 2rem; }
-        }
-
-        /* --- 3. CSS :has() WIDGET (Blog) --- */
-        .blog-filters { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem; }
-        .blog-filters label { cursor: pointer; user-select: none; }
-        .blog-filters input { margin-right: 0.25rem; }
-        .blog-post { padding: 0.5rem; border: 1px solid var(--border-color); border-radius: 6px; margin-bottom: 0.5rem; }
-
-        /* The :has() magic! Hides posts if a filter is checked and the post doesn't match */
-        .blog-widget:has(#filter-tech:checked) .blog-post:not([data-category="tech"]) { display: none; }
-        .blog-widget:has(#filter-life:checked) .blog-post:not([data-category="life"]) { display: none; }
-        .blog-widget:has(#filter-productivity:checked) .blog-post:not([data-category="productivity"]) { display: none; }
-
-        /* --- 4. LIVE EDITOR WIDGET --- */
-        .live-editor-widget { display: flex; flex-direction: column; gap: 1rem; }
-        .live-editor-widget textarea {
-            width: 100%;
-            height: 150px;
-            background: var(--bg-color);
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            color: var(--text-normal);
-            font-family: monospace;
-            padding: 0.5rem;
-        }
-        .live-editor-widget .preview {
-            border: 1px dashed var(--border-color);
-            padding: 1rem;
-            border-radius: 6px;
-            min-height: 100px;
-        }
-        .live-editor-widget .preview h3 { font-size: 1.25rem; color: var(--accent-color); }
-        .live-editor-widget .preview strong { color: var(--text-bright); }
-
-        /* --- 5. POPOVER API WIDGET --- */
-        #info-popover {
-            background: var(--widget-bg);
-            color: var(--text-normal);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 1.5rem;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }
-        #info-popover::backdrop { background: rgba(0,0,0,0.5); backdrop-filter: blur(5px); }
-        .info-button {
-            background: var(--accent-color);
-            color: var(--accent-text);
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
-            font-weight: 700;
-            cursor: pointer;
-        }
-    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
 <body>
 
-    <h1>Component Dashboard</h1>
-    
-    <div class="theme-switcher" id="theme-switcher">
-        <input type="radio" name="theme" id="theme-dark" value="theme-dark" checked>
-        <label for="theme-dark">Dark</label>
-        <input type="radio" name="theme" id="theme-light" value="theme-light">
-        <label for="theme-light">Light</label>
-        <input type="radio" name="theme" id="theme-solarized" value="theme-solarized">
-        <label for="theme-solarized">Solarized</label>
-    </div>
+    <div id="particles-js"></div>
 
-    <div class="dashboard-grid">
+    <main class="container">
+        <header class="header">
+            <h1 class="headline"></h1>
+        </header>
 
-        <article class="widget portfolio-widget">
-            <h2 class="widget-title">1. Portfolio (Container Queries)</h2>
-            <p>Resize this widget to see its layout change!</p>
-            <div class="portfolio-grid">
-                <div class="portfolio-item">Neural Hub</div>
-                <div class="portfolio-item">Live Manuscript</div>
-                <div class="portfolio-item">Interactive Blog</div>
-                <div class="portfolio-item">Component Dashboard</div>
-                <div class="portfolio-item">Project E</div>
-                <div class="portfolio-item">Project F</div>
-            </div>
-        </article>
+        <nav class="link-grid">
+            <a href="/portfolio" class="grid-item">
+                <i class="fa-solid fa-briefcase"></i>
+                <span>Portfolio</span>
+            </a>
+            <a href="/blog" class="grid-item">
+                <i class="fa-solid fa-feather-pointed"></i>
+                <span>Blog</span>
+            </a>
+            <a href="/cv" class="grid-item">
+                <i class="fa-solid fa-file-lines"></i>
+                <span>CV</span>
+            </a>
+            <a href="/notes" class="grid-item">
+                <i class="fa-solid fa-note-sticky"></i>
+                <span>Notes</span>
+            </a>
+            <a href="/shop" class="grid-item">
+                <i class="fa-solid fa-cart-shopping"></i>
+                <span>Shop</span>
+            </a>
+            <a href="/personal" class="grid-item">
+                <i class="fa-solid fa-user-astronaut"></i>
+                <span>Personal</span>
+            </a>
+        </nav>
 
-        <article class="widget blog-widget">
-            <h2 class="widget-title">2. Blog Posts (CSS `:has()`)</h2>
-            <div class="blog-filters">
-                <label><input type="radio" name="blog-filter" id="filter-all" checked> All</label>
-                <label><input type="radio" name="blog-filter" id="filter-tech"> Tech</label>
-                <label><input type="radio" name="blog-filter" id="filter-life"> Life</label>
-                <label><input type="radio" name="blog-filter" id="filter-productivity"> Productivity</label>
-            </div>
-            <div class="blog-post" data-category="tech">The Rise of AI</div>
-            <div class="blog-post" data-category="productivity">Minimalist Productivity</div>
-            <div class="blog-post" data-category="tech">CSS Grid vs. Flexbox</div>
-            <div class="blog-post" data-category="life">The Philosophy of Learning</div>
-        </article>
+        <footer class="footer">
+            <p>&copy; 2025 Chittransh. All rights reserved.</p>
+        </footer>
+    </main>
 
-        <article class="widget live-editor-widget">
-            <h2 class="widget-title">3. Live Markdown Editor (JS)</h2>
-            <textarea id="markdown-input" placeholder="Type simple markdown here...">### Hello World!
-* This is a list item.
-* So is **this**.</textarea>
-            <div class="preview" id="markdown-preview"></div>
-        </article>
-        
-        <article class="widget">
-            <h2 class="widget-title">4. Info (Popover API)</h2>
-            <p>Click the button to show a native HTML popover.</p>
-            <button class="info-button" popovertarget="info-popover">Show Info</button>
-            <div id="info-popover" popover>
-                <h3>About This Page</h3>
-                <p>This page uses modern CSS features to create interactive components with minimal JavaScript.</p>
-                <button popovertarget="info-popover" popovertargetaction="hide">Close</button>
-            </div>
-        </article>
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+    <script src="script.js"></script>
 
-    </div>
-
-    <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        // --- 1. THEME SWITCHER SCRIPT ---
-        const themeSwitcher = document.getElementById('theme-switcher');
-        themeSwitcher.addEventListener('change', (event) => {
-            const selectedTheme = event.target.value;
-            document.documentElement.className = selectedTheme;
-        });
-
-        // --- 2. LIVE MARKDOWN EDITOR SCRIPT ---
-        const markdownInput = document.getElementById('markdown-input');
-        const markdownPreview = document.getElementById('markdown-preview');
-        
-        function simpleMarkdownParser(text) {
-            let html = text
-                .replace(/^### (.*$)/gim, '<h3>$1</h3>') // H3
-                .replace(/^\* (.*$)/gim, '<li>$1</li>')  // List items
-                .replace(/\*\*(.*)\*\*/gim, '<strong>$1</strong>'); // Bold
-            
-            // Wrap list items in a <ul>
-            html = html.replace(/<li>.*<\/li>/gs, '<ul>$&</ul>');
-            
-            return html;
-        }
-        
-        markdownInput.addEventListener('input', () => {
-            markdownPreview.innerHTML = simpleMarkdownParser(markdownInput.value);
-        });
-
-        // Initial parse
-        markdownPreview.innerHTML = simpleMarkdownParser(markdownInput.value);
-    });
-    </script>
 </body>
 </html>
