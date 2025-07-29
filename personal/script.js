@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
 
     // --- !!! IMPORTANT: SET YOUR PIN HERE !!! ---
-    const CORRECT_PIN = '596811';
+    const CORRECT_PIN = '2128';
 
     // --- Element References ---
     const loginOverlay = document.getElementById('login-overlay');
