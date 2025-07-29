@@ -3,60 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daily Checklist</title>
+    <title>Personal Checklist | Chittransh</title>
     <link rel="icon" href="/favicon.png" type="image/png" />
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
-    <style>
-        /* This hides your checklist by default */
-        #protected-content { display: none; }
-    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
 <body>
 
-    <div id="protected-content">
-        <div class="checklist-container">
-            <h1>My Daily Checklist</h1>
-            <p id="date"></p>
-            <div class="input-area">
-                <input type="text" id="task-input" placeholder="Add a new task...">
-                <button id="add-task-btn">Add</button>
-            </div>
-            <ul id="task-list">
-            </ul>
-            <div class="action-buttons">
-                <button id="clear-checked-btn">Clear Checked</button>
-                <button id="reset-btn">Reset for New Day</button>
-            </div>
+    <div id="particles-js-personal"></div>
+
+    <div class="login-overlay" id="login-overlay">
+        <div class="login-box">
+            <form id="login-form">
+                <i class="fa-solid fa-user-shield"></i>
+                <h2>Personal Area</h2>
+                <p>Enter your PIN to continue</p>
+                <input type="password" id="pin-input" placeholder="••••" maxlength="4" autocomplete="off">
+                <button type="submit">Unlock</button>
+            </form>
         </div>
     </div>
 
-    <script>
-        // This function runs immediately
-        (function() {
-            // 1. SET YOUR PASSWORD HERE
-            const correctPassword = "Chittransh596811"; 
+    <main class="container" id="checklist-container">
+        <header class="checklist-header">
+            <h1>Daily Checklist</h1>
+            <button id="reset-button" title="Reset Checklist for a New Day"><i class="fa-solid fa-arrows-rotate"></i> Reset</button>
+        </header>
 
-            // 2. Ask the visitor for the password
-            const enteredPassword = prompt("Please enter the password to continue:", "");
+        <form id="add-task-form">
+            <input type="text" id="task-input" placeholder="Add a new task..." autocomplete="off">
+            <button type="submit">Add</button>
+        </form>
 
-            // 3. Check if the password is correct
-            if (enteredPassword === correctPassword) {
-                // If correct, reveal the hidden checklist
-                document.getElementById("protected-content").style.display = "block";
-                
-                // And load the checklist's functionality script
-                const checklistScript = document.createElement('script');
-                checklistScript.src = 'script.js';
-                document.body.appendChild(checklistScript);
+        <ul class="task-list" id="task-list">
+            </ul>
+    </main>
 
-            } else {
-                // If incorrect, show an error message
-                document.body.innerHTML = "<h1 style='text-align: center; font-family: sans-serif; padding-top: 50px;'>Access Denied</h1>";
-            }
-        })();
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+    <script src="script.js"></script>
+
 </body>
 </html>
