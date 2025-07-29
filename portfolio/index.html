@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coming Soon | Chittransh</title>
+    <link rel="icon" href="/favicon.png" type="image/png" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+
+    <style>
+        /* Base Styles - Matching your site's theme */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0F172A; /* Dark Slate background */
+            color: #cbd5e1; /* Light Slate text */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            min-height: 100vh;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        /* Content Container */
+        .container {
+            max-width: 600px;
+        }
+
+        /* Typography */
+        h1 {
+            font-size: 3rem;
+            font-weight: 900;
+            color: #e2e8f0;
+            margin-bottom: 1rem;
+            /* Subtle gradient effect */
+            background: linear-gradient(90deg, #e2e8f0, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        p {
+            font-size: 1.125rem;
+            color: #94a3b8; /* Dimmer text for subheading */
+            margin-bottom: 2.5rem;
+            line-height: 1.6;
+        }
+
+        /* "Back to Home" Button */
+        .home-link {
+            display: inline-block;
+            padding: 12px 28px;
+            background-color: #1e293b; /* Lighter Slate */
+            border: 1px solid #334155;
+            border-radius: 8px;
+            text-decoration: none;
+            color: #e2e8f0;
+            font-weight: 700;
+            transition: all 0.3s ease;
+        }
+
+        .home-link:hover {
+            background-color: #334155;
+            border-color: #475569;
+            transform: translateY(-3px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Subtle pulsating dot animation */
+        .pulsing-dot {
+            height: 8px;
+            width: 8px;
+            background-color: #38bdf8; /* Sky blue accent */
+            border-radius: 50%;
+            margin: 0 auto 2.5rem;
+            animation: pulse 2s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.3;
+                transform: scale(0.8);
+            }
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+            p {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Coming Soon</h1>
+        <p>This section is currently under construction. I'm working hard to bring you something amazing. Please check back later!</p>
+        
+        <div class="pulsing-dot"></div>
+
+        <a href="https://chittransh.in" class="home-link">← Back to Home</a>
+    </div>
+</body>
+</html>
