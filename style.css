@@ -1,0 +1,162 @@
+/* CSS Variables for easy theme management */
+:root {
+    --bg-color: #0d1117;
+    --primary-color: #c9d1d9;
+    --accent-color: #58a6ff;
+    --border-color: #30363d;
+    --glow-color: rgba(88, 166, 255, 0.5);
+    --font-family: 'Poppins', sans-serif;
+}
+
+/* Basic Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--primary-color);
+    font-family: var(--font-family);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    overflow: hidden; /* Hide scrollbars caused by animations */
+}
+
+/* Particle.js Background Styling */
+#particles-js {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: -1; /* Place it behind all other content */
+}
+
+/* Main Content Container */
+.container {
+    text-align: center;
+    padding: 2rem;
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 900px;
+}
+
+/* Headline with Typewriter Cursor */
+.headline {
+    font-size: 2.5rem;
+    font-weight: 600;
+    margin-bottom: 3rem;
+    color: var(--primary-color);
+}
+
+.headline::after {
+    content: '_';
+    animation: blink 1s step-end infinite;
+    font-weight: 600;
+    margin-left: 5px;
+    color: var(--accent-color);
+}
+
+@keyframes blink {
+    from, to { opacity: 1; }
+    50% { opacity: 0; }
+}
+
+/* Navigation Grid */
+.link-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    perspective: 1000px; /* For 3D hover effect */
+}
+
+/* Individual Grid Items (Links) */
+.grid-item {
+    background-color: rgba(22, 27, 34, 0.8);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 2rem;
+    text-decoration: none;
+    color: var(--primary-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    will-change: transform; /* Performance optimization */
+}
+
+.grid-item i {
+    font-size: 2.5rem;
+    transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.grid-item span {
+    font-size: 1.1rem;
+    font-weight: 400;
+}
+
+/* The "Pushing the Boundary" Hover Effect */
+.grid-item:hover {
+    transform: translateY(-10px) rotateX(10deg) scale(1.05);
+    border-color: var(--accent-color);
+    box-shadow: 0 15px 30px -5px var(--glow-color);
+    color: var(--accent-color);
+}
+
+.grid-item:hover i {
+    transform: scale(1.2);
+    color: var(--accent-color);
+}
+
+/* Footer */
+.footer {
+    margin-top: 4rem;
+    font-size: 0.9rem;
+    color: #8b949e; /* Softer color for footer */
+}
+
+/* --- Responsive Design --- */
+
+/* For Tablets */
+@media (max-width: 768px) {
+    .link-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .headline {
+        font-size: 2rem;
+    }
+}
+
+/* For Mobile Phones */
+@media (max-width: 480px) {
+    .container {
+        padding: 1rem;
+    }
+    .headline {
+        font-size: 1.5rem;
+        margin-bottom: 2rem;
+    }
+    .link-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    .grid-item {
+        flex-direction: row;
+        justify-content: flex-start;
+        padding: 1.25rem;
+        gap: 1.5rem;
+    }
+    .grid-item i {
+        font-size: 1.5rem;
+    }
+    .grid-item span {
+        font-size: 1rem;
+    }
+}
