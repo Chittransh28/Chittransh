@@ -1,10 +1,15 @@
+/* Universal box-sizing for easier layout calculations */
+* {
+    box-sizing: border-box;
+}
+
 body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     background-color: #f0f2f5;
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    padding-top: 50px;
+    padding: 40px 15px; /* Adjusted padding for better mobile spacing */
     margin: 0;
     min-height: 100vh;
 }
@@ -14,14 +19,15 @@ body {
     padding: 30px;
     border-radius: 10px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    max-width: 500px;
+    width: 100%; /* Make container flexible */
+    max-width: 500px; /* Set a max-width for desktop */
 }
 
 h1 {
     text-align: center;
     color: #1c1e21;
     margin-top: 0;
+    font-size: 2.25rem; /* Slightly adjusted font size */
 }
 
 #date {
@@ -39,7 +45,7 @@ h1 {
 
 #task-input {
     flex-grow: 1;
-    padding: 10px;
+    padding: 12px; /* Increased padding for better touch targets */
     border: 1px solid #dddfe2;
     border-radius: 6px;
     font-size: 16px;
@@ -51,7 +57,7 @@ h1 {
 }
 
 #add-task-btn {
-    padding: 10px 20px;
+    padding: 12px 20px; /* Increased padding */
     background-color: #1877f2;
     color: white;
     border: none;
@@ -77,6 +83,7 @@ h1 {
     padding: 12px 5px;
     border-bottom: 1px solid #e9ebee;
     font-size: 16px;
+    word-break: break-word; /* Prevents long tasks from overflowing */
 }
 
 #task-list li:last-child {
@@ -90,9 +97,10 @@ h1 {
 
 #task-list input[type="checkbox"] {
     margin-right: 15px;
-    width: 18px;
-    height: 18px;
+    width: 20px; /* Larger checkbox for touch */
+    height: 20px; /* Larger checkbox for touch */
     cursor: pointer;
+    flex-shrink: 0; /* Prevents checkbox from shrinking */
 }
 
 #task-list li span {
@@ -105,35 +113,23 @@ h1 {
     color: #8a8d91;
     font-size: 20px;
     cursor: pointer;
-    visibility: hidden;
-    opacity: 0;
-    transition: opacity 0.2s, color 0.2s;
+    padding: 5px 10px; /* Add padding for easier tapping */
 }
 
-#task-list li:hover .delete-btn {
-    visibility: visible;
-    opacity: 1;
-}
+/* This is the new section for mobile responsiveness */
+/* It applies only when the screen width is 600px or less */
+@media (max-width: 600px) {
+    body {
+        padding: 20px 10px; /* Less padding on mobile */
+    }
 
-.delete-btn:hover {
-    color: #e74c3c;
-}
+    .checklist-container {
+        padding: 20px; /* Less padding inside the container on mobile */
+    }
 
-.action-buttons {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
-}
+    h1 {
+        font-size: 1.75rem; /* Smaller heading on mobile */
+    }
 
-.action-buttons button {
-    padding: 10px 15px;
-    border: 1px solid #dddfe2;
-    background-color: #f5f6f7;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background-color 0.2s;
-}
-
-.action-buttons button:hover {
-    background-color: #e9ebee;
-}
+    .input-area {
+        flex-direction: column;
