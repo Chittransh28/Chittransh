@@ -5,24 +5,56 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Daily Checklist</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* This hides your checklist by default */
+        #protected-content {
+            display: none;
+        }
+    </style>
 </head>
 <body>
 
-    <div class="checklist-container">
-        <h1>My Daily Checklist</h1>
-        <p id="date"></p>
-        <div class="input-area">
-            <input type="text" id="task-input" placeholder="Add a new task...">
-            <button id="add-task-btn">Add</button>
-        </div>
-        <ul id="task-list">
+    <div id="protected-content">
+        <div class="checklist-container">
+            <h1>My Daily Checklist</h1>
+            <p id="date"></p>
+            <div class="input-area">
+                <input type="text" id="task-input" placeholder="Add a new task...">
+                <button id="add-task-btn">Add</button>
+            </div>
+            <ul id="task-list">
             </ul>
-        <div class="action-buttons">
-            <button id="clear-checked-btn">Clear Checked</button>
-            <button id="reset-btn">Reset for New Day</button>
+            <div class="action-buttons">
+                <button id="clear-checked-btn">Clear Checked</button>
+                <button id="reset-btn">Reset for New Day</button>
+            </div>
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+        // This function runs immediately
+        (function() {
+            // 1. SET YOUR PASSWORD HERE
+            const correctPassword = "Chittransh596811"; 
+
+            // 2. Ask the visitor for the password
+            const enteredPassword = prompt("Please enter the password to continue:", "");
+
+            // 3. Check if the password is correct
+            if (enteredPassword === correctPassword) {
+                // If correct, reveal the hidden checklist
+                document.getElementById("protected-content").style.display = "block";
+                
+                // And load the checklist's functionality script
+                const checklistScript = document.createElement('script');
+                checklistScript.src = 'script.js';
+                document.body.appendChild(checklistScript);
+
+            } else {
+                // If incorrect, show an error message
+                document.body.innerHTML = "<h1 style='text-align: center; font-family: sans-serif; padding-top: 50px;'>Access Denied</h1>";
+            }
+        })();
+    </script>
 </body>
 </html>
