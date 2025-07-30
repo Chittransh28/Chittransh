@@ -1,7 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
     // --- Step 1: Paste your Firebase Configuration here ---
 
-   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
    const firebaseConfig = {
     apiKey: "AIzaSyBceOFjCe6XJqp1WRKzFEH2z0aHTJ_mg7s",
     authDomain: "checklist-c3873.firebaseapp.com",
