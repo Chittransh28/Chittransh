@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     // --- Particle.js Background ---
-    particlesJS('particles-js-post', {{
+    particlesJS('particles-js-post',{
     "particles": {
         "number": {
             "value": 60,
