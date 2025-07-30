@@ -104,9 +104,28 @@ body {
     flex-direction: column;
 }
 .checklist-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
-#reset-button { background: none; border: 1px solid var(--border-color); color: #8b949e; padding: 8px 12px; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; }
-#reset-button:hover { color: var(--primary-color); border-color: var(--primary-color); }
-#reset-button i { margin-right: 0.5rem; }
+.checklist-header div {
+    display: flex;
+    gap: 0.5rem;
+}
+
+#reset-button, #sign-out-button {
+     background: none; border: 1px solid var(--border-color); color: #8b949e; padding: 8px 12px; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; 
+}
+
+#reset-button:hover {
+     color: var(--primary-color); border-color: var(--primary-color); 
+}
+
+/* Adds a red hover effect specifically for the sign out button */
+#sign-out-button:hover {
+    color: var(--error-color); border-color: var(--error-color);
+}
+
+/* This rule was separate, but let's keep it for icon spacing if you use it */
+#reset-button i, #sign-out-button i { 
+    margin-right: 0.5rem; 
+}
 
 /* Add Task Form */
 #add-task-form { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; }
