@@ -208,3 +208,22 @@ body {
     border-bottom-left-radius: 12px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
 }
+
+/* New Footer Links Styling */
+.footer-links {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+}
+
+.footer-links a {
+    color: #8b949e;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer-links a:hover {
+    color: var(--accent-color);
+}
