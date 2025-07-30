@@ -20,10 +20,11 @@
             <form id="login-form">
                 <i class="fa-solid fa-user-shield"></i>
                 <h2>Personal Area</h2>
-                <p>Enter your PIN to continue</p>
-                <input type="password" id="pin-input" placeholder="••••" maxlength="4" autocomplete="off">
+                <p>Sign in to access your checklist</p>
+                <input type="email" id="email-input" placeholder="Email" required>
+                <input type="password" id="password-input" placeholder="Password" required>
                 <p class="error-message" id="error-message"></p>
-                <button type="submit">Unlock</button>
+                <button type="submit">Sign In</button>
             </form>
         </div>
     </div>
@@ -31,20 +32,24 @@
     <main class="container" id="checklist-container">
         <header class="checklist-header">
             <h1>Daily Checklist</h1>
-            <button id="reset-button" title="Reset Checklist for a New Day"><i class="fa-solid fa-arrows-rotate"></i> Reset</button>
+            <div>
+                <button id="reset-button" title="Reset Checklist"><i class="fa-solid fa-arrows-rotate"></i> Reset</button>
+                <button id="sign-out-button" title="Sign Out"><i class="fa-solid fa-right-from-bracket"></i> Sign Out</button>
+            </div>
         </header>
-
         <form id="add-task-form">
             <input type="text" id="task-input" placeholder="Add a new task..." autocomplete="off">
             <button type="submit">Add</button>
         </form>
-
         <ul class="task-list" id="task-list">
             </ul>
     </main>
 
+    <script src="https://www.gstatic.com/firebasejs/9.6.7/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.7/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.7/firebase-firestore-compat.js"></script>
+    
     <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
-    <script src="script.js"></script>
-
+    <script src="personal-script.js"></script>
 </body>
 </html>
