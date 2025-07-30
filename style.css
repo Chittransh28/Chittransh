@@ -8,6 +8,22 @@
     --font-family: 'Poppins', sans-serif;
 }
 
+/* =================================
+   Global Link Styling
+   ================================= */
+a,
+a:link,
+a:visited {
+    color: var(--accent-color);
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+a:hover {
+    color: var(--primary-color);
+    text-decoration: underline;
+}
+
 /* Basic Reset */
 * {
     margin: 0;
