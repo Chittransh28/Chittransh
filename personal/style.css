@@ -9,13 +9,27 @@
     --font-family: 'Poppins', sans-serif;
 }
 
-/* Basic Reset & Body */
+/* --- Global Link Styling --- */
+a,
+a:link,
+a:visited {
+    color: var(--accent-color);
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+a:hover {
+    color: var(--primary-color);
+    text-decoration: underline;
+}
+
+/* --- Basic Reset & Body --- */
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body {
     background-color: var(--bg-color);
     color: var(--primary-color);
     font-family: var(--font-family);
-    overflow: hidden;
+    overflow-x: hidden; /* Allow vertical scroll but not horizontal */
 }
 
 #particles-js-personal {
@@ -27,126 +41,119 @@ body {
     z-index: -1;
 }
 
-/* Login Overlay */
+/* --- Login Overlay (Unchanged) --- */
 .login-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    backdrop-filter: blur(10px);
-    background-color: rgba(13, 17, 23, 0.7);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 100;
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    backdrop-filter: blur(10px); background-color: rgba(13, 17, 23, 0.7);
+    display: flex; justify-content: center; align-items: center; z-index: 100;
     transition: opacity 0.5s ease;
 }
 .login-box {
-    background-color: var(--content-bg);
-    padding: 2rem 2.5rem;
-    border-radius: 12px;
-    border: 1px solid var(--border-color);
-    text-align: center;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-}
-.login-box.error { animation: shake 0.5s ease; }
-@keyframes shake {
-  10%, 90% { transform: translate3d(-1px, 0, 0); }
-  20%, 80% { transform: translate3d(2px, 0, 0); }
-  30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
-  40%, 60% { transform: translate3d(4px, 0, 0); }
+    background-color: var(--content-bg); padding: 2rem 2.5rem;
+    border-radius: 12px; border: 1px solid var(--border-color);
+    text-align: center; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
 .login-box i { font-size: 2.5rem; color: var(--accent-color); margin-bottom: 1rem; }
 .login-box h2 { margin-bottom: 0.5rem; }
 .login-box p { color: #8b949e; margin-bottom: 1.5rem; }
-#pin-input {
-    font-size: 1.5rem;
-    padding: 0.5rem;
-    width: 150px;
-    text-align: center;
-    background-color: var(--bg-color);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    color: var(--primary-color);
-    letter-spacing: 0.5em;
+.login-box input {
+    font-size: 1rem; padding: 0.75rem; width: 100%; text-align: left;
+    background-color: var(--bg-color); border: 1px solid var(--border-color);
+    border-radius: 8px; color: var(--primary-color);
     margin-bottom: 0.5rem;
 }
-#pin-input:focus { outline: none; border-color: var(--accent-color); }
-/* New Rule for the Error Message */
-.error-message {
-    color: var(--error-color);
-    font-size: 0.9rem;
-    height: 20px; /* Reserve space to prevent layout shift */
-    margin-bottom: 0.5rem;
-}
+.login-box input:focus { outline: none; border-color: var(--accent-color); }
+.error-message { color: var(--error-color); font-size: 0.9rem; height: 20px; margin-bottom: 0.5rem; }
 .login-box button {
-    width: 100%;
-    padding: 0.75rem;
-    background-color: var(--accent-color);
-    border: none;
-    border-radius: 8px;
-    color: #fff;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+    width: 100%; padding: 0.75rem; background-color: var(--accent-color);
+    border: none; border-radius: 8px; color: #fff; font-size: 1rem;
+    font-weight: 600; cursor: pointer; transition: background-color 0.3s ease;
 }
 .login-box button:hover { background-color: #3182ce; }
 
-/* Main Checklist Container - MODIFIED */
-#checklist-container {
-    max-width: 800px;
+/* --- Main Dashboard Container --- */
+.container {
+    max-width: 1200px;
     margin: 0 auto;
     padding: 3rem 2rem;
-    height: 100vh;
-    display: none; /* This is the key fix: hidden by default */
-    flex-direction: column;
+    display: none; /* Hidden by default */
 }
-.checklist-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
-.checklist-header div {
+
+/* --- New Dashboard Styles --- */
+.dashboard-header {
     display: flex;
-    gap: 0.5rem;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
 }
+.dashboard-header h1 { font-size: 2rem; }
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 1.5rem;
+    align-items: flex-start;
+}
+
+.grid-card {
+    background-color: var(--content-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 1.5rem;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border-color);
+}
+.card-header h2 { font-size: 1.5rem; }
 
 #reset-button, #sign-out-button {
-     background: none; border: 1px solid var(--border-color); color: #8b949e; padding: 8px 12px; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; 
+    background: none; border: 1px solid var(--border-color);
+    color: #8b949e; padding: 8px 12px; border-radius: 8px;
+    cursor: pointer; transition: all 0.3s ease;
 }
+#reset-button:hover { color: var(--error-color); border-color: var(--error-color); }
+#sign-out-button:hover { color: var(--primary-color); border-color: var(--primary-color); }
 
-#reset-button:hover {
-     color: var(--primary-color); border-color: var(--primary-color); 
-}
-
-/* Adds a red hover effect specifically for the sign out button */
-#sign-out-button:hover {
-    color: var(--error-color); border-color: var(--error-color);
-}
-
-/* This rule was separate, but let's keep it for icon spacing if you use it */
-#reset-button i, #sign-out-button i { 
-    margin-right: 0.5rem; 
-}
-
-/* Add Task Form */
+/* --- Forms inside cards --- */
 #add-task-form { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; }
 #task-input { flex-grow: 1; background-color: var(--bg-color); border: 1px solid var(--border-color); border-radius: 8px; padding: 0.75rem 1rem; color: var(--primary-color); font-size: 1rem; }
 #task-input:focus { outline: none; border-color: var(--accent-color); }
 #add-task-form button { background-color: var(--accent-color); border: none; color: #fff; padding: 0 1.5rem; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: background-color 0.3s ease; }
 #add-task-form button:hover { background-color: #3182ce; }
 
-/* Task List */
-.task-list { list-style: none; overflow-y: auto; padding-right: 10px; }
-.task-item { display: flex; align-items: center; background-color: var(--content-bg); padding: 1rem; border: 1px solid var(--border-color); border-radius: 8px; margin-bottom: 0.75rem; transition: all 0.3s ease; }
-.task-item.completed { background-color: #0d111790; border-color: #21262d; }
+/* --- Metrics Form --- */
+.form-group { margin-bottom: 1.5rem; text-align: left;}
+.form-group label { display: block; margin-bottom: 0.5rem; font-weight: 600; }
+.form-group input { width: 100%; background-color: var(--bg-color); border: 1px solid var(--border-color); border-radius: 8px; padding: 0.75rem 1rem; color: var(--primary-color); font-size: 1rem; }
+.form-group input:focus { outline: none; border-color: var(--accent-color); }
+#metrics-form button { width: 100%; padding: 0.75rem; background-color: var(--accent-color); border: none; border-radius: 8px; color: #fff; font-size: 1rem; font-weight: 600; cursor: pointer; transition: background-color 0.3s ease; }
+#metrics-form button:hover { background-color: #3182ce; }
+
+/* --- Task List --- */
+.task-list { list-style: none; overflow-y: auto; max-height: 50vh; padding-right: 10px; }
+.task-item { display: flex; align-items: center; background-color: var(--bg-color); padding: 1rem; border: 1px solid var(--border-color); border-radius: 8px; margin-bottom: 0.75rem; transition: all 0.3s ease; }
+.task-item.completed { opacity: 0.5; border-color: #21262d; }
 .task-item.completed .task-text { text-decoration: line-through; color: #8b949e; }
-.task-item input[type="checkbox"] { width: 20px; height: 20px; margin-right: 1rem; accent-color: var(--accent-color); cursor: pointer; }
-.task-text { flex-grow: 1; }
+.task-item input[type="checkbox"] { width: 20px; height: 20px; margin-right: 1rem; accent-color: var(--accent-color); cursor: pointer; flex-shrink: 0; }
+.task-text { flex-grow: 1; word-break: break-word; }
 .delete-button { background: none; border: none; color: #8b949e; cursor: pointer; font-size: 1.2rem; padding: 0 0.5rem; transition: color 0.3s ease; }
 .delete-button:hover { color: var(--error-color); }
 
-/* Mobile Responsive */
+/* --- Responsive Design --- */
+@media (max-width: 900px) {
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+}
 @media(max-width: 600px) {
     .login-box { width: 90%; padding: 1.5rem; }
-    #checklist-container { padding: 1.5rem 1rem; }
-    h1 { font-size: 1.8rem; }
+    .container { padding: 1.5rem 1rem; }
+    .dashboard-header h1 { font-size: 1.8rem; }
 }
