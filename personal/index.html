@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Personal Checklist | Chittransh</title>
+    <title>Personal Dashboard | Chittransh</title>
     <link rel="icon" href="/favicon.png" type="image/png" />
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -12,44 +12,52 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
 <body>
-
     <div id="particles-js-personal"></div>
 
     <div class="login-overlay" id="login-overlay">
-        <div class="login-box">
-            <form id="login-form">
-                <i class="fa-solid fa-user-shield"></i>
-                <h2>Personal Area</h2>
-                <p>Sign in to access your checklist</p>
-                <input type="email" id="email-input" placeholder="Email" required>
-                <input type="password" id="password-input" placeholder="Password" required>
-                <p class="error-message" id="error-message"></p>
-                <button type="submit">Sign In</button>
-            </form>
         </div>
-    </div>
 
-    <main class="container" id="checklist-container">
-        <header class="checklist-header">
-            <h1>Daily Checklist</h1>
+    <main class="container" id="dashboard-container">
+        <header class="dashboard-header">
+            <h1>Personal Dashboard</h1>
             <div>
-                <button id="reset-button" title="Reset Checklist"><i class="fa-solid fa-arrows-rotate"></i> Reset</button>
                 <button id="sign-out-button" title="Sign Out"><i class="fa-solid fa-right-from-bracket"></i> Sign Out</button>
             </div>
         </header>
-        <form id="add-task-form">
-            <input type="text" id="task-input" placeholder="Add a new task..." autocomplete="off">
-            <button type="submit">Add</button>
-        </form>
-        <ul class="task-list" id="task-list">
-            </ul>
+
+        <div class="dashboard-grid">
+            <div class="grid-card">
+                <div class="card-header">
+                    <h2>Daily Checklist</h2>
+                    <button id="reset-button" title="Clear All Tasks"><i class="fa-solid fa-trash-can"></i> Clear All</button>
+                </div>
+                <form id="add-task-form">
+                    <input type="text" id="task-input" placeholder="Add a new task..." autocomplete="off">
+                    <button type="submit">Add</button>
+                </form>
+                <ul class="task-list" id="task-list"></ul>
+            </div>
+
+            <div class="grid-card">
+                <div class="card-header">
+                    <h2>Daily Metrics</h2>
+                </div>
+                <form id="metrics-form">
+                    <div class="form-group">
+                        <label for="weight-input">Today's Weight (kg)</label>
+                        <input type="number" step="0.1" id="weight-input" placeholder="e.g., 75.5">
+                    </div>
+                    <button type="submit">Save Metrics</button>
+                </form>
+            </div>
+        </div>
     </main>
 
     <script src="https://www.gstatic.com/firebasejs/9.6.7/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.7/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.7/firebase-firestore-compat.js"></script>
-    
+    <script src="firebase-config.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
-    <script src="script.js"></script>
+    <script src="personal-script.js"></script>
 </body>
 </html>
