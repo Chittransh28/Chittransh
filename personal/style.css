@@ -157,3 +157,74 @@ body {
     .container { padding: 1.5rem 1rem; }
     .dashboard-header h1 { font-size: 1.8rem; }
 }
+/* Purana CSS waise hi rahega... neeche naye styles add karein */
+
+.right-column {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+#dynamic-metrics-container .form-group {
+    margin-bottom: 1rem;
+}
+
+#add-metric-form {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+#new-metric-name {
+    flex-grow: 1;
+    background-color: var(--bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    color: var(--primary-color);
+    font-size: 1rem;
+}
+#new-metric-name:focus {
+    outline: none;
+    border-color: var(--accent-color);
+}
+
+#add-metric-form button {
+    background-color: var(--accent-color);
+    border: none;
+    color: #fff;
+    padding: 0 1.5rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.managed-metrics-list {
+    list-style: none;
+    padding: 0;
+    max-height: 30vh;
+    overflow-y: auto;
+}
+
+.managed-metric-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem;
+    background-color: var(--bg-color);
+    border-radius: 6px;
+    margin-bottom: 0.5rem;
+}
+
+.delete-metric-button {
+    background: none;
+    border: none;
+    color: #8b949e;
+    cursor: pointer;
+    font-size: 1rem;
+}
+.delete-metric-button:hover {
+    color: var(--error-color);
+}
