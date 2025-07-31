@@ -49,21 +49,33 @@
                 <ul class="task-list" id="task-list"></ul>
             </div>
 
-            <div class="grid-card">
-                <div class="card-header">
-                    <h2>Daily Metrics</h2>
-                </div>
-                <form id="metrics-form">
-                    <div class="form-group">
-                        <label for="weight-input">Today's Weight (kg)</label>
-                        <input type="number" step="0.1" id="weight-input" placeholder="e.g., 75.5">
+            <div class="right-column">
+                <div class="grid-card">
+                    <div class="card-header">
+                        <h2>Daily Metrics</h2>
                     </div>
-                    <button type="submit">Save Metrics</button>
-                </form>
+                    <form id="metrics-form">
+                        <div id="dynamic-metrics-container"></div>
+                        <button type="submit">Save Metrics</button>
+                    </form>
+                </div>
+
+                <div class="grid-card">
+                    <div class="card-header">
+                        <h2>Manage Metrics</h2>
+                    </div>
+                    <form id="add-metric-form">
+                        <input type="text" id="new-metric-name" placeholder="e.g., Study Hours" required>
+                        <button type="submit">Add Metric</button>
+                    </form>
+                    <ul class="managed-metrics-list" id="managed-metrics-list">
+                        </ul>
+                </div>
             </div>
         </div>
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
-    <script type="module" src="script.js"></script> </body>
+    <script type="module" src="script.js"></script>
+</body>
 </html>
