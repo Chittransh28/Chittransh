@@ -1,19 +1,14 @@
-// --- Step 1: Imports ---
+// --- Imports ---
 import { firebaseConfig } from './firebase-config.js';
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { 
-    getAuth, 
-    onAuthStateChanged, 
-    signInWithEmailAndPassword, 
-    signOut 
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { 
     getFirestore, collection, doc, getDoc, setDoc, onSnapshot, 
     query, orderBy, addDoc, updateDoc, deleteDoc, serverTimestamp, 
-    where, getDocs, writeBatch, arrayUnion, arrayRemove 
+    where, getDocs, writeBatch, arrayUnion, arrayRemove, limit
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-// --- Step 2: Initialization ---
+// --- Initialization ---
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
@@ -35,12 +30,13 @@ const dynamicMetricsContainer = document.getElementById('dynamic-metrics-contain
 const addMetricForm = document.getElementById('add-metric-form');
 const newMetricNameInput = document.getElementById('new-metric-name');
 const managedMetricsList = document.getElementById('managed-metrics-list');
+const historyContainer = document.getElementById('history-container');
 
 let userRef, tasksCollection, historyCollection;
 let unsubscribeTasks, unsubscribeUser;
 let userMetrics = [];
 
-// --- Authentication Logic ---
+// --- Authentication ---
 onAuthStateChanged(auth, (user) => {
     if (user) {
         userRef = doc(db, 'users', user.uid);
@@ -50,8 +46,7 @@ onAuthStateChanged(auth, (user) => {
         loginOverlay.style.display = 'none';
         dashboardContainer.style.display = 'block';
         
-        listenToUserDocument();
-        loadTasks();
+        listenToUserDocument(); // This will trigger the other load functions
     } else {
         loginOverlay.style.display = 'flex';
         dashboardContainer.style.display = 'none';
@@ -60,15 +55,21 @@ onAuthStateChanged(auth, (user) => {
     }
 });
 
+// --- Main Data Loading and UI Rendering ---
 function listenToUserDocument() {
     if (unsubscribeUser) unsubscribeUser();
     unsubscribeUser = onSnapshot(userRef, async (docSnap) => {
         const userData = docSnap.data();
         userMetrics = userData?.metrics || [];
+        
         renderManagedMetrics();
         renderMetricInputs();
+        
         await handleDailyReset(userData?.lastChecklistReset);
+        
+        loadTasks(); // Load tasks after reset check
         loadTodaysMetrics();
+        loadHistory(); // Load history
     });
 }
 
@@ -88,11 +89,13 @@ async function handleDailyReset(lastResetDate) {
         }
 
         const allTasksSnapshot = await getDocs(tasksCollection);
-        const batch = writeBatch(db);
-        allTasksSnapshot.forEach(doc => {
-            batch.update(doc.ref, { completed: false });
-        });
-        await batch.commit();
+        if(allTasksSnapshot.size > 0){
+            const batch = writeBatch(db);
+            allTasksSnapshot.forEach(doc => {
+                batch.update(doc.ref, { completed: false });
+            });
+            await batch.commit();
+        }
         
         await setDoc(userRef, { lastChecklistReset: todayStr }, { merge: true });
     }
@@ -119,15 +122,43 @@ function loadTasks() {
     });
 }
 
+function loadHistory() {
+    const historyQuery = query(historyCollection, orderBy('date', 'desc'), limit(7));
+    onSnapshot(historyQuery, (snapshot) => {
+        historyContainer.innerHTML = '';
+        if (snapshot.empty) {
+            historyContainer.innerHTML = '<p style="color: #8b949e; text-align: center;">No history records found.</p>';
+            return;
+        }
+        snapshot.forEach(doc => {
+            const data = doc.data();
+            const date = data.date.toDate();
+            const formattedDate = date.toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' });
+            const historyItem = document.createElement('div');
+            historyItem.className = 'history-item';
+            let metricsHTML = '';
+            if (data.metrics) {
+                for (const key in data.metrics) {
+                    metricsHTML += `<span>${key}: <span class="value">${data.metrics[key]}</span></span>`;
+                }
+            }
+            historyItem.innerHTML = `
+                <div class="history-item-date">${formattedDate}</div>
+                <div class="history-details">
+                    <span>Tasks Completed: <span class="value">${data.completedTasks || 0}</span></span>
+                    ${metricsHTML}
+                </div>`;
+            historyContainer.appendChild(historyItem);
+        });
+    });
+}
+
 function renderManagedMetrics() {
     managedMetricsList.innerHTML = '';
     userMetrics.forEach(metric => {
         const item = document.createElement('li');
         item.className = 'managed-metric-item';
-        item.innerHTML = `
-            <span>${metric}</span>
-            <button class="delete-metric-button" data-metric="${metric}"><i class="fa-solid fa-times"></i></button>
-        `;
+        item.innerHTML = `<span>${metric}</span><button class="delete-metric-button" data-metric="${metric}"><i class="fa-solid fa-times"></i></button>`;
         managedMetricsList.appendChild(item);
     });
 }
@@ -138,10 +169,7 @@ function renderMetricInputs() {
         const formGroup = document.createElement('div');
         formGroup.className = 'form-group';
         const inputId = `metric-${metric.replace(/\s+/g, '-')}`;
-        formGroup.innerHTML = `
-            <label for="${inputId}">${metric}</label>
-            <input type="number" step="0.1" id="${inputId}" data-metric-name="${metric}" placeholder="0">
-        `;
+        formGroup.innerHTML = `<label for="${inputId}">${metric}</label><input type="number" step="0.1" id="${inputId}" data-metric-name="${metric}" placeholder="0">`;
         dynamicMetricsContainer.appendChild(formGroup);
     });
 }
@@ -151,13 +179,10 @@ async function loadTodaysMetrics() {
     const historyDocRef = doc(historyCollection, todayStr);
     const historyDocSnap = await getDoc(historyDocRef);
     const metricsData = historyDocSnap.exists() ? historyDocSnap.data().metrics || {} : {};
-    
     userMetrics.forEach(metric => {
         const inputId = `metric-${metric.replace(/\s+/g, '-')}`;
         const inputElement = document.getElementById(inputId);
-        if (inputElement) {
-            inputElement.value = metricsData[metric] || '';
-        }
+        if (inputElement) inputElement.value = metricsData[metric] || '';
     });
 }
 
@@ -174,9 +199,7 @@ addMetricForm.addEventListener('submit', e => {
     e.preventDefault();
     const newMetric = newMetricNameInput.value.trim();
     if (newMetric && !userMetrics.includes(newMetric)) {
-        updateDoc(userRef, {
-            metrics: arrayUnion(newMetric)
-        });
+        updateDoc(userRef, { metrics: arrayUnion(newMetric) });
     }
     newMetricNameInput.value = '';
 });
@@ -184,10 +207,7 @@ addMetricForm.addEventListener('submit', e => {
 managedMetricsList.addEventListener('click', e => {
     const deleteButton = e.target.closest('.delete-metric-button');
     if (deleteButton) {
-        const metricToDelete = deleteButton.dataset.metric;
-        updateDoc(userRef, {
-            metrics: arrayRemove(metricToDelete)
-        });
+        updateDoc(userRef, { metrics: arrayRemove(deleteButton.dataset.metric) });
     }
 });
 
@@ -195,36 +215,23 @@ metricsForm.addEventListener('submit', e => {
     e.preventDefault();
     const todayStr = new Date().toISOString().split('T')[0];
     const historyDocRef = doc(historyCollection, todayStr);
-    
     const metricsToSave = {};
     const inputs = dynamicMetricsContainer.querySelectorAll('input[data-metric-name]');
     inputs.forEach(input => {
         const metricName = input.dataset.metricName;
         const value = parseFloat(input.value);
-        if (input.value.trim() !== '' && !isNaN(value)) {
-            metricsToSave[metricName] = value;
-        }
+        if (input.value.trim() !== '' && !isNaN(value)) metricsToSave[metricName] = value;
     });
-
     if (Object.keys(metricsToSave).length > 0) {
-        setDoc(historyDocRef, {
-            metrics: metricsToSave,
-            date: new Date()
-        }, { merge: true });
+        setDoc(historyDocRef, { metrics: metricsToSave, date: new Date() }, { merge: true });
     }
 });
 
 addTaskForm.addEventListener('submit', e => {
     e.preventDefault();
     const taskText = taskInput.value.trim();
-    if (taskText) {
-        addDoc(tasksCollection, {
-            text: taskText,
-            completed: false,
-            createdAt: serverTimestamp()
-        });
-        taskInput.value = '';
-    }
+    if (taskText) addDoc(tasksCollection, { text: taskText, completed: false, createdAt: serverTimestamp() });
+    taskInput.value = '';
 });
 
 taskList.addEventListener('click', e => {
@@ -250,19 +257,5 @@ resetButton.addEventListener('click', async () => {
 
 // --- Particle.js Background Code ---
 particlesJS('particles-js-personal', {
-    "particles": {
-        "number": { "value": 60, "density": { "enable": true, "value_area": 800 } },
-        "color": { "value": "#8b949e" },
-        "shape": { "type": "circle" },
-        "opacity": { "value": 0.4, "random": true, "anim": { "enable": true, "speed": 1, "opacity_min": 0.1, "sync": false } },
-        "size": { "value": 3, "random": true },
-        "line_linked": { "enable": true, "distance": 150, "color": "#30363d", "opacity": 0.4, "width": 1 },
-        "move": { "enable": true, "speed": 2, "direction": "none", "out_mode": "out" }
-    },
-    "interactivity": {
-        "detect_on": "canvas",
-        "events": { "onhover": { "enable": true, "mode": "grab" }, "resize": true },
-        "modes": { "grab": { "distance": 140, "line_opacity": 1 } }
-    },
-    "retina_detect": true
+    "particles": { "number": { "value": 60, "density": { "enable": true, "value_area": 800 } }, "color": { "value": "#8b949e" }, "shape": { "type": "circle" }, "opacity": { "value": 0.4, "random": true, "anim": { "enable": true, "speed": 1, "opacity_min": 0.1, "sync": false } }, "size": { "value": 3, "random": true }, "line_linked": { "enable": true, "distance": 150, "color": "#30363d", "opacity": 0.4, "width": 1 }, "move": { "enable": true, "speed": 2, "direction": "none", "out_mode": "out" } }, "interactivity": { "detect_on": "canvas", "events": { "onhover": { "enable": true, "mode": "grab" }, "resize": true }, "modes": { "grab": { "distance": 140, "line_opacity": 1 } } }, "retina_detect": true
 });
