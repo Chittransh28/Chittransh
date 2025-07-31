@@ -1,9 +1,5 @@
-// --- Step 1: Import everything we need ---
-
-// Import Firebase config from your secret file
+// --- Step 1: Imports ---
 import { firebaseConfig } from './firebase-config.js';
-
-// Import Firebase services using the new modular syntax
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { 
     getAuth, 
@@ -12,31 +8,17 @@ import {
     signOut 
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { 
-    getFirestore, 
-    collection, 
-    doc, 
-    getDoc, 
-    setDoc, 
-    onSnapshot, 
-    query, 
-    orderBy, 
-    addDoc, 
-    updateDoc, 
-    deleteDoc, 
-    serverTimestamp, 
-    where, 
-    getDocs, 
-    writeBatch 
+    getFirestore, collection, doc, getDoc, setDoc, onSnapshot, 
+    query, orderBy, addDoc, updateDoc, deleteDoc, serverTimestamp, 
+    where, getDocs, writeBatch, arrayUnion, arrayRemove 
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-
-// --- Step 2: Initialize Firebase and services ---
+// --- Step 2: Initialization ---
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-
-// --- Element References (remains the same) ---
+// --- Element References ---
 const loginOverlay = document.getElementById('login-overlay');
 const loginForm = document.getElementById('login-form');
 const emailInput = document.getElementById('email-input');
@@ -49,42 +31,49 @@ const taskInput = document.getElementById('task-input');
 const taskList = document.getElementById('task-list');
 const resetButton = document.getElementById('reset-button');
 const metricsForm = document.getElementById('metrics-form');
-const weightInput = document.getElementById('weight-input');
+const dynamicMetricsContainer = document.getElementById('dynamic-metrics-container');
+const addMetricForm = document.getElementById('add-metric-form');
+const newMetricNameInput = document.getElementById('new-metric-name');
+const managedMetricsList = document.getElementById('managed-metrics-list');
 
 let userRef, tasksCollection, historyCollection;
-let unsubscribeTasks;
+let unsubscribeTasks, unsubscribeUser;
+let userMetrics = [];
 
-
-// --- Step 3: Rewritten Logic using new Firebase syntax ---
-
-// Authentication listener
-onAuthStateChanged(auth, async (user) => {
+// --- Authentication Logic ---
+onAuthStateChanged(auth, (user) => {
     if (user) {
-        // User is signed in
         userRef = doc(db, 'users', user.uid);
         tasksCollection = collection(userRef, 'tasks');
         historyCollection = collection(userRef, 'history');
         
-        await handleDailyReset();
-        
         loginOverlay.style.display = 'none';
         dashboardContainer.style.display = 'block';
+        
+        listenToUserDocument();
         loadTasks();
-        loadTodaysMetrics();
     } else {
-        // User is signed out
         loginOverlay.style.display = 'flex';
         dashboardContainer.style.display = 'none';
         if (unsubscribeTasks) unsubscribeTasks();
+        if (unsubscribeUser) unsubscribeUser();
     }
 });
 
-// Daily Reset Logic
-async function handleDailyReset() {
-    const todayStr = new Date().toISOString().split('T')[0];
-    const userDocSnap = await getDoc(userRef);
-    const lastResetDate = userDocSnap.data()?.lastChecklistReset;
+function listenToUserDocument() {
+    if (unsubscribeUser) unsubscribeUser();
+    unsubscribeUser = onSnapshot(userRef, async (docSnap) => {
+        const userData = docSnap.data();
+        userMetrics = userData?.metrics || [];
+        renderManagedMetrics();
+        renderMetricInputs();
+        await handleDailyReset(userData?.lastChecklistReset);
+        loadTodaysMetrics();
+    });
+}
 
+async function handleDailyReset(lastResetDate) {
+    const todayStr = new Date().toISOString().split('T')[0];
     if (lastResetDate !== todayStr) {
         const completedTasksQuery = query(tasksCollection, where('completed', '==', true));
         const tasksSnapshot = await getDocs(completedTasksQuery);
@@ -109,7 +98,6 @@ async function handleDailyReset() {
     }
 }
 
-// Load Tasks with real-time listener
 function loadTasks() {
     if (unsubscribeTasks) unsubscribeTasks();
     const tasksQuery = query(tasksCollection, orderBy('createdAt', 'asc'));
@@ -131,20 +119,49 @@ function loadTasks() {
     });
 }
 
-// Load Metrics
+function renderManagedMetrics() {
+    managedMetricsList.innerHTML = '';
+    userMetrics.forEach(metric => {
+        const item = document.createElement('li');
+        item.className = 'managed-metric-item';
+        item.innerHTML = `
+            <span>${metric}</span>
+            <button class="delete-metric-button" data-metric="${metric}"><i class="fa-solid fa-times"></i></button>
+        `;
+        managedMetricsList.appendChild(item);
+    });
+}
+
+function renderMetricInputs() {
+    dynamicMetricsContainer.innerHTML = '';
+    userMetrics.forEach(metric => {
+        const formGroup = document.createElement('div');
+        formGroup.className = 'form-group';
+        const inputId = `metric-${metric.replace(/\s+/g, '-')}`;
+        formGroup.innerHTML = `
+            <label for="${inputId}">${metric}</label>
+            <input type="number" step="0.1" id="${inputId}" data-metric-name="${metric}" placeholder="0">
+        `;
+        dynamicMetricsContainer.appendChild(formGroup);
+    });
+}
+
 async function loadTodaysMetrics() {
     const todayStr = new Date().toISOString().split('T')[0];
     const historyDocRef = doc(historyCollection, todayStr);
     const historyDocSnap = await getDoc(historyDocRef);
-    if (historyDocSnap.exists()) {
-        weightInput.value = historyDocSnap.data().weight || '';
-    } else {
-        weightInput.value = '';
-    }
+    const metricsData = historyDocSnap.exists() ? historyDocSnap.data().metrics || {} : {};
+    
+    userMetrics.forEach(metric => {
+        const inputId = `metric-${metric.replace(/\s+/g, '-')}`;
+        const inputElement = document.getElementById(inputId);
+        if (inputElement) {
+            inputElement.value = metricsData[metric] || '';
+        }
+    });
 }
 
 // --- Event Listeners ---
-
 loginForm.addEventListener('submit', e => {
     e.preventDefault();
     signInWithEmailAndPassword(auth, emailInput.value, passwordInput.value)
@@ -152,6 +169,50 @@ loginForm.addEventListener('submit', e => {
 });
 
 signOutButton.addEventListener('click', () => signOut(auth));
+
+addMetricForm.addEventListener('submit', e => {
+    e.preventDefault();
+    const newMetric = newMetricNameInput.value.trim();
+    if (newMetric && !userMetrics.includes(newMetric)) {
+        updateDoc(userRef, {
+            metrics: arrayUnion(newMetric)
+        });
+    }
+    newMetricNameInput.value = '';
+});
+
+managedMetricsList.addEventListener('click', e => {
+    const deleteButton = e.target.closest('.delete-metric-button');
+    if (deleteButton) {
+        const metricToDelete = deleteButton.dataset.metric;
+        updateDoc(userRef, {
+            metrics: arrayRemove(metricToDelete)
+        });
+    }
+});
+
+metricsForm.addEventListener('submit', e => {
+    e.preventDefault();
+    const todayStr = new Date().toISOString().split('T')[0];
+    const historyDocRef = doc(historyCollection, todayStr);
+    
+    const metricsToSave = {};
+    const inputs = dynamicMetricsContainer.querySelectorAll('input[data-metric-name]');
+    inputs.forEach(input => {
+        const metricName = input.dataset.metricName;
+        const value = parseFloat(input.value);
+        if (input.value.trim() !== '' && !isNaN(value)) {
+            metricsToSave[metricName] = value;
+        }
+    });
+
+    if (Object.keys(metricsToSave).length > 0) {
+        setDoc(historyDocRef, {
+            metrics: metricsToSave,
+            date: new Date()
+        }, { merge: true });
+    }
+});
 
 addTaskForm.addEventListener('submit', e => {
     e.preventDefault();
@@ -178,18 +239,6 @@ taskList.addEventListener('click', e => {
     }
 });
 
-metricsForm.addEventListener('submit', e => {
-    e.preventDefault();
-    const weight = parseFloat(weightInput.value);
-    if (isNaN(weight)) return;
-    const todayStr = new Date().toISOString().split('T')[0];
-    const historyDocRef = doc(historyCollection, todayStr);
-    setDoc(historyDocRef, {
-        weight: weight,
-        date: new Date()
-    }, { merge: true });
-});
-
 resetButton.addEventListener('click', async () => {
     if (confirm('This will permanently delete all tasks. Are you sure?')) {
         const allTasksSnapshot = await getDocs(tasksCollection);
@@ -201,5 +250,19 @@ resetButton.addEventListener('click', async () => {
 
 // --- Particle.js Background Code ---
 particlesJS('particles-js-personal', {
-    "particles": { "number": { "value": 60, "density": { "enable": true, "value_area": 800 } }, "color": { "value": "#8b949e" }, "shape": { "type": "circle" }, "opacity": { "value": 0.4, "random": true, "anim": { "enable": true, "speed": 1, "opacity_min": 0.1, "sync": false } }, "size": { "value": 3, "random": true }, "line_linked": { "enable": true, "distance": 150, "color": "#30363d", "opacity": 0.4, "width": 1 }, "move": { "enable": true, "speed": 2, "direction": "none", "out_mode": "out" } }, "interactivity": { "detect_on": "canvas", "events": { "onhover": { "enable": true, "mode": "grab" }, "resize": true }, "modes": { "grab": { "distance": 140, "line_opacity": 1 } } }, "retina_detect": true
+    "particles": {
+        "number": { "value": 60, "density": { "enable": true, "value_area": 800 } },
+        "color": { "value": "#8b949e" },
+        "shape": { "type": "circle" },
+        "opacity": { "value": 0.4, "random": true, "anim": { "enable": true, "speed": 1, "opacity_min": 0.1, "sync": false } },
+        "size": { "value": 3, "random": true },
+        "line_linked": { "enable": true, "distance": 150, "color": "#30363d", "opacity": 0.4, "width": 1 },
+        "move": { "enable": true, "speed": 2, "direction": "none", "out_mode": "out" }
+    },
+    "interactivity": {
+        "detect_on": "canvas",
+        "events": { "onhover": { "enable": true, "mode": "grab" }, "resize": true },
+        "modes": { "grab": { "distance": 140, "line_opacity": 1 } }
+    },
+    "retina_detect": true
 });
