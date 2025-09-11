@@ -1,87 +1,124 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Personal Dashboard | Chittransh</title>
-    <link rel="icon" href="/favicon.png" type="image/png" />
-    <link rel="stylesheet" href="style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Stronger -- Progress Tracker</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="/favicon.png" type="image/png" />
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <div id="particles-js-personal"></div>
+  <div id="app" class="app-root">
+    <header class="topbar">
+      <div class="brand">Stronger</div>
+      <div class="right">
+        <div id="online-indicator" class="online">Online</div>
+        <div id="auth-buttons" class="auth-controls"></div>
+      </div>
+    </header>
 
-    <div class="login-overlay" id="login-overlay">
-        <div class="login-box">
-            <form id="login-form">
-                <i class="fa-solid fa-user-shield"></i>
-                <h2>Personal Area</h2>
-                <p>Sign in to access your dashboard</p>
-                <input type="email" id="email-input" placeholder="Email" required>
-                <input type="password" id="password-input" placeholder="Password" required>
-                <p class="error-message" id="error-message"></p>
-                <button type="submit">Sign In</button>
-            </form>
+    <main class="container">
+      <!-- Auth -->
+      <section id="auth-screen" class="card screen">
+        <h2>Sign In / Register</h2>
+        <div class="grid cols-2 gap">
+          <div>
+            <label>Email</label>
+            <input id="email" class="input" type="email" placeholder="you@example.com" />
+          </div>
+          <div>
+            <label>Password</label>
+            <input id="password" class="input" type="password" placeholder="••••••••" />
+          </div>
         </div>
-    </div>
-
-    <main class="container" id="dashboard-container">
-        <header class="dashboard-header">
-            <h1>Personal Dashboard</h1>
-            <div>
-                <button id="sign-out-button" title="Sign Out"><i class="fa-solid fa-right-from-bracket"></i> Sign Out</button>
-            </div>
-        </header>
-
-        <div class="dashboard-grid">
-            <div class="grid-card">
-                <div class="card-header">
-                    <h2>Daily Checklist</h2>
-                    <button id="reset-button" title="Clear All Tasks"><i class="fa-solid fa-trash-can"></i> Clear All</button>
-                </div>
-                <form id="add-task-form">
-                    <input type="text" id="task-input" placeholder="Add a new task..." autocomplete="off">
-                    <button type="submit">Add</button>
-                </form>
-                <ul class="task-list" id="task-list"></ul>
-            </div>
-
-            <div class="right-column">
-                <div class="grid-card">
-                    <div class="card-header">
-                        <h2>Daily Metrics</h2>
-                    </div>
-                    <form id="metrics-form">
-                        <div id="dynamic-metrics-container"></div>
-                        <button type="submit">Save Metrics</button>
-                    </form>
-                </div>
-
-                <div class="grid-card">
-                    <div class="card-header">
-                        <h2>Manage Metrics</h2>
-                    </div>
-                    <form id="add-metric-form">
-                        <input type="text" id="new-metric-name" placeholder="e.g., Study Hours" required>
-                        <button type="submit">Add Metric</button>
-                    </form>
-                    <ul class="managed-metrics-list" id="managed-metrics-list"></ul>
-                </div>
-
-                <div class="grid-card">
-                    <div class="card-header">
-                        <h2>Recent History</h2>
-                    </div>
-                    <div id="history-container"></div>
-                </div>
-            </div>
+        <div class="row gap">
+          <button id="btn-signin" class="btn">Sign in</button>
+          <button id="btn-register" class="btn ghost">Register</button>
+          <button id="btn-reset" class="btn ghost">Reset password</button>
         </div>
+        <div id="auth-message" class="small muted"></div>
+      </section>
+
+      <!-- App screens -->
+      <section id="app-screen" class="hidden">
+        <div class="toolbar">
+          <div>
+            <label>Day split</label>
+            <select id="day-split" class="input">
+              <option>Back+Biceps</option><option>Chest+Triceps</option><option>Legs+Shoulders</option><option>Other</option>
+            </select>
+          </div>
+          <div>
+            <label>Variation</label>
+            <select id="variation" class="input"><option>V1</option><option>V2</option></select>
+          </div>
+          <div class="right">
+            <button id="start-live" class="btn">Start Live</button>
+            <button id="add-past" class="btn ghost">Add Past</button>
+            <button id="signout" class="btn ghost">Sign out</button>
+          </div>
+        </div>
+
+        <div id="screens" class="mt">
+          <!-- History -->
+          <div id="history" class="card">
+            <div class="row space-between">
+              <h3>Workout History</h3>
+              <div class="row gap">
+                <input id="search-ex" class="input small" placeholder="Search exercise..." />
+                <button id="load-more" class="btn ghost">Load more</button>
+              </div>
+            </div>
+            <div id="history-list" class="stack"></div>
+          </div>
+
+          <!-- Active workout -->
+          <div id="live-workout" class="card hidden">
+            <div class="row space-between">
+              <h3 id="live-title">Active Workout</h3>
+              <div class="row gap">
+                <div id="timer">00:00</div>
+                <button id="finish" class="btn">Finish</button>
+                <button id="cancel" class="btn ghost">Cancel</button>
+              </div>
+            </div>
+            <div id="exercises-container" class="stack mt-sm"></div>
+            <div class="row gap mt-sm">
+              <button id="add-ex-btn" class="btn ghost">+ Exercise</button>
+              <button id="save-now" class="btn">Save</button>
+            </div>
+          </div>
+
+          <!-- Progress -->
+          <div id="progress" class="card mt">
+            <h3>Progress</h3>
+            <div class="row gap">
+              <select id="chart-ex" class="input"></select>
+              <canvas id="chart" height="120"></canvas>
+            </div>
+            <div id="recent-maxes" class="mt-sm"></div>
+          </div>
+        </div>
+
+        <!-- Templates -->
+        <div id="templates" class="card mt">
+          <div class="row space-between">
+            <h4>Templates</h4>
+            <button id="create-template" class="btn ghost">Create</button>
+          </div>
+          <div id="template-list" class="stack mt-sm"></div>
+        </div>
+      </section>
     </main>
 
-    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
-    <script type="module" src="script.js"></script>
+    <!-- Modals (simple toggles) -->
+    <div id="modal-root"></div>
+
+    <footer class="footer">Built for your gym. Secure defaults included.</footer>
+  </div>
+
+  <script src="app.js" type="module"></script>
 </body>
 </html>
