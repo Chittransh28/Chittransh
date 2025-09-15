@@ -1,10 +1,36 @@
 /* app.js — Stronger (ES Module) */
-/* Prereqs:
-   - Paste Firebase client config into the firebaseConfig constant below (replace placeholders).
-   - Set Firestore security rules (provided separately) to secure data.
-   - Deploy static files (index.html, styles.css, app.js, sw.js) to GitHub Pages.
-*/
-
+// --- Added by fixer: startup logging and global error overlay ---
+console.log('app.js loaded — fixer v1');
+(function(){
+  function showFatal(msg){
+    try {
+      var root = document.getElementById('modal-root') || document.body;
+      var overlay = document.createElement('div');
+      overlay.id = 'fatal-overlay';
+      overlay.style.position = 'fixed';
+      overlay.style.left = 0; overlay.style.top = 0; overlay.style.right = 0; overlay.style.bottom = 0;
+      overlay.style.background = 'rgba(0,0,0,0.75)';
+      overlay.style.zIndex = 99999;
+      overlay.style.display = 'flex';
+      overlay.style.alignItems = 'center';
+      overlay.style.justifyContent = 'center';
+      var card = document.createElement('div');
+      card.style.background = '#111827';
+      card.style.color = '#e6eef8';
+      card.style.padding = '16px';
+      card.style.borderRadius = '10px';
+      card.style.maxWidth = '720px';
+      card.style.width = '90%';
+      card.innerHTML = '<div style="font-weight:700;margin-bottom:8px">Application error</div><div id="fatal-msg" style="white-space:pre-wrap;margin-bottom:12px"></div><div style="text-align:right"><button id="err-close" style="padding:8px;border-radius:8px;border:0;background:#60a5fa;color:#fff">Close</button></div>';
+      overlay.appendChild(card);
+      root.appendChild(overlay);
+      document.getElementById('fatal-msg').textContent = msg;
+      document.getElementById('err-close').addEventListener('click', function(){ overlay.remove(); });
+    } catch(e){ console.error('failed to show fatal overlay', e); }
+  }
+  window.addEventListener('error', function(ev){ try{ console.error('window error', ev.error || ev.message); showFatal(String(ev.error || ev.message)); } catch(e){ console.error(e); }});
+  window.addEventListener('unhandledrejection', function(ev){ try{ console.error('unhandled rejection', ev.reason); showFatal(String(ev.reason)); } catch(e){ console.error(e); }});
+})();
 /* --------------------------
    Firebase config - replace
    --------------------------
@@ -455,10 +481,10 @@ function attachEventHandlers(){
    Service worker registration (PWA offline cache)
    -------------------------- */
 if ('serviceWorker' in navigator) {
-  try { navigator.serviceWorker.register('/sw.js'); console.log('sw registered'); } catch (err) { console.warn('sw failed', err); }
+  try { navigator.serviceWorker.register('./sw.js'); console.log('sw registered'); } catch (err) { console.warn('sw failed', err); }
 }
 
 /* --------------------------
    Startup
    -------------------------- */
-init();
+try{ init(); } catch(e){ console.error("init failed", e); throw e; }
