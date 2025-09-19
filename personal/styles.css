@@ -120,3 +120,7 @@ canvas {
   .row.gap > * { margin-bottom: .5rem; }
   header h2 { font-size: 1.25rem; }
 }
+/* Prevent empty modal-root from blocking everything */
+#modal-root:empty {
+  display: none;
+}
