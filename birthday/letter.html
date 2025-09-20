@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Vintage Birthday Wish</title>
+    <link rel="stylesheet" href="letter-style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Parisienne&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div class="letter-container">
+        <div class="letter-content" id="typed-text">
+            </div>
+    </div>
+
+    <script>
+        const fullText = `
+            Happy Birthday! 🎂🥳 Today is all about celebrating you—your journey, your spirit, your laughter, and everything that makes you so special. I hope your day is filled with endless smiles 😄, warm hugs 🤗, and little moments that make your heart feel lighter and brighter 🌸.
+
+            I want to take a moment to wish you the absolute best in every area of your life 🌟. May this year bring you opportunities that excite you 💼✨, challenges that help you grow 🌱, and experiences that leave you feeling accomplished, proud, and happy 😊. I genuinely hope that all the dreams you’ve been nurturing, the goals you’ve been working towards, and even the quiet wishes you’ve kept to yourself start falling into place beautifully ✨.
+
+            May your life be blessed with health 💪, peace 🕊️, joy 💛, and love ❤️ at every step. I pray that every morning you wake up with hope ☀️, every evening you feel content 🌙, and that every day in between is filled with small victories, laughter 😂, and moments of gratitude 🙏. May you always have the courage to chase what matters to you, the strength to overcome obstacles, and the wisdom to embrace the lessons life brings 🌈.
+
+            I hope that friendships and connections in your life continue to bring warmth 🤝, support 💕, and unforgettable memories 🏞️. May family, friends, and everyone who truly cares about you remind you of your worth and make you feel valued every single day 🌹. May your heart stay open, your mind stay curious, and your spirit stay bright ✨.
+
+            On this special day, I also hope you take a moment to reflect on everything you’ve achieved, every obstacle you’ve overcome, and every beautiful moment that has shaped who you are today 🌟. You’ve come so far, and there’s so much more waiting for you—adventures, accomplishments, joy, and countless experiences that will make your life richer, fuller, and more meaningful 💫.
+
+            May laughter always find its way to your lips 😄, love always find its way to your heart ❤️, and success always follow your hard work 🌟. May you discover new passions, achieve your goals, and continue growing into the amazing person you are meant to be 🌱💛. And even in moments of challenge, may you find strength, patience, and the clarity to move forward with confidence 💪🕊️.
+
+            So, here’s to you on your birthday! 🎉🥂 To a year filled with hope 🌞, joy 🌸, and endless positivity 🌈. May your days ahead sparkle with happiness ✨, your nights bring peaceful rest 🌙, and your heart remain light and full of love 💖. I’m genuinely cheering for you 🙌, wishing you nothing but the absolute best in life, and hoping that everything you dream of comes true 🌟.
+
+            Keep shining, keep smiling, and keep being the amazing, incredible person that you are 💛🌻. Happy Birthday once again! 🎂🎁🎉
+        `;
+
+        const typedTextElement = document.getElementById('typed-text');
+        let charIndex = 0;
+        const typingSpeed = 50; // Milliseconds per character (adjust for faster/slower)
+
+        function typeWriter() {
+            if (charIndex < fullText.length) {
+                typedTextElement.innerHTML += fullText.charAt(charIndex);
+                charIndex++;
+                setTimeout(typeWriter, typingSpeed);
+            } else {
+                // Optional: Add a blinking cursor effect at the end
+                // typedTextElement.style.borderRight = 'none';
+            }
+        }
+
+        // Start typing when the page loads
+        window.onload = typeWriter;
+    </script>
+
+</body>
+</html>
