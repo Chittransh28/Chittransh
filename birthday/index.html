@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday!</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js" defer></script>
+    <script src="script.js" defer></script>
+</head>
+<body>
+
+    <section class="fullscreen-section" id="welcome">
+        <div class="content">
+            <h1 class="main-title">Happy Birthday, [Name]! 🎂🥳</h1>
+            <p>Your journey of a wish begins now...</p>
+        </div>
+    </section>
+
+    <section class="scroll-section">
+        <div class="content">
+            <h2 class="section-title">A Year of Opportunity 🌟</h2>
+            <p class="section-text">May this year bring you opportunities that excite you, challenges that help you grow, and experiences that leave you feeling accomplished, proud, and happy. I genuinely hope that all the dreams you’ve been nurturing start falling into place beautifully.</p>
+        </div>
+    </section>
+
+    <section class="scroll-section">
+        <div class="content">
+            <h2 class="section-title">Wishes for Your Well-being 🙏</h2>
+            <p>Tap on each card to reveal a wish.</p>
+            <div class="cards-container">
+                <div class="card">
+                    <div class="card-inner">
+                        <div class="card-front">Health 💪</div>
+                        <div class="card-back">May you be blessed with the strength and vitality to chase every dream.</div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-inner">
+                        <div class="card-front">Peace 🕊️</div>
+                        <div class="card-back">May you find tranquility and calm in every moment, big or small.</div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-inner">
+                        <div class="card-front">Joy 💛</div>
+                        <div class="card-back">May your days be filled with laughter that makes your heart feel light.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="scroll-section">
+        <div class="content">
+            <h2 class="section-title">Your Circle of Warmth 🤝</h2>
+            <p>Unforgettable moments with unforgettable people.</p>
+            <div class="photo-gallery">
+                <img src="https://picsum.photos/seed/1/400/400" alt="Memory 1" class="gallery-img">
+                <img src="https://picsum.photos/seed/2/400/400" alt="Memory 2" class="gallery-img">
+                <img src="https://picsum.photos/seed/3/400/400" alt="Memory 3" class="gallery-img">
+                <img src="https://picsum.photos/seed/4/400/400" alt="Memory 4" class="gallery-img">
+            </div>
+        </div>
+    </section>
+
+    <section class="scroll-section">
+        <div class="content">
+            <h2 class="final-title">Keep Shining! ✨</h2>
+            <p id="typing-text"></p>
+        </div>
+    </section>
+
+    <div id="lightbox" class="lightbox">
+        <span class="close-btn">&times;</span>
+        <img class="lightbox-content" id="lightbox-img">
+    </div>
+
+</body>
+</html>
