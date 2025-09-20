@@ -10,19 +10,18 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- ENHANCED SECTION FADE-IN ANIMATIONS ---
     const sections = document.querySelectorAll('.scroll-section');
     sections.forEach(section => {
-        // Animate the main content of the section (text, cards, gallery)
         const contentToAnimate = section.querySelector('p, .cards-container, .photo-gallery');
         
         if (contentToAnimate) {
             gsap.from(contentToAnimate, {
                 scrollTrigger: {
                     trigger: section,
-                    start: 'top 85%', // Start animation sooner
+                    start: 'top 85%',
                 },
-                y: 100, // Increased distance
+                y: 100,
                 opacity: 0,
-                rotation: -3, // Added subtle rotation
-                duration: 1.5, // Slower duration
+                rotation: -3,
+                duration: 1.5,
                 ease: 'power2.out'
             });
         }
@@ -76,6 +75,24 @@ document.addEventListener('DOMContentLoaded', () => {
             element.innerHTML += text.charAt(i);
             i++;
             setTimeout(() => typeWriter(element, text, i), 45);
+        } else {
+            createLink();
         }
+    }
+
+    function createLink() {
+        const linkContainer = document.createElement('div');
+        linkContainer.className = 'link-container';
+
+        const link = document.createElement('a');
+        link.href = 'http://chittransh.in/birthday/letter.html';
+        link.textContent = 'Click to view your full letter';
+        link.className = 'final-link';
+        link.target = '_blank';
+
+        linkContainer.appendChild(link);
+        
+        // --- THIS IS THE CORRECTED LINE ---
+        typingTextElement.after(linkContainer);
     }
 });
