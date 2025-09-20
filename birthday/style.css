@@ -99,3 +99,35 @@ document.addEventListener('DOMContentLoaded', () => {
         typingTextElement.parentElement.appendChild(linkContainer);
     }
 });
+
+        /* --- Styles for the final link --- */
+.link-container {
+    margin-top: 40px;
+    /* Animation for a smooth fade-in */
+    opacity: 0;
+    animation: fadeIn 2s ease 1s forwards;
+}
+
+.final-link {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #f7b32b; /* Gold color to match the theme */
+    text-decoration: none;
+    padding: 10px 20px;
+    border: 2px solid #f7b32b;
+    border-radius: 50px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.final-link:hover {
+    background-color: #f7b32b;
+    color: #1a1a2e; /* Dark background color for text on hover */
+}
+
+/* Keyframes for the fade-in animation */
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+    }
+}
