@@ -1,0 +1,60 @@
+body {
+    margin: 0;
+    padding: 20px;
+    /* This gradient creates a subtle, aged paper effect for the main background */
+    background: linear-gradient(to bottom, #f0ead6, #e9dfc7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    font-family: 'Dancing Script', cursive; /* A nice handwritten-style font */
+    color: #3f2b1d; /* Dark brown, ink-like color */
+    overflow-y: auto; /* Allow scrolling if content is long */
+    overflow-x: hidden;
+    box-sizing: border-box;
+}
+
+.letter-container {
+    /* --- THIS IS THE NEW BACKGROUND EFFECT --- */
+    /* Base color of the letter paper */
+    background-color: #fdf5e6;
+    /* Layered gradients to simulate vintage stains */
+    background-image:
+        radial-gradient(circle at 85% 80%, rgba(212, 200, 169, 0.2) 0%, transparent 40%),
+        radial-gradient(circle at 15% 25%, rgba(212, 200, 169, 0.15) 0%, transparent 50%);
+    
+    border: 1px solid #d4c8a9; /* Soft border */
+    border-radius: 5px;
+    padding: 40px 30px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2), 0 0 15px rgba(0, 0, 0, 0.05) inset; /* Shadow for depth */
+    max-width: 800px;
+    width: 90%; /* Responsive width */
+    line-height: 1.8;
+    text-align: left; /* Text flow */
+    position: relative;
+    white-space: pre-wrap; /* Preserve line breaks and spaces from JS text */
+    word-wrap: break-word; /* Ensure long words break correctly */
+    box-sizing: border-box;
+}
+
+.letter-content {
+    position: relative;
+    font-size: 1.5rem; /* Larger font for readability */
+    padding: 10px; /* Internal padding */
+    /* Add a subtle text shadow to make it pop a little like ink */
+    text-shadow: 0.5px 0.5px 0.5px rgba(0, 0, 0, 0.1);
+}
+
+/* Adjust font size for smaller screens */
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+    .letter-container {
+        padding: 25px 20px;
+        width: 95%;
+    }
+    .letter-content {
+        font-size: 1.2rem;
+    }
+}
