@@ -1,0 +1,170 @@
+/* --- Mobile-First Basic Styles --- */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    margin: 0;
+    background-color: #1a1a2e;
+    color: #e0e0e0;
+    line-height: 1.7;
+}
+
+.content {
+    width: 90%;
+    margin: 0 auto;
+    padding: 20px 0;
+}
+
+h1, h2 {
+    font-weight: 700;
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+}
+
+.main-title { font-size: 2.8rem; color: #f7b32b; }
+.section-title { font-size: 2.2rem; color: #a2d2ff; }
+.final-title { font-size: 2.5rem; color: #f7b32b; }
+p { font-size: 1.1rem; }
+
+/* --- Section Styling --- */
+.fullscreen-section, .scroll-section {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 60px 0;
+    box-sizing: border-box;
+    text-align: center;
+    overflow-x: hidden; /* Prevent horizontal scroll */
+}
+
+/* --- Interactive Cards (Section 3) --- */
+.cards-container {
+    display: flex;
+    flex-direction: column; /* Stack cards vertically on mobile */
+    align-items: center;
+    gap: 25px;
+    margin-top: 30px;
+}
+.card {
+    background-color: transparent;
+    width: 280px;
+    height: 280px;
+    perspective: 1000px; /* Gives the card a 3D space */
+    cursor: pointer;
+}
+.card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.8s;
+    transform-style: preserve-3d; /* --- THIS WAS THE FIX: 'preserve-3d' --- */
+}
+.card.flipped .card-inner {
+    transform: rotateY(180deg);
+}
+.card-front, .card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    box-sizing: border-box;
+    font-weight: bold;
+    -webkit-backface-visibility: hidden; /* Hides the back of the element */
+    backface-visibility: hidden;
+}
+.card-front {
+    background: linear-gradient(45deg, #4c669f, #3b5998);
+    color: white;
+    font-size: 1.5rem;
+}
+.card-back {
+    background: linear-gradient(45deg, #a2d2ff, #f7b32b);
+    color: #1a1a2e;
+    transform: rotateY(180deg); /* Pre-rotates the back face */
+    font-size: 1.2rem;
+}
+
+/* --- Photo Gallery (Section 4) --- */
+.photo-gallery {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* 2 columns on mobile */
+    gap: 10px;
+    margin-top: 30px;
+}
+.gallery-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+.gallery-img:active { /* Better for touch devices */
+    transform: scale(0.95);
+}
+
+/* --- Lightbox for Gallery --- */
+.lightbox {
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.4s ease, visibility 0.4s ease;
+}
+.lightbox.active {
+    opacity: 1;
+    visibility: visible;
+}
+.lightbox-content {
+    max-width: 90%;
+    max-height: 80%;
+    border-radius: 5px;
+}
+.close-btn {
+    position: absolute;
+    top: 15px;
+    right: 25px;
+    color: #fff;
+    font-size: 45px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* --- Desktop and Tablet Adjustments --- */
+@media (min-width: 768px) {
+    .content {
+        max-width: 800px;
+    }
+    .main-title { font-size: 3.5rem; }
+    .section-title { font-size: 2.8rem; }
+    .final-title { font-size: 3.2rem; }
+    p { font-size: 1.2rem; }
+
+    .cards-container {
+        flex-direction: row; /* Side-by-side on larger screens */
+        justify-content: center;
+        gap: 30px;
+    }
+    .card {
+        width: 250px;
+        height: 250px;
+    }
+    .photo-gallery {
+        grid-template-columns: repeat(4, 1fr); /* 4 columns on desktop */
+        gap: 15px;
+    }
+    .gallery-img:hover { /* Add hover for mouse devices */
+        transform: scale(1.05);
+    }
+}
