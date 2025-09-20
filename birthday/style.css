@@ -1,170 +1,101 @@
-/* --- Mobile-First Basic Styles --- */
-body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    margin: 0;
-    background-color: #1a1a2e;
-    color: #e0e0e0;
-    line-height: 1.7;
-}
+document.addEventListener('DOMContentLoaded', () => {
 
-.content {
-    width: 90%;
-    margin: 0 auto;
-    padding: 20px 0;
-}
+    // --- GSAP SETUP ---
+    gsap.registerPlugin(ScrollTrigger);
 
-h1, h2 {
-    font-weight: 700;
-    text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
-}
+    // --- INTRO ANIMATION ---
+    gsap.from('.main-title', { duration: 1, y: -50, opacity: 0, ease: 'bounce' });
+    gsap.from('#welcome p', { duration: 1.2, y: 50, opacity: 0, delay: 0.5 });
 
-.main-title { font-size: 2.8rem; color: #f7b32b; }
-.section-title { font-size: 2.2rem; color: #a2d2ff; }
-.final-title { font-size: 2.5rem; color: #f7b32b; }
-p { font-size: 1.1rem; }
+    // --- ENHANCED SECTION FADE-IN ANIMATIONS ---
+    const sections = document.querySelectorAll('.scroll-section');
+    sections.forEach(section => {
+        // Animate the main content of the section (text, cards, gallery)
+        const contentToAnimate = section.querySelector('p, .cards-container, .photo-gallery');
+        
+        if (contentToAnimate) {
+            gsap.from(contentToAnimate, {
+                scrollTrigger: {
+                    trigger: section,
+                    start: 'top 85%', // Start animation sooner
+                },
+                y: 100, // Increased distance
+                opacity: 0,
+                rotation: -3, // Added subtle rotation
+                duration: 1.5, // Slower duration
+                ease: 'power2.out'
+            });
+        }
+    });
 
-/* --- Section Styling --- */
-.fullscreen-section, .scroll-section {
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    padding: 60px 0;
-    box-sizing: border-box;
-    text-align: center;
-    overflow-x: hidden; /* Prevent horizontal scroll */
-}
+    // --- INTERACTIVE CARDS (SECTION 3) ---
+    const cards = document.querySelectorAll('.card');
+    cards.forEach(card => {
+        card.addEventListener('click', () => {
+            card.classList.toggle('flipped');
+        });
+    });
 
-/* --- Interactive Cards (Section 3) --- */
-.cards-container {
-    display: flex;
-    flex-direction: column; /* Stack cards vertically on mobile */
-    align-items: center;
-    gap: 25px;
-    margin-top: 30px;
-}
-.card {
-    background-color: transparent;
-    width: 280px;
-    height: 280px;
-    perspective: 1000px; /* Gives the card a 3D space */
-    cursor: pointer;
-}
-.card-inner {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    transition: transform 0.8s;
-    transform-style: preserve-3d; /* --- THIS WAS THE FIX: 'preserve-3d' --- */
-}
-.card.flipped .card-inner {
-    transform: rotateY(180deg);
-}
-.card-front, .card-back {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    border-radius: 15px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-    box-sizing: border-box;
-    font-weight: bold;
-    -webkit-backface-visibility: hidden; /* Hides the back of the element */
-    backface-visibility: hidden;
-}
-.card-front {
-    background: linear-gradient(45deg, #4c669f, #3b5998);
-    color: white;
-    font-size: 1.5rem;
-}
-.card-back {
-    background: linear-gradient(45deg, #a2d2ff, #f7b32b);
-    color: #1a1a2e;
-    transform: rotateY(180deg); /* Pre-rotates the back face */
-    font-size: 1.2rem;
-}
+    // --- PHOTO GALLERY & LIGHTBOX (SECTION 4) ---
+    const galleryImages = document.querySelectorAll('.gallery-img');
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightbox-img');
+    const closeBtn = document.querySelector('.close-btn');
 
-/* --- Photo Gallery (Section 4) --- */
-.photo-gallery {
-    display: grid;
-    grid-template-columns: 1fr 1fr; /* 2 columns on mobile */
-    gap: 10px;
-    margin-top: 30px;
-}
-.gallery-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: transform 0.3s ease;
-}
-.gallery-img:active { /* Better for touch devices */
-    transform: scale(0.95);
-}
+    galleryImages.forEach(img => {
+        img.addEventListener('click', () => {
+            lightbox.classList.add('active');
+            lightboxImg.src = img.src;
+        });
+    });
 
-/* --- Lightbox for Gallery --- */
-.lightbox {
-    position: fixed;
-    z-index: 1000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.9);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.4s ease, visibility 0.4s ease;
-}
-.lightbox.active {
-    opacity: 1;
-    visibility: visible;
-}
-.lightbox-content {
-    max-width: 90%;
-    max-height: 80%;
-    border-radius: 5px;
-}
-.close-btn {
-    position: absolute;
-    top: 15px;
-    right: 25px;
-    color: #fff;
-    font-size: 45px;
-    font-weight: bold;
-    cursor: pointer;
-}
+    const closeLightbox = () => {
+        lightbox.classList.remove('active');
+    };
 
-/* --- Desktop and Tablet Adjustments --- */
-@media (min-width: 768px) {
-    .content {
-        max-width: 800px;
+    closeBtn.addEventListener('click', closeLightbox);
+    lightbox.addEventListener('click', (e) => {
+        if (e.target !== lightboxImg) {
+            closeLightbox();
+        }
+    });
+
+    // --- FINAL TYPING TEXT ANIMATION ---
+    const typingTextElement = document.getElementById('typing-text');
+    const textToType = "Here’s to a year filled with hope, joy, and endless positivity. Keep smiling, and keep being the amazing, incredible person that you are. Happy Birthday once again!";
+    
+    ScrollTrigger.create({
+        trigger: typingTextElement,
+        start: 'top 80%',
+        onEnter: () => typeWriter(typingTextElement, textToType, 0),
+        once: true
+    });
+
+    function typeWriter(element, text, i) {
+        if (i < text.length) {
+            element.innerHTML += text.charAt(i);
+            i++;
+            setTimeout(() => typeWriter(element, text, i), 45);
+        } else {
+            // --- NEW CODE ---
+            // When typing is done, create the link
+            createLink();
+        }
     }
-    .main-title { font-size: 3.5rem; }
-    .section-title { font-size: 2.8rem; }
-    .final-title { font-size: 3.2rem; }
-    p { font-size: 1.2rem; }
 
-    .cards-container {
-        flex-direction: row; /* Side-by-side on larger screens */
-        justify-content: center;
-        gap: 30px;
+    // --- NEW FUNCTION TO CREATE AND ADD THE LINK ---
+    function createLink() {
+        const linkContainer = document.createElement('div');
+        linkContainer.className = 'link-container';
+
+        const link = document.createElement('a');
+        link.href = 'http://chittransh.in/birthday/letter.html';
+        link.textContent = 'Click to view your full letter';
+        link.className = 'final-link';
+        link.target = '_blank'; // Opens the link in a new tab
+
+        linkContainer.appendChild(link);
+        // Append the link to the parent container of the typing text
+        typingTextElement.parentElement.appendChild(linkContainer);
     }
-    .card {
-        width: 250px;
-        height: 250px;
-    }
-    .photo-gallery {
-        grid-template-columns: repeat(4, 1fr); /* 4 columns on desktop */
-        gap: 15px;
-    }
-    .gallery-img:hover { /* Add hover for mouse devices */
-        transform: scale(1.05);
-    }
-}
+});
