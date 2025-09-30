@@ -14,7 +14,7 @@ import {
   getFirestore, collection, addDoc, setDoc, doc, onSnapshot, query, orderBy, deleteDoc
 } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 // === FIX: Import Chart.js library ===
-import Chart from 'https://cdn.jsdelivr.net/npm/chart.js';
+import { Chart } from 'https://cdn.jsdelivr.net/npm/chart.js';
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
