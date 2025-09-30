@@ -174,3 +174,49 @@ canvas { width: 100% !important; height: auto !important; }
 .mt { margin-top: 1.5rem; }
 .mt-sm { margin-top: .75rem; }
 .muted { color: #8b949e; }
+
+/* =======================================
+   === NEW: Responsive Design for Mobile ===
+   ======================================= */
+
+/* For Tablets and smaller devices */
+@media (max-width: 768px) {
+    .container, #auth-screen {
+        margin: 1rem auto;
+    }
+    .card {
+        padding: 1rem;
+    }
+}
+
+/* For Mobile Phones */
+@media (max-width: 600px) {
+    body {
+        padding: 0.5rem;
+    }
+
+    /* Disable hover effects on mobile */
+    .card:hover {
+        transform: none;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    }
+
+    .btn:hover {
+        /* Reset hover for touch */
+        background: var(--accent-color);
+        border-color: var(--accent-color);
+        box-shadow: none;
+    }
+    .btn.ghost:hover {
+        background: transparent;
+    }
+    .btn.danger:hover {
+        background: transparent;
+    }
+
+    header.row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+}
