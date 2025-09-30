@@ -1,92 +1,141 @@
-/* ========== Global Reset ========== */
+/* CSS Variables from your main website's theme */
+:root {
+    --bg-color: #0d1117;
+    --primary-color: #c9d1d9;
+    --accent-color: #58a6ff;
+    --border-color: #30363d;
+    --card-bg: rgba(22, 27, 34, 0.8);
+    --glow-color: rgba(88, 166, 255, 0.2);
+    --danger-color: #f85149;
+    --font-family: 'Poppins', sans-serif;
+}
+
+/* Basic Reset */
 * {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  font-family: system-ui, sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 body {
-  background: #f9fafb;
-  color: #111827;
-  line-height: 1.5;
-  padding: 1rem;
+    background-color: var(--bg-color);
+    color: var(--primary-color);
+    font-family: var(--font-family);
+    min-height: 100vh;
+    padding: 1rem;
+    overflow-x: hidden;
 }
 
-/* ========== Layout Helpers ========== */
-.row {
-  display: flex;
-  align-items: center;
+h2, h3, h4 {
+    font-weight: 600;
 }
-.row.gap > * { margin-right: .5rem; }
-.row.space-between { justify-content: space-between; }
-.stack { display: flex; flex-direction: column; gap: .5rem; }
 
-.mt { margin-top: 1.5rem; }
-.mt-sm { margin-top: .75rem; }
+/* Particle.js Background Styling */
+#particles-js {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: -1;
+}
 
-/* ========== Card ========== */
+/* Main Content Container */
+.container, #auth-screen {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+/* Card Styling (Glassmorphism) */
 .card {
-  background: #fff;
-  border-radius: .75rem;
-  padding: 1rem;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-  margin-bottom: 1rem;
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    margin-bottom: 1rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+.card:hover {
+    border-color: var(--accent-color);
+    box-shadow: 0 8px 30px -5px var(--glow-color);
+    transform: translateY(-5px);
 }
 
-/* ========== Buttons ========== */
+/* Buttons */
 .btn {
-  background: #2563eb;
-  color: #fff;
-  border: none;
-  border-radius: .5rem;
-  padding: .5rem 1rem;
-  cursor: pointer;
-  font-size: .9rem;
-  transition: background .2s;
+    background: var(--accent-color);
+    color: var(--bg-color);
+    border: 1px solid var(--accent-color);
+    border-radius: 8px;
+    padding: .6rem 1.2rem;
+    cursor: pointer;
+    font-size: .9rem;
+    font-weight: 600;
+    transition: all .2s ease;
 }
-.btn:hover { background: #1d4ed8; }
+.btn:hover {
+    background: #79bbff;
+    border-color: #79bbff;
+    box-shadow: 0 0 15px var(--glow-color);
+}
 .btn.ghost {
-  background: transparent;
-  color: #2563eb;
-  border: 1px solid #2563eb;
+    background: transparent;
+    color: var(--accent-color);
 }
 .btn.ghost:hover {
-  background: #eff6ff;
+    background: rgba(88, 166, 255, 0.1);
+    color: #79bbff;
+}
+.btn.danger {
+    color: var(--danger-color);
+    border-color: var(--danger-color);
+}
+.btn.danger:hover {
+    background: rgba(248, 81, 73, 0.1);
+    color: #ff6e67;
 }
 
-/* ========== Inputs & Selects ========== */
+
+/* Inputs & Selects */
 input, select {
-  width: 100%;
-  padding: .5rem .75rem;
-  border: 1px solid #d1d5db;
-  border-radius: .5rem;
-  font-size: .9rem;
+    width: 100%;
+    padding: .75rem;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: .9rem;
+    background-color: #0d1117;
+    color: var(--primary-color);
+    font-family: var(--font-family);
+    margin-bottom: .5rem;
 }
 input:focus, select:focus {
-  outline: none;
-  border-color: #2563eb;
-  box-shadow: 0 0 0 2px rgba(37,99,235,0.2);
+    outline: none;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 3px var(--glow-color);
+}
+select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%2358a6ff' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 0.5rem center;
+    background-repeat: no-repeat;
+    background-size: 1.5em 1.5em;
+    padding-right: 2.5rem;
 }
 
-/* ========== Header ========== */
-header {
-  margin-bottom: 1rem;
-}
 
-/* ========== Auth Screen ========== */
-#auth-screen {
-  max-width: 400px;
-  margin: 4rem auto;
-}
+/* Header */
+header { margin-bottom: 1.5rem; }
 
-/* ========== App Screen ========== */
-#app-screen {
-  max-width: 900px;
-  margin: 0 auto;
-}
+/* Auth Screen */
+#auth-screen { max-width: 450px; }
 
-/* ========== Modal ========== */
+/* Modal */
 #modal-root {
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
@@ -94,56 +143,34 @@ header {
   justify-content: center;
   align-items: center;
   background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(5px);
   z-index: 50;
+  overflow-y: auto;
+  padding: 1rem;
 }
+#modal-root:empty { display: none; }
 #modal-root .modal {
-  background: #fff;
-  padding: 1rem;
-  border-radius: .75rem;
-  max-width: 600px;
-  width: 90%;
-}
-
-/* ========== Chart ========== */
-canvas {
-  width: 100% !important;
-  height: auto !important;
-}
-
-/* ========== Utility ========== */
-.muted { color: #6b7280; font-size: .85rem; }
-.hidden { display: none !important; }
-
-/* ========== Mobile Tweaks ========== */
-@media (max-width: 600px) {
-  .row { flex-wrap: wrap; }
-  .row.gap > * { margin-bottom: .5rem; }
-  header h2 { font-size: 1.25rem; }
-}
-/* Prevent empty modal-root from blocking everything */
-#modal-root:empty {
-  display: none;
-}
-
-/* Keep modal centered but scrollable if taller than screen */
-#modal-root {
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: rgba(0,0,0,0.5);
-  z-index: 50;
-  overflow-y: auto; /* allow scroll if content is tall */
-  padding: 1rem;
-}
-
-#modal-root .modal {
-  background: #fff;
-  border-radius: .75rem;
-  padding: 1rem;
+  padding: 1.5rem;
   max-width: 600px;
   width: 100%;
-  max-height: 90vh;   /* modal never taller than viewport */
-  overflow-y: auto;   /* scroll inside modal */
+  max-height: 90vh;
+  overflow-y: auto;
 }
+.modal .detail-exercise {
+    border-left: 3px solid var(--accent-color);
+    padding-left: 1rem;
+    margin-bottom: 1rem;
+}
+
+/* Chart */
+canvas { width: 100% !important; height: auto !important; }
+
+/* Utility */
+.hidden { display: none !important; }
+.row { display: flex; align-items: center; flex-wrap: wrap;}
+.row.gap > * { margin-right: .75rem; margin-bottom: .75rem;}
+.row.space-between { justify-content: space-between; }
+.stack { display: flex; flex-direction: column; gap: .5rem; }
+.mt { margin-top: 1.5rem; }
+.mt-sm { margin-top: .75rem; }
+.muted { color: #8b949e; }
