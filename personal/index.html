@@ -4,10 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Personal Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <!-- Auth Screen -->
+  <div id="particles-js"></div>
+
   <section id="auth-screen">
     <div class="card">
       <h2>Login / Register</h2>
@@ -18,25 +22,21 @@
         <button id="btn-register" class="btn">Register</button>
         <button id="btn-reset" class="btn ghost">Reset Password</button>
       </div>
-      <p id="auth-message" class="muted"></p>
     </div>
   </section>
 
-  <!-- App Screen -->
-  <section id="app-screen" class="hidden">
+  <main id="app-screen" class="container hidden">
     <header class="row space-between">
       <h2>Personal Tracker</h2>
       <button id="signout" class="btn ghost">Sign Out</button>
     </header>
 
-    <!-- Actions -->
     <div class="row gap mt">
       <button id="start-live" class="btn">Start Live</button>
       <button id="add-past" class="btn">Add Past</button>
       <button id="create-template" class="btn">+ Template</button>
     </div>
 
-    <!-- Day Split & Variation -->
     <div class="row gap mt-sm">
       <select id="day-split">
         <option>Back + Biceps</option>
@@ -50,44 +50,39 @@
       </select>
     </div>
 
-    <!-- Live Workout -->
     <div id="live-workout" class="hidden mt card">
       <h3>Live Workout</h3>
       <div id="exercises-container"></div>
       <div class="row gap mt-sm">
         <button id="add-ex-btn" class="btn ghost">+ Exercise</button>
         <button id="finish" class="btn">Finish</button>
-        <button id="cancel" class="btn ghost">Cancel</button>
+        <button id="cancel" class="btn ghost danger">Cancel</button>
       </div>
-      <p id="timer">00:00</p>
     </div>
 
-    <!-- History -->
     <section class="mt">
       <h3>Workout History</h3>
       <div id="history-list"></div>
     </section>
 
-    <!-- Templates -->
     <section class="mt">
       <h3>Templates</h3>
       <div id="template-list"></div>
     </section>
 
-    <!-- Progress -->
     <section class="mt">
       <h3>Progress</h3>
       <select id="chart-ex"></select>
-      <div style="height:300px">
+      <div style="height:300px; margin-top: 1rem;">
         <canvas id="chart"></canvas>
       </div>
       <div id="recent-maxes" class="mt-sm"></div>
     </section>
-  </section>
+  </main>
 
-  <!-- Modal Root -->
   <div id="modal-root"></div>
 
+  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
   <script type="module" src="app.js"></script>
 </body>
 </html>
