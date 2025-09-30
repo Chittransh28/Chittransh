@@ -1,6 +1,6 @@
 // app.js — Personal Tracker
 // Firebase + Firestore + Auth + Templates + Manual Past Entry
-// Fully functional
+// Fully functional - CORRECTED VERSION
 
 /* =========================
    FIREBASE INITIALIZATION
@@ -11,8 +11,10 @@ import {
   sendPasswordResetEmail, signOut, onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 import {
-  getFirestore, collection, addDoc, setDoc, doc, onSnapshot, query, orderBy
+  getFirestore, collection, addDoc, setDoc, doc, onSnapshot, query, orderBy, deleteDoc
 } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+// === FIX: Import Chart.js library ===
+import Chart from 'https://cdn.jsdelivr.net/npm/chart.js';
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -35,7 +37,6 @@ const db = getFirestore(firebaseApp);
 let uid = null;
 let allWorkouts = [];
 let allTemplates = [];
-let currentWorkout = null;
 let chart = null;
 
 /* =========================
@@ -66,14 +67,25 @@ const chartSelect = $('#chart-ex'); const chartCanvas = $('#chart');
 const recentMaxesEl = $('#recent-maxes');
 
 const templateListEl = $('#template-list'), createTemplateBtn = $('#create-template');
+const modalRoot = $('#modal-root');
+
 
 /* =========================
    TOAST
 ========================= */
-function showToast(msg) {
+function showToast(msg, isError = false) {
   console.info('toast:', msg);
-  authMessage.textContent = msg;
-  setTimeout(() => { if (authMessage.textContent === msg) authMessage.textContent = ''; }, 3000);
+  const toastEl = document.createElement('div');
+  toastEl.className = 'card';
+  toastEl.style.cssText = `
+    position: fixed; top: 1rem; right: 1rem; z-index: 100;
+    background: ${isError ? '#fef2f2' : '#eff6ff'};
+    color: ${isError ? '#991b1b' : '#1e40af'};
+    border: 1px solid ${isError ? '#fecaca' : '#bfdbfe'};
+  `;
+  toastEl.textContent = msg;
+  document.body.appendChild(toastEl);
+  setTimeout(() => toastEl.remove(), 3000);
 }
 
 /* =========================
@@ -82,18 +94,18 @@ function showToast(msg) {
 btnRegister.addEventListener('click', async () => {
   try {
     await createUserWithEmailAndPassword(auth, emailEl.value, passwordEl.value);
-  } catch (e) { showToast(e.message); }
+  } catch (e) { showToast(e.message, true); }
 });
 btnSignin.addEventListener('click', async () => {
   try {
     await signInWithEmailAndPassword(auth, emailEl.value, passwordEl.value);
-  } catch (e) { showToast(e.message); }
+  } catch (e) { showToast(e.message, true); }
 });
 btnReset.addEventListener('click', async () => {
   try {
     await sendPasswordResetEmail(auth, emailEl.value);
     showToast('Reset email sent');
-  } catch (e) { showToast(e.message); }
+  } catch (e) { showToast(e.message, true); }
 });
 signoutBtn.addEventListener('click', () => signOut(auth));
 
@@ -105,7 +117,6 @@ onAuthStateChanged(auth, user => {
   } else {
     uid = null;
     showAuth();
-    loadLocalCaches();
   }
 });
 
@@ -126,7 +137,7 @@ function attachFirestoreListeners() {
     renderProgressRecent();
   });
 
-  onSnapshot(tplRef, snap => {
+  onSnapshot(query(tplRef, orderBy('name')), snap => {
     allTemplates = snap.docs.map(d => ({ id: d.id, ...d.data() }));
     renderTemplates();
   });
@@ -136,21 +147,15 @@ function attachFirestoreListeners() {
    SAVE WORKOUT
 ========================= */
 async function saveWorkout(workout) {
-  if (db && uid) {
-    if (workout.id && !workout.id.startsWith('local-')) {
+  if (!uid) { showToast('You must be signed in to save workouts.', true); return; }
+  try {
+    if (workout.id) {
       await setDoc(doc(db, `users/${uid}/workouts`, workout.id), workout);
     } else {
-      const ref = await addDoc(collection(db, `users/${uid}/workouts`), workout);
-      workout.id = ref.id;
+      await addDoc(collection(db, `users/${uid}/workouts`), workout);
     }
-  } else {
-    workout.id = 'local-' + Date.now();
-    allWorkouts.unshift(workout);
-    localStorage.setItem('local_workouts', JSON.stringify(allWorkouts));
-  }
-  renderHistory();
-  refreshChartSelect();
-  renderProgressRecent();
+    showToast('Workout saved!');
+  } catch(e) { showToast(e.message, true); }
 }
 
 /* =========================
@@ -158,15 +163,48 @@ async function saveWorkout(workout) {
 ========================= */
 function renderHistory() {
   historyList.innerHTML = '';
-  if (!allWorkouts.length) { historyList.innerHTML = '<div>No workouts</div>'; return; }
+  if (!allWorkouts.length) { historyList.innerHTML = '<div>No workouts yet.</div>'; return; }
   allWorkouts.forEach(w => {
     const d = new Date(w.startTime || Date.now());
     const div = document.createElement('div');
     div.className = 'card';
-    div.textContent = `${d.toLocaleDateString()} - ${w.daySplit || ''} ${w.variation || ''}`;
-    div.addEventListener('click', () => console.log(w));
+    div.style.cursor = 'pointer';
+    div.innerHTML = `
+      <div class="row space-between">
+        <strong>${w.daySplit || d.toLocaleDateString()}</strong>
+        <span class="muted">${d.toLocaleDateString()}</span>
+      </div>
+      <div class="muted">${(w.exercises || []).map(e => e.name).join(', ')}</div>
+    `;
+    // === FIX: Clicking history item now opens a details modal ===
+    div.addEventListener('click', () => openWorkoutDetailModal(w));
     historyList.appendChild(div);
   });
+}
+
+// === NEW FUNCTION: Modal to show workout details ===
+function openWorkoutDetailModal(workout) {
+  modalRoot.innerHTML = '';
+  const modal = document.createElement('div');
+  modal.className = 'modal card';
+
+  const exerciseHTML = (workout.exercises || []).map(ex => `
+    <div class="detail-exercise">
+      <strong>${escape(ex.name)}</strong>
+      ${(ex.sets || []).map(set => `<div>${set.reps} reps @ ${set.weight} kg</div>`).join('')}
+    </div>
+  `).join('');
+
+  modal.innerHTML = `
+    <h3>Workout Details</h3>
+    <p class="muted">Completed on: ${new Date(workout.startTime).toLocaleString()}</p>
+    <div class="mt">${exerciseHTML}</div>
+    <div class="row gap mt-sm">
+      <button id="close-modal" class="btn ghost">Close</button>
+    </div>
+  `;
+  modalRoot.appendChild(modal);
+  $('#close-modal', modal).addEventListener('click', () => modalRoot.innerHTML = '');
 }
 
 /* =========================
@@ -174,20 +212,20 @@ function renderHistory() {
 ========================= */
 addPastBtn.addEventListener('click', () => openPastWorkoutModal());
 
-function openPastWorkoutModal() {
-  const root = $('#modal-root'); root.innerHTML = '';
+function openPastWorkoutModal(workout = null) {
+  modalRoot.innerHTML = '';
   const modal = document.createElement('div'); modal.className = 'modal card';
   modal.innerHTML = `
     <h3>Add Past Workout</h3>
-    <label>Date <input type="date" id="pw-date" value="${new Date().toISOString().slice(0, 10)}"></label>
+    <label>Date <input type="datetime-local" id="pw-date" value="${new Date().toISOString().slice(0, 16)}"></label>
     <div id="pw-ex-list"></div>
-    <button id="pw-add-ex">+ Add Exercise</button>
-    <div class="row gap mt-sm">
+    <button id="pw-add-ex" class="btn ghost mt-sm">+ Exercise</button>
+    <div class="row gap mt">
       <button id="pw-save" class="btn">Save</button>
       <button id="pw-cancel" class="btn ghost">Cancel</button>
     </div>
   `;
-  root.appendChild(modal);
+  modalRoot.appendChild(modal);
 
   const exList = $('#pw-ex-list', modal);
   $('#pw-add-ex', modal).addEventListener('click', () => addManualExercise(exList));
@@ -196,152 +234,327 @@ function openPastWorkoutModal() {
     const exercises = $all('.pw-ex', modal).map(exDiv => {
       const name = $('.pw-name', exDiv).value;
       const sets = $all('.pw-set', exDiv).map(s => ({
-        reps: $('.pw-reps', s).value,
-        weight: $('.pw-weight', s).value
+        reps: parseInt($('.pw-reps', s).value) || 0,
+        weight: parseFloat($('.pw-weight', s).value) || 0
       }));
       return { name, sets };
-    });
-    const workout = { startTime: new Date(date).toISOString(), exercises };
-    await saveWorkout(workout);
-    root.innerHTML = '';
-    showToast('Workout saved');
+    }).filter(e => e.name); // Don't save exercises without a name
+    const newWorkout = { startTime: new Date(date).toISOString(), exercises };
+    await saveWorkout(newWorkout);
+    modalRoot.innerHTML = '';
   });
-  $('#pw-cancel', modal).addEventListener('click', () => root.innerHTML = '');
+  $('#pw-cancel', modal).addEventListener('click', () => modalRoot.innerHTML = '');
 }
 
 function addManualExercise(container) {
-  const div = document.createElement('div'); div.className = 'pw-ex card';
+  const div = document.createElement('div'); div.className = 'pw-ex card mt-sm';
   div.innerHTML = `
     <input class="pw-name" placeholder="Exercise name">
-    <div class="pw-sets"></div>
-    <button class="pw-add-set">+ Set</button>
+    <div class="pw-sets stack mt-sm"></div>
+    <button class="pw-add-set btn ghost">+ Set</button>
   `;
   container.appendChild(div);
   const setsEl = $('.pw-sets', div);
-  $('.pw-add-set', div).addEventListener('click', () => {
+  const addSetRow = () => {
     const row = document.createElement('div'); row.className = 'pw-set row gap';
-    row.innerHTML = `<input class="pw-reps" placeholder="Reps"><input class="pw-weight" placeholder="kg">`;
+    row.innerHTML = `<input class="pw-reps" type="number" placeholder="Reps"><input class="pw-weight" type="number" placeholder="kg">`;
     setsEl.appendChild(row);
-  });
+  };
+  $('.pw-add-set', div).addEventListener('click', addSetRow);
+  addSetRow(); // Start with one set
+  return div;
 }
 
+
 /* =========================
-   LIVE WORKOUT (unchanged)
+   LIVE WORKOUT (FIXED & FUNCTIONAL)
 ========================= */
 startLiveBtn.addEventListener('click', () => {
-  currentWorkout = { startTime: new Date().toISOString(), exercises: [] };
   liveWorkoutEl.classList.remove('hidden');
+  exercisesContainer.innerHTML = ''; // Clear previous
+  addManualExercise(exercisesContainer); // Start with one exercise
+});
+
+addExBtn.addEventListener('click', () => addManualExercise(exercisesContainer));
+
+finishBtn.addEventListener('click', async () => {
+  const exercises = $all('.pw-ex', exercisesContainer).map(exDiv => {
+    const name = $('.pw-name', exDiv).value;
+    const sets = $all('.pw-set', exDiv).map(s => ({
+      reps: parseInt($('.pw-reps', s).value) || 0,
+      weight: parseFloat($('.pw-weight', s).value) || 0
+    }));
+    return { name, sets };
+  }).filter(e => e.name);
+
+  if (exercises.length === 0) {
+    showToast('Add at least one exercise.', true);
+    return;
+  }
+
+  const workout = {
+    startTime: new Date().toISOString(),
+    exercises,
+    daySplit: daySplitEl.value,
+    variation: variationEl.value
+  };
+
+  await saveWorkout(workout);
+  liveWorkoutEl.classList.add('hidden');
+  exercisesContainer.innerHTML = '';
+});
+
+cancelBtn.addEventListener('click', () => {
+  if (confirm('Are you sure you want to cancel this workout? All progress will be lost.')) {
+    liveWorkoutEl.classList.add('hidden');
+    exercisesContainer.innerHTML = '';
+  }
 });
 
 /* =========================
-   TEMPLATES (UPGRADED)
+   TEMPLATES (FIXED & FUNCTIONAL)
 ========================= */
 createTemplateBtn.addEventListener('click', () => openTemplateModal());
 
 function renderTemplates() {
   templateListEl.innerHTML = '';
+  if (!allTemplates.length) { templateListEl.innerHTML = '<div>No templates yet.</div>'; return; }
   allTemplates.forEach(t => {
     const node = document.createElement('div'); node.className = 'card';
     node.innerHTML = `
-      <strong>${escape(t.name)}</strong>
-      <div>${(t.exercises || []).map(e => e.name).join(', ')}</div>
-      <button class="start">Start</button>
-      <button class="quick">Quick Log</button>
-      <button class="edit">Edit</button>
-      <button class="del">Delete</button>
+      <div class="row space-between">
+        <strong>${escape(t.name)}</strong>
+        <div class="row gap">
+            <button class="start btn">Start</button>
+            <button class="edit btn ghost">Edit</button>
+            <button class="del btn danger">Del</button>
+        </div>
+      </div>
+      <div class="muted mt-sm">${(t.exercises || []).map(e => e.name).join(', ')}</div>
     `;
     node.querySelector('.start').addEventListener('click', () => startLiveFromTemplate(t));
-    node.querySelector('.quick').addEventListener('click', () => quickLogTemplate(t));
     node.querySelector('.edit').addEventListener('click', () => openTemplateModal(t));
-    node.querySelector('.del').addEventListener('click', () => { allTemplates = allTemplates.filter(x => x.id !== t.id); renderTemplates(); });
+    // === FIX: Delete button now has confirmation and removes from Firestore ===
+    node.querySelector('.del').addEventListener('click', async () => {
+      if (confirm(`Are you sure you want to delete the "${t.name}" template?`)) {
+        try {
+          await deleteDoc(doc(db, `users/${uid}/templates`, t.id));
+          showToast('Template deleted');
+        } catch(e) { showToast(e.message, true); }
+      }
+    });
     templateListEl.appendChild(node);
   });
 }
 
-function startLiveFromTemplate(t) {
-  currentWorkout = { startTime: new Date().toISOString(), exercises: JSON.parse(JSON.stringify(t.exercises || [])) };
+function startLiveFromTemplate(template) {
   liveWorkoutEl.classList.remove('hidden');
+  exercisesContainer.innerHTML = '';
+  (template.exercises || []).forEach(ex => {
+    const exDiv = addManualExercise(exercisesContainer);
+    $('.pw-name', exDiv).value = ex.name;
+    const setsContainer = $('.pw-sets', exDiv);
+    setsContainer.innerHTML = ''; // Clear the default set
+    (ex.sets || []).forEach(set => {
+       const row = document.createElement('div'); row.className = 'pw-set row gap';
+       row.innerHTML = `<input class="pw-reps" type="number" placeholder="Reps" value="${set.reps || ''}"><input class="pw-weight" type="number" placeholder="kg" value="${set.weight || ''}">`;
+       setsContainer.appendChild(row);
+    });
+  });
 }
-async function quickLogTemplate(t) {
-  const workout = { startTime: new Date().toISOString(), exercises: JSON.parse(JSON.stringify(t.exercises || [])) };
-  await saveWorkout(workout);
-  showToast('Workout logged from template');
-}
+
 function openTemplateModal(template = null) {
-  const root = $('#modal-root'); root.innerHTML = '';
+  modalRoot.innerHTML = '';
   const modal = document.createElement('div'); modal.className = 'modal card';
   modal.innerHTML = `
     <h3>${template ? 'Edit' : 'New'} Template</h3>
     <input id="tpl-name" placeholder="Template name" value="${template ? escape(template.name) : ''}">
     <div id="tpl-ex-list"></div>
-    <button id="tpl-add-ex">+ Add Exercise</button>
-    <div class="row gap mt-sm">
+    <button id="tpl-add-ex" class="btn ghost mt-sm">+ Add Exercise</button>
+    <div class="row gap mt">
       <button id="tpl-save" class="btn">Save</button>
       <button id="tpl-cancel" class="btn ghost">Cancel</button>
     </div>
   `;
-  root.appendChild(modal);
+  modalRoot.appendChild(modal);
 
   const exList = $('#tpl-ex-list', modal);
   if (template && template.exercises) {
     template.exercises.forEach(ex => {
       const exDiv = addManualExercise(exList);
       $('.pw-name', exDiv).value = ex.name;
+      const setsContainer = $('.pw-sets', exDiv);
+      setsContainer.innerHTML = ''; // clear default set
       ex.sets.forEach(s => {
         const row = document.createElement('div'); row.className = 'pw-set row gap';
-        row.innerHTML = `<input class="pw-reps" value="${s.reps}"><input class="pw-weight" value="${s.weight}">`;
+        row.innerHTML = `<input class="pw-reps" value="${s.reps || ''}"><input class="pw-weight" value="${s.weight || ''}">`;
         $('.pw-sets', exDiv).appendChild(row);
       });
     });
   }
 
   $('#tpl-add-ex', modal).addEventListener('click', () => addManualExercise(exList));
+  // === FIX: Save button now saves to Firestore ===
   $('#tpl-save', modal).addEventListener('click', async () => {
     const name = $('#tpl-name', modal).value;
+    if (!name) { showToast('Template name cannot be empty.', true); return; }
+
     const exercises = $all('.pw-ex', modal).map(exDiv => {
       const exName = $('.pw-name', exDiv).value;
       const sets = $all('.pw-set', exDiv).map(s => ({
-        reps: $('.pw-reps', s).value,
-        weight: $('.pw-weight', s).value
+        reps: parseInt($('.pw-reps', s).value) || 0,
+        weight: parseFloat($('.pw-weight', s).value) || 0
       }));
       return { name: exName, sets };
-    });
-    const tpl = { id: template ? template.id : 'tpl-' + Date.now(), name, exercises };
-    if (!template) allTemplates.unshift(tpl);
-    else {
-      const idx = allTemplates.findIndex(x => x.id === tpl.id);
-      if (idx >= 0) allTemplates[idx] = tpl;
-    }
-    renderTemplates();
-    root.innerHTML = '';
+    }).filter(e => e.name);
+
+    const tplData = { name, exercises };
+    try {
+      if (template && template.id) {
+        await setDoc(doc(db, `users/${uid}/templates`, template.id), tplData);
+      } else {
+        await addDoc(collection(db, `users/${uid}/templates`), tplData);
+      }
+      showToast('Template saved!');
+      modalRoot.innerHTML = '';
+    } catch(e) { showToast(e.message, true); }
   });
-  $('#tpl-cancel', modal).addEventListener('click', () => root.innerHTML = '');
+  $('#tpl-cancel', modal).addEventListener('click', () => modalRoot.innerHTML = '');
 }
 
 /* =========================
-   CHART & PROGRESS (same)
+   CHART & PROGRESS (FIXED & FUNCTIONAL)
 ========================= */
 function refreshChartSelect() {
-  const names = new Set();
-  allWorkouts.forEach(w => (w.exercises || []).forEach(e => names.add(e.name)));
-  chartSelect.innerHTML = '<option value="">-- Select exercise --</option>' + [...names].map(n => `<option>${escape(n)}</option>`).join('');
+  const names = [...new Set(allWorkouts.flatMap(w => (w.exercises || []).map(e => e.name)))];
+  chartSelect.innerHTML = '<option value="">-- Select exercise to chart --</option>' + names.map(n => `<option value="${escape(n)}">${escape(n)}</option>`).join('');
 }
+
+// === FIX: Event listener to draw chart on selection ===
+chartSelect.addEventListener('change', () => {
+  renderChart(chartSelect.value);
+});
+
+// === NEW FUNCTION: Renders the chart using Chart.js ===
+function renderChart(exerciseName) {
+  if (chart) {
+    chart.destroy(); // Destroy old chart instance
+  }
+  if (!exerciseName) return;
+
+  const dataPoints = allWorkouts
+    .map(w => {
+      const ex = (w.exercises || []).find(e => e.name === exerciseName);
+      if (!ex) return null;
+      const maxWeight = Math.max(0, ...(ex.sets || []).map(s => parseFloat(s.weight) || 0));
+      return { time: new Date(w.startTime), weight: maxWeight };
+    })
+    .filter(Boolean) // Remove workouts that didn't include the exercise
+    .sort((a, b) => a.time - b.time); // Sort by date ascending
+
+  chart = new Chart(chartCanvas, {
+    type: 'line',
+    data: {
+      labels: dataPoints.map(d => d.time.toLocaleDateString()),
+      datasets: [{
+        label: `Max Weight for ${escape(exerciseName)} (kg)`,
+        data: dataPoints.map(d => d.weight),
+        borderColor: '#2563eb',
+        backgroundColor: 'rgba(37, 99, 235, 0.1)',
+        fill: true,
+        tension: 0.1
+      }]
+    }
+  });
+}
+
 function renderProgressRecent() {
   const recent = {};
   allWorkouts.forEach(w => (w.exercises || []).forEach(e => {
-    const maxW = Math.max(...(e.sets || []).map(s => parseFloat(s.weight) || 0));
+    const maxW = Math.max(0, ...(e.sets || []).map(s => parseFloat(s.weight) || 0));
     if (!recent[e.name] || maxW > recent[e.name].weight) {
       recent[e.name] = { weight: maxW };
     }
   }));
-  recentMaxesEl.innerHTML = Object.entries(recent).map(([n, v]) => `<div>${n}: ${v.weight}kg</div>`).join('');
+  recentMaxesEl.innerHTML = '<h4>Personal Bests (Max Weight)</h4>' + Object.entries(recent).map(([n, v]) => `<div><strong>${escape(n)}:</strong> ${v.weight} kg</div>`).join('');
 }
 
 /* =========================
-   LOCAL CACHE
+   PWA SERVICE WORKER REGISTRATION
 ========================= */
-function loadLocalCaches() {
-  try { allWorkouts = JSON.parse(localStorage.getItem('local_workouts') || '[]'); } catch { allWorkouts = []; }
-  try { allTemplates = JSON.parse(localStorage.getItem('local_templates') || '[]'); } catch { allTemplates = []; }
-  renderHistory(); renderTemplates(); refreshChartSelect(); renderProgressRecent();
+// === FIX: Added service worker registration ===
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js')
+      .then(reg => console.log('Service Worker registered.', reg))
+      .catch(err => console.error('Service Worker registration failed:', err));
+  });
 }
+// === NEW: Particle.js Configuration from your main website ===
+particlesJS('particles-js', {
+    "particles": {
+        "number": {
+            "value": 60,
+            "density": {
+                "enable": true,
+                "value_area": 800
+            }
+        },
+        "color": {
+            "value": "#8b949e"
+        },
+        "shape": {
+            "type": "circle"
+        },
+        "opacity": {
+            "value": 0.4,
+            "random": true,
+            "anim": {
+                "enable": true,
+                "speed": 1,
+                "opacity_min": 0.1,
+                "sync": false
+            }
+        },
+        "size": {
+            "value": 3,
+            "random": true
+        },
+        "line_linked": {
+            "enable": true,
+            "distance": 150,
+            "color": "#30363d",
+            "opacity": 0.4,
+            "width": 1
+        },
+        "move": {
+            "enable": true,
+            "speed": 2,
+            "direction": "none",
+            "random": false,
+            "straight": false,
+            "out_mode": "out",
+            "bounce": false
+        }
+    },
+    "interactivity": {
+        "detect_on": "canvas",
+        "events": {
+            "onhover": {
+                "enable": true,
+                "mode": "grab"
+            },
+            "onclick": {
+                "enable": false
+            },
+            "resize": true
+        },
+        "modes": {
+            "grab": {
+                "distance": 140,
+                "line_opacity": 1
+            }
+        }
+    },
+    "retina_detect": true
+});
