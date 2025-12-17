@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pro Habit Tracker</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --bg-card: #1e293b;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent-blue: #3b82f6;
+            --accent-green: #10b981;
+            --accent-red: #ef4444;
+            --border: #334155;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', system-ui, sans-serif; }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+            padding: 20px;
+        }
+
+        /* --- Header --- */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        h1 { font-size: 1.5rem; font-weight: 700; }
+        
+        .date-display { color: var(--text-secondary); font-size: 0.9rem; }
+
+        /* --- Dashboard Grid --- */
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: var(--bg-card);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .card h3 { font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; }
+
+        /* --- Tracker Grid --- */
+        .tracker-container {
+            background: var(--bg-card);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+
+        .controls {
+            padding: 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            gap: 10px;
+        }
+
+        input[type="text"] {
+            background: var(--bg-dark);
+            border: 1px solid var(--border);
+            color: white;
+            padding: 10px;
+            border-radius: 6px;
+            flex-grow: 1;
+        }
+
+        button {
+            background: var(--accent-blue);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        button:hover { opacity: 0.9; }
+        button.delete-btn { background: var(--accent-red); padding: 5px 10px; font-size: 0.8rem; margin-left: 10px;}
+
+        /* Table Styling */
+        .table-wrapper { overflow-x: auto; }
+        
+        table { width: 100%; border-collapse: collapse; min-width: 800px; }
+        
+        th, td {
+            padding: 12px;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+            border-right: 1px solid var(--border);
+        }
+
+        th { background: #1e293b; color: var(--text-secondary); font-size: 0.8rem; position: sticky; top: 0; }
+        
+        /* Sticky first column for habit names */
+        td:first-child, th:first-child {
+            position: sticky;
+            left: 0;
+            background: var(--bg-card);
+            z-index: 10;
+            text-align: left;
+            min-width: 200px;
+            font-weight: 500;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+        }
+
+        /* Checkboxes */
+        .check-box {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border);
+            border-radius: 4px;
+            display: inline-block;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .check-box.checked {
+            background-color: var(--accent-green);
+            border-color: var(--accent-green);
+            position: relative;
+        }
+
+        .check-box.checked::after {
+            content: '✔';
+            color: white;
+            font-size: 12px;
+            position: absolute;
+            top: -2px; left: 3px;
+        }
+
+        /* Progress Bar in Table */
+        .progress-cell { width: 150px; }
+        .progress-bg { background: var(--bg-dark); height: 8px; border-radius: 4px; overflow: hidden; }
+        .progress-fill { height: 100%; background: var(--accent-blue); transition: width 0.3s ease; }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <div>
+            <h1>HABIT TRACKER</h1>
+            <div class="date-display" id="currentDate"></div>
+        </div>
+        <button onclick="clearData()" style="background: var(--border);">Reset All</button>
+    </header>
+
+    <div class="dashboard">
+        <div class="card">
+            <h3>Monthly Consistency</h3>
+            <canvas id="consistencyChart"></canvas>
+        </div>
+        <div class="card">
+            <h3>Completion Rate</h3>
+            <div style="text-align: center; margin-top: 20px;">
+                <canvas id="doughnutChart" style="max-height: 150px;"></canvas>
+                <h1 id="scoreDisplay" style="margin-top: 10px; font-size: 2.5rem; color: var(--accent-blue);">0%</h1>
+                <p style="color: var(--text-secondary);">Overall Discipline Score</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="tracker-container">
+        <div class="controls">
+            <input type="text" id="newHabitInput" placeholder="Enter a new habit (e.g., Read 10 Pages)...">
+            <button onclick="addHabit()">+ Add Habit</button>
+        </div>
+        
+        <div class="table-wrapper">
+            <table id="habitTable">
+                <thead>
+                    <tr id="headerRow">
+                        <th>HABIT</th>
+                        <th>GOAL</th>
+                        <th>PROGRESS</th>
+                    </tr>
+                </thead>
+                <tbody id="habitBody">
+                    </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // --- 1. State Management ---
+        const daysInMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).getDate();
+        const currentDay = new Date().getDate();
+        
+        // Load from LocalStorage or Default
+        let habits = JSON.parse(localStorage.getItem('myHabits')) || [
+            { id: 1, name: "Wake up at 6 AM", data: Array(daysInMonth).fill(false) },
+            { id: 2, name: "30 Min Workout", data: Array(daysInMonth).fill(false) },
+            { id: 3, name: "No Sugar", data: Array(daysInMonth).fill(false) },
+            { id: 4, name: "Code for 1 Hour", data: Array(daysInMonth).fill(false) }
+        ];
+
+        // --- 2. Initialization ---
+        document.getElementById('currentDate').innerText = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+        
+        function init() {
+            renderHeader();
+            renderTable();
+            updateCharts();
+        }
+
+        // --- 3. DOM Rendering ---
+        function renderHeader() {
+            const headerRow = document.getElementById('headerRow');
+            // Clear existing date headers (keep first 2: Habit, Goal)
+            while (headerRow.children.length > 2) { headerRow.removeChild(headerRow.lastChild); }
+            
+            // Add Dates 1 to 31
+            for (let i = 1; i <= daysInMonth; i++) {
+                const th = document.createElement('th');
+                th.innerText = i;
+                // Highlight today
+                if(i === currentDay) th.style.color = 'var(--accent-blue)';
+                headerRow.appendChild(th);
+            }
+            
+            // Re-add Progress Header
+            const progTh = document.createElement('th');
+            progTh.innerText = "PROGRESS";
+            headerRow.appendChild(progTh);
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('habitBody');
+            tbody.innerHTML = '';
+
+            habits.forEach((habit, index) => {
+                const tr = document.createElement('tr');
+
+                // Habit Name
+                const nameTd = document.createElement('td');
+                nameTd.innerHTML = `${habit.name} <button class="delete-btn" onclick="deleteHabit(${index})">x</button>`;
+                tr.appendChild(nameTd);
+
+                // Goal (Static for now)
+                const goalTd = document.createElement('td');
+                goalTd.innerText = daysInMonth;
+                tr.appendChild(goalTd);
+
+                // Checkboxes
+                habit.data.forEach((checked, dayIndex) => {
+                    const td = document.createElement('td');
+                    const div = document.createElement('div');
+                    div.className = `check-box ${checked ? 'checked' : ''}`;
+                    div.onclick = () => toggleHabit(index, dayIndex);
+                    td.appendChild(div);
+                    tr.appendChild(td);
+                });
+
+                // Progress Bar
+                const completedCount = habit.data.filter(Boolean).length;
+                const percent = Math.round((completedCount / daysInMonth) * 100);
+                
+                const progTd = document.createElement('td');
+                progTd.className = 'progress-cell';
+                progTd.innerHTML = `
+                    <div class="progress-bg">
+                        <div class="progress-fill" style="width: ${percent}%"></div>
+                    </div>
+                    <div style="font-size: 0.7rem; margin-top: 5px; text-align: right;">${percent}%</div>
+                `;
+                tr.appendChild(progTd);
+
+                tbody.appendChild(tr);
+            });
+        }
+
+        // --- 4. Logic & Interactivity ---
+        function toggleHabit(habitIndex, dayIndex) {
+            habits[habitIndex].data[dayIndex] = !habits[habitIndex].data[dayIndex];
+            saveData();
+            renderTable(); // Re-render to show checkmark and update progress bar
+            updateCharts();
+        }
+
+        function addHabit() {
+            const input = document.getElementById('newHabitInput');
+            if (input.value.trim() === "") return;
+            
+            habits.push({
+                id: Date.now(),
+                name: input.value,
+                data: Array(daysInMonth).fill(false)
+            });
+            input.value = "";
+            saveData();
+            renderTable();
+            updateCharts();
+        }
+
+        function deleteHabit(index) {
+            if(confirm("Delete this habit?")) {
+                habits.splice(index, 1);
+                saveData();
+                renderTable();
+                updateCharts();
+            }
+        }
+
+        function saveData() {
+            localStorage.setItem('myHabits', JSON.stringify(habits));
+        }
+
+        function clearData() {
+            if(confirm("Are you sure you want to reset all data?")) {
+                localStorage.removeItem('myHabits');
+                location.reload();
+            }
+        }
+
+        // --- 5. Analytics (Chart.js) ---
+        let lineChartInstance = null;
+        let doughnutChartInstance = null;
+
+        function updateCharts() {
+            const totalHabits = habits.length * daysInMonth;
+            const totalChecked = habits.reduce((acc, h) => acc + h.data.filter(Boolean).length, 0);
+            const overallScore = totalHabits === 0 ? 0 : Math.round((totalChecked / totalHabits) * 100);
+
+            // Update Text Score
+            document.getElementById('scoreDisplay').innerText = `${overallScore}%`;
+
+            // Calculate Daily Consistency (How many habits done per day)
+            const dailyData = Array(daysInMonth).fill(0);
+            for (let i = 0; i < daysInMonth; i++) {
+                let checkedCount = 0;
+                habits.forEach(h => { if(h.data[i]) checkedCount++; });
+                dailyData[i] = checkedCount;
+            }
+
+            // --- Render Line Chart ---
+            const ctxLine = document.getElementById('consistencyChart').getContext('2d');
+            if (lineChartInstance) lineChartInstance.destroy();
+
+            lineChartInstance = new Chart(ctxLine, {
+                type: 'line',
+                data: {
+                    labels: Array.from({length: daysInMonth}, (_, i) => i + 1),
+                    datasets: [{
+                        label: 'Habits Completed',
+                        data: dailyData,
+                        borderColor: '#3b82f6',
+                        backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: { beginAtZero: true, grid: { color: '#334155' } },
+                        x: { grid: { display: false } }
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+
+            // --- Render Doughnut Chart ---
+            const ctxDoughnut = document.getElementById('doughnutChart').getContext('2d');
+            if (doughnutChartInstance) doughnutChartInstance.destroy();
+
+            doughnutChartInstance = new Chart(ctxDoughnut, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Completed', 'Remaining'],
+                    datasets: [{
+                        data: [totalChecked, totalHabits - totalChecked],
+                        backgroundColor: ['#3b82f6', '#1e293b'],
+                        borderWidth: 0
+                    }]
+                },
+                options: { cutout: '70%' }
+            });
+        }
+
+        // Run Init
+        init();
+
+    </script>
+</body>
+</html>
