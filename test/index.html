@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Life OS 2026</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div class="app-container">
+        <header>
+            <h1>My Life OS</h1>
+            <div class="stats-bar">
+                <div class="stat-card">
+                    <span class="label">Life Score</span>
+                    <span class="value" id="life-score">--</span>
+                </div>
+                <div class="stat-card">
+                    <span class="label">Sleep Hours</span>
+                    <input type="number" id="sleep-input" placeholder="0" min="0" max="24">
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <div id="habit-grid" class="habit-grid">
+                <p style="color: #888; text-align: center;">Loading your habits...</p>
+            </div>
+        </main>
+
+        <button id="add-habit-btn" class="fab">+</button>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
