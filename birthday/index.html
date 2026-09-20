@@ -13,7 +13,7 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:90;opa
 .glow{position:absolute;width:min(85vw,800px);aspect-ratio:1;left:50%;top:50%;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle,#d5adf53b,transparent 68%);filter:blur(8px);animation:pulse 6s ease-in-out infinite}.moon{position:absolute;right:9%;top:11%;width:clamp(42px,7vw,76px);aspect-ratio:1;border-radius:50%;background:#f8efffbb;box-shadow:0 0 45px #d6b1f655}.moon:after{content:"";position:absolute;inset:0 0 0 28%;border-radius:50%;background:#241332}
 @keyframes pulse{50%{transform:translate(-50%,-50%) scale(1.1);opacity:.7}}.stars,.petals{position:absolute;inset:0;pointer-events:none}.star{position:absolute;width:2px;height:2px;border-radius:50%;background:white;box-shadow:0 0 8px #ead8ff;animation:twinkle var(--d) var(--delay) infinite}.petal{position:absolute;top:-10vh;width:9px;height:16px;border-radius:80% 20% 80% 20%;background:linear-gradient(135deg,#f0d8ffb3,#a06bd11f);animation:fall var(--d) linear var(--delay) infinite;opacity:0}
 @keyframes twinkle{0%,100%{opacity:.08;transform:scale(.7)}50%{opacity:.9;transform:scale(1.5)}}@keyframes fall{0%{opacity:0;transform:translate3d(0,-10vh,0) rotate(var(--r))}10%{opacity:.55}90%{opacity:.2}100%{opacity:0;transform:translate3d(var(--drift),110vh,0) rotate(calc(var(--r) + 260deg))}}
-.center{min-height:100svh;display:grid;place-items:center;padding:28px;text-align:center;position:relative;z-index:2}.intro{max-width:920px}.date,.eyebrow{font:10px Arial,sans-serif;letter-spacing:.32em;text-transform:uppercase;color:#ffffff7d}.date{opacity:0;animation:up 1s var(--ease) .5s forwards}.line{font-size:clamp(22px,4vw,45px);line-height:1.22;margin:30px 0 0;opacity:0}.line.a{animation:up 1s var(--ease) 1s forwards}.line.b{animation:up 1s var(--ease) 2.25s forwards;color:var(--lav2)}.nameWrap{margin-top:46px;opacity:0;animation:name 1.4s var(--ease) 3.7s forwards}.name{margin:0;font-size:clamp(70px,15vw,160px);line-height:.85;font-weight:400;letter-spacing:-.06em;background:linear-gradient(120deg,#fff,#d5b2f2);-webkit-background-clip:text;background-clip:text;color:transparent}.sub{font-size:clamp(16px,2.5vw,24px);color:#ffffffae;margin:24px 0 0}.enter,.next,.sound,.smallBtn{border:1px solid var(--line);background:#ffffff0d;color:#fff;border-radius:999px;cursor:pointer;backdrop-filter:blur(12px);transition:.3s var(--ease)}.enter{margin-top:38px;padding:14px 26px;opacity:0;animation:up 1s var(--ease) 5s forwards}.enter:hover,.next:hover,.smallBtn:hover{background:#ffffff17;transform:translateY(-2px)}.hint{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);font:10px Arial,sans-serif;color:#ffffff59;white-space:nowrap}
+.center{min-height:100svh;display:grid;place-items:center;padding:28px;text-align:center;position:relative;z-index:2}.intro{max-width:920px}.date,.eyebrow{font:10px Arial,sans-serif;letter-spacing:.32em;text-transform:uppercase;color:#ffffff7d}.date{opacity:0;animation:up 1s var(--ease) .5s forwards}.line{font-size:clamp(22px,4vw,45px);line-height:1.22;margin:30px 0 0;opacity:0}.line.a{animation:up 1s var(--ease) 1s forwards}.line.b{animation:up 1s var(--ease) 2.25s forwards;color:var(--lav2)}.nameWrap{margin-top:46px;opacity:0;animation:name 1.4s var(--ease) 3.7s forwards}.name{margin:0;font-size:clamp(70px,15vw,160px);line-height:.85;font-weight:400;letter-spacing:-.06em;background:linear-gradient(120deg,#fff,#d5b2f2);-webkit-background-clip:text;background-clip:text;color:transparent}.sub{font-size:clamp(16px,2.5vw,24px);color:#ffffffae;margin:24px 0 0}.enter,.next,.sound,.smallBtn{display:inline-block;text-decoration:none;border:1px solid var(--line);background:#ffffff0d;color:#fff;border-radius:999px;cursor:pointer;backdrop-filter:blur(12px);transition:.3s var(--ease)}.enter{margin-top:38px;padding:14px 26px;opacity:0;animation:up 1s var(--ease) 5s forwards}.enter:hover,.next:hover,.smallBtn:hover{background:#ffffff17;transform:translateY(-2px)}.hint{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);font:10px Arial,sans-serif;color:#ffffff59;white-space:nowrap}
 @keyframes up{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:none}}@keyframes name{from{opacity:0;transform:scale(.95) translateY(10px)}to{opacity:1;transform:none}}
 .sound{position:fixed;left:18px;top:18px;z-index:80;width:44px;height:44px;padding:0;display:grid;place-items:center;border:1px solid var(--line);background:#ffffff0d;color:#fff;border-radius:50%;cursor:pointer;backdrop-filter:blur(12px);transition:.3s var(--ease)}.sound:hover{background:#ffffff17;transform:scale(1.04)}.speaker{font-family:Arial,sans-serif;font-size:18px;line-height:1}.sound.muted .speaker{font-size:17px;opacity:.8}
 .audioHint{position:fixed;left:72px;top:29px;z-index:80;font:10px Arial,sans-serif;color:#ffffff6b;opacity:0;transform:translateX(-5px);transition:.4s}.audioHint.show{opacity:1;transform:none}
@@ -43,7 +43,7 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:90;opa
 <div class="date">September 21, 2026</div>
 <p class="line a">Today is a little different.</p>
 <p class="line b">Because today belongs to someone very special.</p>
-<div class="nameWrap"><h1 class="name">Khushi</h1><p class="sub">A little world, made just for you. 💜</p><button class="enter" id="enterBtn">Come in&nbsp; →</button></div>
+<div class="nameWrap"><h1 class="name">Khushi</h1><p class="sub">A little world, made just for you. 💜</p><a class="enter" id="enterBtn" href="#s2">Come in&nbsp; →</a></div>
 </div></div>
 <div class="hint">Tap “Come in” to begin · 🔊 to mute</div>
 </section>
@@ -59,7 +59,7 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:90;opa
 <div class="q"><b>Your courage.</b><p>You keep moving even when you're adjusting, uncertain, or figuring people and places out. That says more about your strength than you realise.</p></div>
 <div class="q"><b>Your way of living.</b><p>You don't just want ordinary days. You want experiences, memories, good food, photographs, laughter and moments worth remembering.</p></div>
 <div class="q final"><b>And then there are your eyes. 👀</b><p>Honestly, those deserve their own website.</p></div>
-</div><button class="next" data-next="s3">Keep going&nbsp; →</button>
+</div><a class="next" href="#s3">Keep going&nbsp; →</a>
 </div></section>
 
 <section class="section" id="s3"><div class="inner">
@@ -74,7 +74,7 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:90;opa
 <figure class="photo" data-full="assets/photos/dressed-up-one.jpg"><img src="assets/photos/dressed-up-one.jpg" alt="Khushi dressed up in red" loading="lazy"><figcaption class="caption">The dressed-up one.</figcaption></figure>
 </div>
 <p class="lead" style="margin:40px auto 0;text-align:center">I've seen so many versions of you.<br><strong style="font-weight:400;color:#eadbfa">I think I'll always have a favourite. All of them.</strong></p>
-<button class="next" data-next="s4">Next&nbsp; →</button>
+<a class="next" href="#s4">Next&nbsp; →</a>
 </div></section>
 
 <section class="section" id="s4"><div class="inner">
@@ -88,7 +88,7 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:90;opa
 <div class="note"><button><span>Please don't let one bad thought define you.</span><span>+</span></button><div class="noteBody"><p>You're far more impressive, capable and strong than the doubtful version of yourself sometimes lets you believe.</p></div></div>
 </div>
 <p class="lead" style="margin:45px auto 0;text-align:center;color:#eadbfa">And whenever you forget all of this...<br><strong style="font-weight:400">I'll remind you. 💜</strong></p>
-<button class="next" data-next="s5">Next&nbsp; →</button>
+<a class="next" href="#s5">Next&nbsp; →</a>
 </div></section>
 
 <section class="section" id="s5"><div class="inner">
@@ -103,7 +103,7 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:90;opa
 <div class="wish last"><div class="icon">🍜</div><h3>And, obviously, unlimited chilli paneer.</h3><p>Some wishes are simply non-negotiable.</p></div>
 </div>
 <p class="lead" style="margin:42px auto 0;text-align:center">And if I could sneak one selfish thing into the list...<br><strong style="color:#eadbfa;font-weight:400">more years of getting to be part of your life.</strong></p>
-<button class="next" data-next="s6">One more thing&nbsp; →</button>
+<a class="next" href="#s6">One more thing&nbsp; →</a>
 </div></section>
 
 <section class="section bouquet" id="s6"><div class="inner">
@@ -114,14 +114,14 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:90;opa
 </button>
 <div class="bouquetReveal" id="bouquetReveal"><div class="bouquetFlowers">🌷 🪻 🌷 🪻 🌷</div>
 <p><strong style="color:#fff">These are for you. 💜</strong><br>I wish I could've handed them to you myself.<br><br>But until I can, let this little bouquet remind you that you deserve to be celebrated — beautifully and completely.</p>
-<button class="next" data-next="s7">I have one last thing&nbsp; →</button></div>
+<a class="next" href="#s7">I have one last thing&nbsp; →</a></div>
 </div></section>
 
 <section class="section" id="s7"><div class="inner" style="text-align:center">
 <div class="eyebrow">07 · For the year ahead</div><h2>23 little wishes for you.</h2><p class="lead" style="margin-inline:auto">Tap every card. Each one holds a little wish for your new year.</p>
 <div class="wishProgress" id="wishProgress">0 / 23 opened</div>
 <div class="wishes23" id="wishes23"></div>
-<div class="unlock" id="unlock"><p style="color:#eadbfa;font-size:20px">You opened all 23. 💜</p><button class="next" data-next="s8">And finally...&nbsp; →</button></div>
+<div class="unlock" id="unlock"><p style="color:#eadbfa;font-size:20px">You opened all 23. 💜</p><a class="next" href="#s8">And finally...&nbsp; →</a></div>
 </div></section>
 
 <section class="section letterSection" id="s8"><div class="inner">
@@ -154,8 +154,6 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:90;opa
   for(let i=0;i<(innerWidth<650?45:85);i++){const e=document.createElement('span');e.className='star';e.style.left=Math.random()*100+'%';e.style.top=Math.random()*100+'%';e.style.setProperty('--d',2+Math.random()*4+'s');e.style.setProperty('--delay',Math.random()*5+'s');stars.appendChild(e)}
   for(let i=0;i<(innerWidth<650?10:18);i++){const e=document.createElement('span');e.className='petal';e.style.left=(-5+Math.random()*110)+'%';e.style.setProperty('--d',10+Math.random()*10+'s');e.style.setProperty('--delay',Math.random()*13+'s');e.style.setProperty('--drift',(-90+Math.random()*180)+'px');e.style.setProperty('--r',Math.random()*360+'deg');petals.appendChild(e)}
 
-  const go=id=>document.getElementById(id)?.scrollIntoView({behavior:'smooth'});
-  $$('[data-next]').forEach(b=>b.addEventListener('click',()=>go(b.dataset.next)));
   const sections=$$('.section,.screen'), progress=$('#progress');
   new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){const n=sections.indexOf(e.target)+1;progress.textContent=String(n).padStart(2,'0')+' / 08'}}),{threshold:.5}).observe(document.getElementById('s1'));
   sections.slice(1).forEach(s=>new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){const n=sections.indexOf(e.target)+1;progress.textContent=String(n).padStart(2,'0')+' / 08'}}),{threshold:.5}).observe(s));
@@ -186,8 +184,9 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:90;opa
   const grid=$('#wishes23'),wp=$('#wishProgress'),unlock=$('#unlock');let opened=0;
   wishes.forEach((text,i)=>{const b=document.createElement('button');b.className='wish23';b.textContent=i+1;b.setAttribute('aria-label','Birthday wish '+(i+1));b.addEventListener('click',()=>{if(b.classList.contains('revealed'))return;b.classList.add('revealed');b.textContent=text;opened++;wp.textContent=opened+' / 23 opened';if(opened===23)unlock.classList.add('show')});grid.appendChild(b)});
 
-  // Music starts from the opening "Come in" tap. This is a deliberate
-  // user gesture, so Chrome is allowed to start audible playback.
+  // Music starts from the opening "Come in" tap. That tap is a real user
+  // gesture, so Chrome permits audible playback. The floating control only
+  // mutes/unmutes the already-started soundtrack.
   const music=$('#music'),sound=$('#sound'),hint=$('#audioHint'),enterBtn=$('#enterBtn');
   let muted=false,started=false;
 
@@ -206,15 +205,13 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:90;opa
       muted=false;
       setIcon();
     }catch(err){
-      // If the browser still refuses, the mute control is not turned into
-      // a play button; a later normal gesture can retry through the same CTA.
+      hint.textContent='Tap again to start the music';
+      hint.classList.add('show');
+      setTimeout(()=>hint.classList.remove('show'),1800);
     }
   }
 
-  enterBtn.addEventListener('click',async()=>{
-    await startMusicFromGesture();
-    document.getElementById('s2').scrollIntoView({behavior:'smooth'});
-  });
+  enterBtn.addEventListener('click',()=>{ startMusicFromGesture(); });
 
   sound.addEventListener('click',async e=>{
     e.stopPropagation();
@@ -229,26 +226,6 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:90;opa
 
   music.addEventListener('play',()=>{started=true;setIcon()});
   setIcon();
-    }catch(err){
-      // Audible autoplay was blocked by the browser. A natural first interaction
-      // will retry automatically; no "start music" button is required.
-    }
-  }
-  function retryOnInteraction(){
-    if(!started) startMusic();
-    ['pointerdown','touchstart','scroll','keydown'].forEach(ev=>window.removeEventListener(ev,retryOnInteraction,{passive:true}));
-  }
-  ['pointerdown','touchstart','scroll','keydown'].forEach(ev=>window.addEventListener(ev,retryOnInteraction,{passive:true}));
-  sound.addEventListener('click',e=>{
-    e.stopPropagation();
-    muted=!muted;
-    music.muted=muted;
-    if(!muted && !started) startMusic();
-    setIcon();
-  });
-  music.addEventListener('play',()=>{started=true;setIcon()});
-  setIcon();
-  startMusic();
 })();
 </script>
 </body>
