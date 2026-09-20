@@ -43,9 +43,9 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:90;opa
 <div class="date">September 21, 2026</div>
 <p class="line a">Today is a little different.</p>
 <p class="line b">Because today belongs to someone very special.</p>
-<div class="nameWrap"><h1 class="name">Khushi</h1><p class="sub">A little world, made just for you. 💜</p><button class="enter" data-next="s2">Come in&nbsp; →</button></div>
+<div class="nameWrap"><h1 class="name">Khushi</h1><p class="sub">A little world, made just for you. 💜</p><button class="enter" id="enterBtn">Come in&nbsp; →</button></div>
 </div></div>
-<div class="hint">Music starts automatically · tap 🔊 to mute</div>
+<div class="hint">Tap “Come in” to begin · 🔊 to mute</div>
 </section>
 
 <section class="section" id="s2"><div class="inner">
@@ -186,24 +186,49 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:90;opa
   const grid=$('#wishes23'),wp=$('#wishProgress'),unlock=$('#unlock');let opened=0;
   wishes.forEach((text,i)=>{const b=document.createElement('button');b.className='wish23';b.textContent=i+1;b.setAttribute('aria-label','Birthday wish '+(i+1));b.addEventListener('click',()=>{if(b.classList.contains('revealed'))return;b.classList.add('revealed');b.textContent=text;opened++;wp.textContent=opened+' / 23 opened';if(opened===23)unlock.classList.add('show')});grid.appendChild(b)});
 
-  // Real uploaded soundtrack: attempt audible autoplay.
-// Browsers may block audible autoplay. If they do, the first normal page
-// interaction (tap/scroll) starts the song; the control itself is only mute/unmute.
-  const music=$('#music'),sound=$('#sound'),hint=$('#audioHint');let muted=false,started=false;
+  // Music starts from the opening "Come in" tap. This is a deliberate
+  // user gesture, so Chrome is allowed to start audible playback.
+  const music=$('#music'),sound=$('#sound'),hint=$('#audioHint'),enterBtn=$('#enterBtn');
+  let muted=false,started=false;
+
   function setIcon(){
     sound.classList.toggle('muted',muted);
     sound.querySelector('.speaker').textContent=muted?'🔇':'🔊';
     sound.setAttribute('aria-pressed',String(muted));
     sound.setAttribute('aria-label',muted?'Unmute birthday music':'Mute birthday music');
   }
-  async function startMusic(){
-    if(started)return;
+
+  async function startMusicFromGesture(){
     try{
       music.muted=false;
       await music.play();
       started=true;
       muted=false;
       setIcon();
+    }catch(err){
+      // If the browser still refuses, the mute control is not turned into
+      // a play button; a later normal gesture can retry through the same CTA.
+    }
+  }
+
+  enterBtn.addEventListener('click',async()=>{
+    await startMusicFromGesture();
+    document.getElementById('s2').scrollIntoView({behavior:'smooth'});
+  });
+
+  sound.addEventListener('click',async e=>{
+    e.stopPropagation();
+    if(!started){
+      await startMusicFromGesture();
+      return;
+    }
+    muted=!muted;
+    music.muted=muted;
+    setIcon();
+  });
+
+  music.addEventListener('play',()=>{started=true;setIcon()});
+  setIcon();
     }catch(err){
       // Audible autoplay was blocked by the browser. A natural first interaction
       // will retry automatically; no "start music" button is required.
