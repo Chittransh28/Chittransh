@@ -7,7 +7,7 @@
 <title>For Khushi 💜</title>
 <style>
 :root{--bg:#100819;--bg2:#21112f;--lav:#d8b6f5;--lav2:#f0e4fb;--muted:#bcaec8;--line:#ffffff20;--ease:cubic-bezier(.22,1,.36,1)}
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:#fffaff;font-family:Georgia,"Times New Roman",serif;overflow-x:hidden}button{font:inherit}
+*{box-sizing:border-box}html{scroll-behavior:smooth}html,body{max-width:100%;}body{margin:0;background:var(--bg);color:#fffaff;font-family:Georgia,"Times New Roman",serif;overflow-x:hidden}button{font:inherit}
 body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:90;opacity:.035;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
 .screen,.section{min-height:100svh;position:relative;overflow:hidden}.screen{background:radial-gradient(circle at 50% 45%,#6e479526,transparent 42%),linear-gradient(145deg,#0c0612,#241332 60%,#100719)}
 .glow{position:absolute;width:min(85vw,800px);aspect-ratio:1;left:50%;top:50%;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle,#d5adf53b,transparent 68%);filter:blur(8px);animation:pulse 6s ease-in-out infinite}.moon{position:absolute;right:9%;top:11%;width:clamp(42px,7vw,76px);aspect-ratio:1;border-radius:50%;background:#f8efffbb;box-shadow:0 0 45px #d6b1f655}.moon:after{content:"";position:absolute;inset:0 0 0 28%;border-radius:50%;background:#241332}
@@ -15,25 +15,25 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:90;opa
 @keyframes twinkle{0%,100%{opacity:.08;transform:scale(.7)}50%{opacity:.9;transform:scale(1.5)}}@keyframes fall{0%{opacity:0;transform:translate3d(0,-10vh,0) rotate(var(--r))}10%{opacity:.55}90%{opacity:.2}100%{opacity:0;transform:translate3d(var(--drift),110vh,0) rotate(calc(var(--r) + 260deg))}}
 .center{min-height:100svh;display:grid;place-items:center;padding:28px;text-align:center;position:relative;z-index:2}.intro{max-width:920px}.date,.eyebrow{font:10px Arial,sans-serif;letter-spacing:.32em;text-transform:uppercase;color:#ffffff7d}.date{opacity:0;animation:up 1s var(--ease) .5s forwards}.line{font-size:clamp(22px,4vw,45px);line-height:1.22;margin:30px 0 0;opacity:0}.line.a{animation:up 1s var(--ease) 1s forwards}.line.b{animation:up 1s var(--ease) 2.25s forwards;color:var(--lav2)}.nameWrap{margin-top:46px;opacity:0;animation:name 1.4s var(--ease) 3.7s forwards}.name{margin:0;font-size:clamp(70px,15vw,160px);line-height:.85;font-weight:400;letter-spacing:-.06em;background:linear-gradient(120deg,#fff,#d5b2f2);-webkit-background-clip:text;background-clip:text;color:transparent}.sub{font-size:clamp(16px,2.5vw,24px);color:#ffffffae;margin:24px 0 0}.enter,.next,.sound,.smallBtn{border:1px solid var(--line);background:#ffffff0d;color:#fff;border-radius:999px;cursor:pointer;backdrop-filter:blur(12px);transition:.3s var(--ease)}.enter{margin-top:38px;padding:14px 26px;opacity:0;animation:up 1s var(--ease) 5s forwards}.enter:hover,.next:hover,.smallBtn:hover{background:#ffffff17;transform:translateY(-2px)}.hint{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);font:10px Arial,sans-serif;color:#ffffff59;white-space:nowrap}
 @keyframes up{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:none}}@keyframes name{from{opacity:0;transform:scale(.95) translateY(10px)}to{opacity:1;transform:none}}
-.sound{position:fixed;left:18px;top:18px;z-index:80;width:44px;height:44px;padding:0;display:grid;place-items:center}.bars{display:flex;gap:3px;align-items:center}.bars i{width:2px;height:6px;background:#fff;border-radius:2px}.sound.on .bars i:nth-child(1){height:10px;animation:b .7s infinite alternate}.sound.on .bars i:nth-child(2){height:15px;animation:b .55s .1s infinite alternate}.sound.on .bars i:nth-child(3){height:8px;animation:b .8s .2s infinite alternate}@keyframes b{to{transform:scaleY(.5)}}
+.sound{position:fixed;left:18px;top:18px;z-index:80;width:44px;height:44px;padding:0;display:grid;place-items:center;border:1px solid var(--line);background:#ffffff0d;color:#fff;border-radius:50%;cursor:pointer;backdrop-filter:blur(12px);transition:.3s var(--ease)}.sound:hover{background:#ffffff17;transform:scale(1.04)}.speaker{font-family:Arial,sans-serif;font-size:18px;line-height:1}.sound.muted .speaker{font-size:17px;opacity:.8}
 .audioHint{position:fixed;left:72px;top:29px;z-index:80;font:10px Arial,sans-serif;color:#ffffff6b;opacity:0;transform:translateX(-5px);transition:.4s}.audioHint.show{opacity:1;transform:none}
 .progress{position:fixed;right:18px;top:25px;z-index:80;font:10px Arial,sans-serif;letter-spacing:.12em;color:#ffffff66}
-.section{padding:95px 20px 75px;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 15%,#b177eb12,transparent 38%),linear-gradient(180deg,#12091b,#21112e)}.section:nth-of-type(even){background:linear-gradient(180deg,#180d24,#0f0817)}.inner{width:min(1050px,100%);margin:auto}.eyebrow{margin-bottom:12px}.section h2{font-size:clamp(44px,8vw,90px);font-weight:400;letter-spacing:-.05em;line-height:.96;margin:0 0 22px;background:linear-gradient(120deg,#fff,#d7b4f4);-webkit-background-clip:text;background-clip:text;color:transparent}.lead{max-width:720px;color:var(--muted);font-size:clamp(18px,2.5vw,25px);line-height:1.6}.next{display:block;margin:45px auto 0;padding:13px 23px}
+.section{padding:95px 20px 75px;display:flex;align-items:flex-start;justify-content:center;background:radial-gradient(circle at 50% 15%,#b177eb12,transparent 38%),linear-gradient(180deg,#12091b,#21112e)}.section:nth-of-type(even){background:linear-gradient(180deg,#180d24,#0f0817)}.inner{width:min(1050px,100%);margin:auto}.eyebrow{margin-bottom:12px}.section h2{font-size:clamp(44px,8vw,90px);font-weight:400;letter-spacing:-.05em;line-height:.96;margin:0 0 22px;background:linear-gradient(120deg,#fff,#d7b4f4);-webkit-background-clip:text;background-clip:text;color:transparent}.lead{max-width:720px;color:var(--muted);font-size:clamp(18px,2.5vw,25px);line-height:1.6}.next{display:block;margin:45px auto 0;padding:13px 23px}
 .qualities{display:grid;grid-template-columns:repeat(2,1fr);gap:13px;margin-top:42px}.q{padding:25px;border:1px solid var(--line);border-radius:22px;background:#ffffff08;min-height:150px;transition:.4s var(--ease)}.q:hover{transform:translateY(-5px);background:#ffffff0e}.q b{font-size:24px;font-weight:400}.q p{color:var(--muted);line-height:1.55;margin:9px 0 0}.q.final{grid-column:1/-1;text-align:center;min-height:auto}.q.final p{color:var(--lav2);font-size:21px}
-.gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:45px}.photo{position:relative;overflow:hidden;border:1px solid var(--line);border-radius:23px;background:#251435;aspect-ratio:4/5;cursor:pointer}.photo.wide{grid-column:span 2;aspect-ratio:16/10}.photo img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .8s var(--ease),filter .5s}.photo:hover img{transform:scale(1.045)}.photo:after{content:"";position:absolute;inset:50% 0 0;background:linear-gradient(transparent,#000b);pointer-events:none}.caption{position:absolute;bottom:17px;left:18px;right:12px;z-index:2;font-size:21px;text-shadow:0 2px 14px #000}
+.gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:45px}.photo{margin:0;min-width:0;position:relative;overflow:hidden;border:1px solid var(--line);border-radius:23px;background:#251435;aspect-ratio:4/5;cursor:pointer}.photo.wide{grid-column:span 2;aspect-ratio:16/10;}.photo img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .8s var(--ease),filter .5s}.photo:hover img{transform:scale(1.045)}.photo:after{content:"";position:absolute;inset:50% 0 0;background:linear-gradient(transparent,#000b);pointer-events:none}.caption{position:absolute;bottom:17px;left:18px;right:12px;z-index:2;font-size:21px;text-shadow:0 2px 14px #000}
 .lightbox{position:fixed;inset:0;background:#08050ce8;z-index:120;display:none;place-items:center;padding:20px;backdrop-filter:blur(14px)}.lightbox.open{display:grid}.lightbox img{max-width:94vw;max-height:88vh;border-radius:18px;box-shadow:0 20px 80px #000}.close{position:absolute;right:20px;top:20px;width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:#ffffff12;color:#fff;font-size:25px;cursor:pointer}
 .notes{display:grid;gap:12px;margin-top:43px}.note{border:1px solid var(--line);border-radius:18px;background:#ffffff06;overflow:hidden}.note button{width:100%;border:0;background:transparent;color:#fff;text-align:left;padding:21px 23px;cursor:pointer;display:flex;justify-content:space-between;align-items:center}.note button span:last-child{color:#d8b6f5;font-size:22px}.noteBody{max-height:0;overflow:hidden;transition:max-height .5s var(--ease),padding .5s}.note.open .noteBody{max-height:180px;padding:0 23px 22px}.noteBody p{color:var(--muted);line-height:1.55;margin:0}
 .wishes{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;margin-top:42px}.wish{padding:27px;border:1px solid var(--line);border-radius:23px;background:#ffffff07;min-height:190px}.wish .icon{font-size:28px}.wish h3{font-size:24px;font-weight:400;margin:12px 0 7px}.wish p{color:var(--muted);line-height:1.5;margin:0}.wish.last{grid-column:1/-1;text-align:center}
 .bouquet{text-align:center;background:radial-gradient(circle at 50% 50%,#a970d31f,transparent 42%),#150a20}.flowerBtn{width:210px;height:210px;display:block;margin:40px auto 10px;border:0;background:transparent;cursor:pointer;position:relative}.flower{position:absolute;inset:0;display:grid;place-items:center}.petalBig{position:absolute;width:52px;height:78px;border-radius:70% 30% 70% 30%;background:linear-gradient(145deg,#efd9ff,#9c68c9);transform-origin:50% 95%;transition:1.15s var(--ease);opacity:.88}.petalBig:nth-child(1){transform:rotate(0) translateY(-17px)}.petalBig:nth-child(2){transform:rotate(72deg) translateY(-17px)}.petalBig:nth-child(3){transform:rotate(144deg) translateY(-17px)}.petalBig:nth-child(4){transform:rotate(216deg) translateY(-17px)}.petalBig:nth-child(5){transform:rotate(288deg) translateY(-17px)}.flowerCore{width:40px;height:40px;border-radius:50%;background:#fff1ff;box-shadow:0 0 35px #e4c4ff99;z-index:2}.flowerBtn.bloom .petalBig:nth-child(1){transform:rotate(0) translateY(-68px)}.flowerBtn.bloom .petalBig:nth-child(2){transform:rotate(72deg) translateY(-68px)}.flowerBtn.bloom .petalBig:nth-child(3){transform:rotate(144deg) translateY(-68px)}.flowerBtn.bloom .petalBig:nth-child(4){transform:rotate(216deg) translateY(-68px)}.flowerBtn.bloom .petalBig:nth-child(5){transform:rotate(288deg) translateY(-68px)}.bouquetReveal{max-height:0;opacity:0;overflow:hidden;transition:1s var(--ease)}.bouquetReveal.show{max-height:430px;opacity:1}.bouquetFlowers{font-size:55px;letter-spacing:10px;animation:floatFlowers 4s ease-in-out infinite}.bouquetReveal p{font-size:21px;line-height:1.65;color:var(--muted)}@keyframes floatFlowers{50%{transform:translateY(-7px)}}
-.wishes23{display:grid;grid-template-columns:repeat(4,1fr);gap:11px;max-width:880px;margin:42px auto}.wish23{aspect-ratio:1;border:1px solid var(--line);border-radius:20px;background:#ffffff07;color:#eadbfa;cursor:pointer;padding:13px;transition:.4s var(--ease);font-size:19px}.wish23:hover{transform:translateY(-4px);background:#ffffff0d}.wish23.revealed{font-size:13px;line-height:1.4;background:linear-gradient(145deg,#c29ae52e,#ffffff07);color:#fff;transform:none}.wishProgress{font:11px Arial,sans-serif;color:#ffffff70;letter-spacing:.1em}.unlock{opacity:0;max-height:0;overflow:hidden;transition:.7s var(--ease)}.unlock.show{opacity:1;max-height:100px}
+.wishes23{display:grid;grid-template-columns:repeat(4,1fr);gap:11px;max-width:880px;margin:42px auto}.wish23{min-width:0;overflow-wrap:anywhere;aspect-ratio:1;border:1px solid var(--line);border-radius:20px;background:#ffffff07;color:#eadbfa;cursor:pointer;padding:13px;transition:.4s var(--ease);font-size:19px}.wish23:hover{transform:translateY(-4px);background:#ffffff0d}.wish23.revealed{font-size:13px;line-height:1.4;background:linear-gradient(145deg,#c29ae52e,#ffffff07);color:#fff;transform:none}.wishProgress{font:11px Arial,sans-serif;color:#ffffff70;letter-spacing:.1em}.unlock{opacity:0;max-height:0;overflow:hidden;transition:.7s var(--ease)}.unlock.show{opacity:1;max-height:100px}
 .letterSection{background:linear-gradient(180deg,#12091b,#261335)}.letter{max-width:780px;margin:45px auto 0;font-size:clamp(18px,2.3vw,22px);line-height:1.85;color:#fffad8d9}.letter p{margin:0 0 23px}.sign{margin-top:40px;color:#fff;font-size:24px}.end{text-align:center;margin-top:85px}.forever{font-size:clamp(24px,4vw,38px);color:var(--lav2);letter-spacing:.08em}
-@media(max-width:700px){.qualities,.wishes{grid-template-columns:1fr}.q.final,.wish.last{grid-column:auto}.gallery{grid-template-columns:repeat(2,1fr)}.photo.wide{grid-column:span 2}.wishes23{grid-template-columns:repeat(3,1fr)}.section{padding:88px 17px 62px}.audioHint{display:none}}
+@media(max-width:700px){.qualities,.wishes{grid-template-columns:1fr}.q.final,.wish.last{grid-column:auto}.gallery{grid-template-columns:repeat(2,minmax(0,1fr));}.photo.wide{grid-column:span 2}.wishes23{grid-template-columns:repeat(2,minmax(0,1fr));}.section{padding:88px 17px 62px;align-items:flex-start}.section .inner{margin-top:0}.section h2{font-size:clamp(42px,12vw,66px);}.caption{font-size:clamp(16px,5vw,21px);line-height:1.05}.audioHint{display:none}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
 </style>
 </head>
 <body>
 <div id="app">
-<button class="sound" id="sound" aria-label="Play birthday music" aria-pressed="false"><span class="bars"><i></i><i></i><i></i></span></button>
+<button class="sound" id="sound" aria-label="Mute birthday music" aria-pressed="false"><span class="speaker" aria-hidden="true">🔊</span></button>
 <div class="audioHint" id="audioHint">music on</div>
 <div class="progress" id="progress">01 / 08</div>
 
@@ -45,7 +45,7 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:90;opa
 <p class="line b">Because today belongs to someone very special.</p>
 <div class="nameWrap"><h1 class="name">Khushi</h1><p class="sub">A little world, made just for you. 💜</p><button class="enter" data-next="s2">Come in&nbsp; →</button></div>
 </div></div>
-<div class="hint">Tap ♫ whenever you're ready for the music</div>
+<div class="hint">Music starts automatically · tap 🔊 to mute</div>
 </section>
 
 <section class="section" id="s2"><div class="inner">
@@ -145,7 +145,7 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:90;opa
 </div>
 
 <div class="lightbox" id="lightbox" aria-hidden="true"><button class="close" id="closeLightbox" aria-label="Close photo">×</button><img id="lightboxImg" alt=""></div>
-<audio id="music" preload="auto" loop src="assets/audio/birthday-song.m4a"></audio>
+<audio id="music" preload="auto" autoplay loop playsinline src="assets/audio/birthday-song.mp3"></audio>
 
 <script>
 (() => {
@@ -186,16 +186,44 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:90;opa
   const grid=$('#wishes23'),wp=$('#wishProgress'),unlock=$('#unlock');let opened=0;
   wishes.forEach((text,i)=>{const b=document.createElement('button');b.className='wish23';b.textContent=i+1;b.setAttribute('aria-label','Birthday wish '+(i+1));b.addEventListener('click',()=>{if(b.classList.contains('revealed'))return;b.classList.add('revealed');b.textContent=text;opened++;wp.textContent=opened+' / 23 opened';if(opened===23)unlock.classList.add('show')});grid.appendChild(b)});
 
-  // Real uploaded soundtrack. Browser autoplay restrictions are respected:
-  // first tap on the music button starts it; navigation does not interrupt it.
-  const music=$('#music'),sound=$('#sound'),hint=$('#audioHint');let playing=false;
-  async function toggleMusic(){
-    try{
-      if(!playing){await music.play();playing=true;sound.classList.add('on');sound.setAttribute('aria-pressed','true');sound.setAttribute('aria-label','Pause birthday music');hint.classList.add('show');setTimeout(()=>hint.classList.remove('show'),1400)}
-      else{music.pause();playing=false;sound.classList.remove('on');sound.setAttribute('aria-pressed','false');sound.setAttribute('aria-label','Play birthday music')}
-    }catch(err){hint.textContent='Tap again to play the music';hint.classList.add('show');setTimeout(()=>hint.classList.remove('show'),1800)}
+  // Real uploaded soundtrack: attempt audible autoplay.
+// Browsers may block audible autoplay. If they do, the first normal page
+// interaction (tap/scroll) starts the song; the control itself is only mute/unmute.
+  const music=$('#music'),sound=$('#sound'),hint=$('#audioHint');let muted=false,started=false;
+  function setIcon(){
+    sound.classList.toggle('muted',muted);
+    sound.querySelector('.speaker').textContent=muted?'🔇':'🔊';
+    sound.setAttribute('aria-pressed',String(muted));
+    sound.setAttribute('aria-label',muted?'Unmute birthday music':'Mute birthday music');
   }
-  sound.addEventListener('click',toggleMusic);
+  async function startMusic(){
+    if(started)return;
+    try{
+      music.muted=false;
+      await music.play();
+      started=true;
+      muted=false;
+      setIcon();
+    }catch(err){
+      // Audible autoplay was blocked by the browser. A natural first interaction
+      // will retry automatically; no "start music" button is required.
+    }
+  }
+  function retryOnInteraction(){
+    if(!started) startMusic();
+    ['pointerdown','touchstart','scroll','keydown'].forEach(ev=>window.removeEventListener(ev,retryOnInteraction,{passive:true}));
+  }
+  ['pointerdown','touchstart','scroll','keydown'].forEach(ev=>window.addEventListener(ev,retryOnInteraction,{passive:true}));
+  sound.addEventListener('click',e=>{
+    e.stopPropagation();
+    muted=!muted;
+    music.muted=muted;
+    if(!muted && !started) startMusic();
+    setIcon();
+  });
+  music.addEventListener('play',()=>{started=true;setIcon()});
+  setIcon();
+  startMusic();
 })();
 </script>
 </body>
