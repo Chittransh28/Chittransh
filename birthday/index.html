@@ -7,7 +7,7 @@
 <title>For Khushi 💜</title>
 <style>
 :root{--bg:#100819;--bg2:#21112f;--lav:#d8b6f5;--lav2:#f0e4fb;--muted:#bcaec8;--line:#ffffff20;--ease:cubic-bezier(.22,1,.36,1)}
-*{box-sizing:border-box}html{scroll-behavior:smooth}html,body{max-width:100%;}body{margin:0;background:var(--bg);color:#fffaff;font-family:Georgia,"Times New Roman",serif;overflow-x:hidden}button{font:inherit}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:10px}html,body{max-width:100%;}body{margin:0;background:var(--bg);color:#fffaff;font-family:Georgia,"Times New Roman",serif;overflow-x:hidden}button{font:inherit}
 body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:90;opacity:.035;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
 .screen,.section{min-height:100svh;position:relative;overflow:hidden}.screen{background:radial-gradient(circle at 50% 45%,#6e479526,transparent 42%),linear-gradient(145deg,#0c0612,#241332 60%,#100719)}
 .glow{position:absolute;width:min(85vw,800px);aspect-ratio:1;left:50%;top:50%;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle,#d5adf53b,transparent 68%);filter:blur(8px);animation:pulse 6s ease-in-out infinite}.moon{position:absolute;right:9%;top:11%;width:clamp(42px,7vw,76px);aspect-ratio:1;border-radius:50%;background:#f8efffbb;box-shadow:0 0 45px #d6b1f655}.moon:after{content:"";position:absolute;inset:0 0 0 28%;border-radius:50%;background:#241332}
@@ -27,6 +27,33 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:90;opa
 .bouquet{text-align:center;background:radial-gradient(circle at 50% 50%,#a970d31f,transparent 42%),#150a20}.flowerBtn{width:210px;height:210px;display:block;margin:40px auto 10px;border:0;background:transparent;cursor:pointer;position:relative}.flower{position:absolute;inset:0;display:grid;place-items:center}.petalBig{position:absolute;width:52px;height:78px;border-radius:70% 30% 70% 30%;background:linear-gradient(145deg,#efd9ff,#9c68c9);transform-origin:50% 95%;transition:1.15s var(--ease);opacity:.88}.petalBig:nth-child(1){transform:rotate(0) translateY(-17px)}.petalBig:nth-child(2){transform:rotate(72deg) translateY(-17px)}.petalBig:nth-child(3){transform:rotate(144deg) translateY(-17px)}.petalBig:nth-child(4){transform:rotate(216deg) translateY(-17px)}.petalBig:nth-child(5){transform:rotate(288deg) translateY(-17px)}.flowerCore{width:40px;height:40px;border-radius:50%;background:#fff1ff;box-shadow:0 0 35px #e4c4ff99;z-index:2}.flowerBtn.bloom .petalBig:nth-child(1){transform:rotate(0) translateY(-68px)}.flowerBtn.bloom .petalBig:nth-child(2){transform:rotate(72deg) translateY(-68px)}.flowerBtn.bloom .petalBig:nth-child(3){transform:rotate(144deg) translateY(-68px)}.flowerBtn.bloom .petalBig:nth-child(4){transform:rotate(216deg) translateY(-68px)}.flowerBtn.bloom .petalBig:nth-child(5){transform:rotate(288deg) translateY(-68px)}.bouquetReveal{max-height:0;opacity:0;overflow:hidden;transition:1s var(--ease)}.bouquetReveal.show{max-height:430px;opacity:1}.bouquetFlowers{font-size:55px;letter-spacing:10px;animation:floatFlowers 4s ease-in-out infinite}.bouquetReveal p{font-size:21px;line-height:1.65;color:var(--muted)}@keyframes floatFlowers{50%{transform:translateY(-7px)}}
 .wishes23{display:grid;grid-template-columns:repeat(4,1fr);gap:11px;max-width:880px;margin:42px auto}.wish23{min-width:0;overflow-wrap:anywhere;aspect-ratio:1;border:1px solid var(--line);border-radius:20px;background:#ffffff07;color:#eadbfa;cursor:pointer;padding:13px;transition:.4s var(--ease);font-size:19px}.wish23:hover{transform:translateY(-4px);background:#ffffff0d}.wish23.revealed{font-size:13px;line-height:1.4;background:linear-gradient(145deg,#c29ae52e,#ffffff07);color:#fff;transform:none}.wishProgress{font:11px Arial,sans-serif;color:#ffffff70;letter-spacing:.1em}.unlock{opacity:0;max-height:0;overflow:hidden;transition:.7s var(--ease)}.unlock.show{opacity:1;max-height:100px}
 .letterSection{background:linear-gradient(180deg,#12091b,#261335)}.letter{max-width:780px;margin:45px auto 0;font-size:clamp(18px,2.3vw,22px);line-height:1.85;color:#fffad8d9}.letter p{margin:0 0 23px}.sign{margin-top:40px;color:#fff;font-size:24px}.end{text-align:center;margin-top:85px}.forever{font-size:clamp(24px,4vw,38px);color:var(--lav2);letter-spacing:.08em}
+
+/* Version 9 progressive-enhancement safety: core interactions work without JS. */
+.photo{display:block;text-decoration:none;color:inherit}
+.lightbox:target{display:grid}
+.lightbox:target img{animation:lbIn .45s var(--ease)}
+@keyframes lbIn{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:none}}
+.notes details.note summary{list-style:none;cursor:pointer;width:100%;padding:21px 23px;display:flex;justify-content:space-between;align-items:center;color:#fff}
+.notes details.note summary::-webkit-details-marker{display:none}
+.notes details.note summary span{color:#d8b6f5;font-size:22px;transition:.3s var(--ease)}
+.notes details.note[open] summary span{transform:rotate(45deg)}
+.notes details.note .noteBody{max-height:none;padding:0 23px 22px;overflow:visible}
+.flowerToggle{position:absolute;opacity:0;pointer-events:none}
+.flowerToggle:checked + .flowerBtn .petalBig:nth-child(1){transform:rotate(0) translateY(-68px)}
+.flowerToggle:checked + .flowerBtn .petalBig:nth-child(2){transform:rotate(72deg) translateY(-68px)}
+.flowerToggle:checked + .flowerBtn .petalBig:nth-child(3){transform:rotate(144deg) translateY(-68px)}
+.flowerToggle:checked + .flowerBtn .petalBig:nth-child(4){transform:rotate(216deg) translateY(-68px)}
+.flowerToggle:checked + .flowerBtn .petalBig:nth-child(5){transform:rotate(288deg) translateY(-68px)}
+.flowerToggle:checked ~ .bouquetReveal{max-height:430px;opacity:1}
+.wish23{position:relative;display:grid;place-items:center;text-align:center;text-decoration:none}
+.wish23 input{position:absolute;opacity:0;inset:0;width:100%;height:100%;cursor:pointer;margin:0;z-index:2}
+.wishFront{font-size:1em;transition:.35s var(--ease)}
+.wishText{display:none;font-size:13px;line-height:1.4}
+.wish23:has(input:checked){background:linear-gradient(145deg,#c29ae52e,#ffffff07);cursor:default}
+.wish23:has(input:checked) .wishFront{display:none}
+.wish23:has(input:checked) .wishText{display:block}
+.wishes23:not(:has(input:not(:checked))) + .unlock{opacity:1;max-height:100px}
+
 @media(max-width:700px){.qualities,.wishes{grid-template-columns:1fr}.q.final,.wish.last{grid-column:auto}.gallery{grid-template-columns:repeat(2,minmax(0,1fr));}.photo.wide{grid-column:span 2}.wishes23{grid-template-columns:repeat(2,minmax(0,1fr));}.section{padding:88px 17px 62px;align-items:flex-start}.section .inner{margin-top:0}.section h2{font-size:clamp(42px,12vw,66px);}.caption{font-size:clamp(16px,5vw,21px);line-height:1.05}.audioHint{display:none}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
 </style>
@@ -66,12 +93,12 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:90;opa
 <div class="eyebrow">03 · The many versions</div><h2>Every version of you.</h2>
 <p class="lead">I've seen a lot of different Khushis. Dressed up. Laughing. Completely chaotic. Lost in a moment. And somehow, every version has its own kind of beauty.</p>
 <div class="gallery">
-<figure class="photo" data-full="assets/photos/pretty-one.jpg"><img src="assets/photos/pretty-one.jpg" alt="Khushi smiling in warm lights" loading="eager"><figcaption class="caption">The pretty one.</figcaption></figure>
-<figure class="photo" data-full="assets/photos/innocent-one.jpg"><img src="assets/photos/innocent-one.jpg" alt="Khushi in a casual portrait" loading="lazy"><figcaption class="caption">The innocent one.</figcaption></figure>
-<figure class="photo" data-full="assets/photos/elegant-one.jpg"><img src="assets/photos/elegant-one.jpg" alt="Khushi dressed elegantly in Varanasi" loading="lazy"><figcaption class="caption">The elegant one.</figcaption></figure>
-<figure class="photo wide" data-full="assets/photos/adventurous-one.jpg"><img src="assets/photos/adventurous-one.jpg" alt="Khushi on an experience by the Ganges" loading="lazy"><figcaption class="caption">The girl who loves an experience.</figcaption></figure>
-<figure class="photo" data-full="assets/photos/us-one.jpg"><img src="assets/photos/us-one.jpg" alt="A black and white photo of the two of you" loading="lazy"><figcaption class="caption">The us one. 🖤</figcaption></figure>
-<figure class="photo" data-full="assets/photos/dressed-up-one.jpg"><img src="assets/photos/dressed-up-one.jpg" alt="Khushi dressed up in red" loading="lazy"><figcaption class="caption">The dressed-up one.</figcaption></figure>
+<a class="photo" href="#lb1"><img src="assets/photos/pretty-one.jpg" alt="Khushi smiling in warm lights" loading="eager"><figcaption class="caption">The pretty one.</figcaption></a>
+<a class="photo" href="#lb2"><img src="assets/photos/innocent-one.jpg" alt="Khushi in a casual portrait" loading="lazy"><figcaption class="caption">The innocent one.</figcaption></a>
+<a class="photo" href="#lb3"><img src="assets/photos/elegant-one.jpg" alt="Khushi dressed elegantly in Varanasi" loading="lazy"><figcaption class="caption">The elegant one.</figcaption></a>
+<a class="photo wide" href="#lb4"><img src="assets/photos/adventurous-one.jpg" alt="Khushi on an experience by the Ganges" loading="lazy"><figcaption class="caption">The girl who loves an experience.</figcaption></a>
+<a class="photo" href="#lb5"><img src="assets/photos/us-one.jpg" alt="A black and white photo of the two of you" loading="lazy"><figcaption class="caption">The us one. 🖤</figcaption></a>
+<a class="photo" href="#lb6"><img src="assets/photos/dressed-up-one.jpg" alt="Khushi dressed up in red" loading="lazy"><figcaption class="caption">The dressed-up one.</figcaption></a>
 </div>
 <p class="lead" style="margin:40px auto 0;text-align:center">I've seen so many versions of you.<br><strong style="font-weight:400;color:#eadbfa">I think I'll always have a favourite. All of them.</strong></p>
 <a class="next" href="#s4">Next&nbsp; →</a>
@@ -80,12 +107,12 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:90;opa
 <section class="section" id="s4"><div class="inner">
 <div class="eyebrow">04 · Don't forget</div><h2>Things I hope you never forget.</h2><p class="lead">Especially on the days when your mind gets a little too loud.</p>
 <div class="notes">
-<div class="note"><button><span>You don't have to have everything figured out.</span><span>+</span></button><div class="noteBody"><p>A new place takes time to feel like home. Give yourself that time.</p></div></div>
-<div class="note"><button><span>Not everyone has to be understood immediately.</span><span>+</span></button><div class="noteBody"><p>Take your time with people. You don't owe everyone instant trust or certainty.</p></div></div>
-<div class="note"><button><span>Your doubts aren't always telling you the truth.</span><span>+</span></button><div class="noteBody"><p>Sometimes a thought is just a thought, even when it feels incredibly convincing.</p></div></div>
-<div class="note"><button><span>You don't have to prove your worth.</span><span>+</span></button><div class="noteBody"><p>You are valuable before you accomplish another single thing.</p></div></div>
-<div class="note"><button><span>You are allowed to have bad days.</span><span>+</span></button><div class="noteBody"><p>They don't erase your strength, your beauty, your kindness, or everything you've already managed to do.</p></div></div>
-<div class="note"><button><span>Please don't let one bad thought define you.</span><span>+</span></button><div class="noteBody"><p>You're far more impressive, capable and strong than the doubtful version of yourself sometimes lets you believe.</p></div></div>
+<details class="note"><summary>You don't have to have everything figured out.<span>+</span></summary><div class="noteBody"><p>A new place takes time to feel like home. Give yourself that time.</p></div></details>
+<details class="note"><summary>Not everyone has to be understood immediately.<span>+</span></summary><div class="noteBody"><p>Take your time with people. You don't owe everyone instant trust or certainty.</p></div></details>
+<details class="note"><summary>Your doubts aren't always telling you the truth.<span>+</span></summary><div class="noteBody"><p>Sometimes a thought is just a thought, even when it feels incredibly convincing.</p></div></details>
+<details class="note"><summary>You don't have to prove your worth.<span>+</span></summary><div class="noteBody"><p>You are valuable before you accomplish another single thing.</p></div></details>
+<details class="note"><summary>You are allowed to have bad days.<span>+</span></summary><div class="noteBody"><p>They don't erase your strength, your beauty, your kindness, or everything you've already managed to do.</p></div></details>
+<details class="note"><summary>Please don't let one bad thought define you.<span>+</span></summary><div class="noteBody"><p>You're far more impressive, capable and strong than the doubtful version of yourself sometimes lets you believe.</p></div></details>
 </div>
 <p class="lead" style="margin:45px auto 0;text-align:center;color:#eadbfa">And whenever you forget all of this...<br><strong style="font-weight:400">I'll remind you. 💜</strong></p>
 <a class="next" href="#s5">Next&nbsp; →</a>
@@ -109,9 +136,10 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:90;opa
 <section class="section bouquet" id="s6"><div class="inner">
 <div class="eyebrow">06 · A little surprise</div><h2>Your birthday bouquet.</h2>
 <p class="lead" style="margin-inline:auto;text-align:center">I couldn't hand these to you myself today.<br>So I wanted to give you a little bouquet here, too.</p>
-<button class="flowerBtn" id="flowerBtn" aria-label="Open your birthday flower">
+<input class="flowerToggle" id="flowerToggle" type="checkbox" aria-label="Open your birthday flower">
+<label class="flowerBtn" for="flowerToggle" aria-label="Open your birthday flower">
 <div class="flower"><i class="petalBig"></i><i class="petalBig"></i><i class="petalBig"></i><i class="petalBig"></i><i class="petalBig"></i><span class="flowerCore"></span></div>
-</button>
+</label>
 <div class="bouquetReveal" id="bouquetReveal"><div class="bouquetFlowers">🌷 🪻 🌷 🪻 🌷</div>
 <p><strong style="color:#fff">These are for you. 💜</strong><br>I wish I could've handed them to you myself.<br><br>But until I can, let this little bouquet remind you that you deserve to be celebrated — beautifully and completely.</p>
 <a class="next" href="#s7">I have one last thing&nbsp; →</a></div>
@@ -119,8 +147,8 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:90;opa
 
 <section class="section" id="s7"><div class="inner" style="text-align:center">
 <div class="eyebrow">07 · For the year ahead</div><h2>23 little wishes for you.</h2><p class="lead" style="margin-inline:auto">Tap every card. Each one holds a little wish for your new year.</p>
-<div class="wishProgress" id="wishProgress">0 / 23 opened</div>
-<div class="wishes23" id="wishes23"></div>
+<div class="wishProgress" id="wishProgress">Tap all 23 cards · 0 / 23 opened</div>
+<div class="wishes23" id="wishes23"><label class="wish23"><input type="checkbox" id="w1"><span class="wishFront">1</span><span class="wishText">More adventures that become favourite memories.</span></label><label class="wish23"><input type="checkbox" id="w2"><span class="wishFront">2</span><span class="wishText">More confidence in the person you already are.</span></label><label class="wish23"><input type="checkbox" id="w3"><span class="wishFront">3</span><span class="wishText">More reasons to laugh until your stomach hurts.</span></label><label class="wish23"><input type="checkbox" id="w4"><span class="wishFront">4</span><span class="wishText">More beautiful photographs you love looking back at.</span></label><label class="wish23"><input type="checkbox" id="w5"><span class="wishFront">5</span><span class="wishText">More spontaneous plans.</span></label><label class="wish23"><input type="checkbox" id="w6"><span class="wishFront">6</span><span class="wishText">More sunsets worth stopping for.</span></label><label class="wish23"><input type="checkbox" id="w7"><span class="wishFront">7</span><span class="wishText">More delicious food. Obviously.</span></label><label class="wish23"><input type="checkbox" id="w8"><span class="wishFront">8</span><span class="wishText">More courage when things feel uncertain.</span></label><label class="wish23"><input type="checkbox" id="w9"><span class="wishFront">9</span><span class="wishText">More people who genuinely value you.</span></label><label class="wish23"><input type="checkbox" id="w10"><span class="wishFront">10</span><span class="wishText">More moments where you feel completely at home.</span></label><label class="wish23"><input type="checkbox" id="w11"><span class="wishFront">11</span><span class="wishText">More days where your mind feels peaceful.</span></label><label class="wish23"><input type="checkbox" id="w12"><span class="wishFront">12</span><span class="wishText">More reasons to be proud of yourself.</span></label><label class="wish23"><input type="checkbox" id="w13"><span class="wishFront">13</span><span class="wishText">More experiences that make you say “I’m glad I did that.”</span></label><label class="wish23"><input type="checkbox" id="w14"><span class="wishFront">14</span><span class="wishText">More kindness from the world around you.</span></label><label class="wish23"><input type="checkbox" id="w15"><span class="wishFront">15</span><span class="wishText">More confidence in your instincts.</span></label><label class="wish23"><input type="checkbox" id="w16"><span class="wishFront">16</span><span class="wishText">More silly moments.</span></label><label class="wish23"><input type="checkbox" id="w17"><span class="wishFront">17</span><span class="wishText">More things to look forward to.</span></label><label class="wish23"><input type="checkbox" id="w18"><span class="wishFront">18</span><span class="wishText">More dreams becoming plans.</span></label><label class="wish23"><input type="checkbox" id="w19"><span class="wishFront">19</span><span class="wishText">More plans becoming memories.</span></label><label class="wish23"><input type="checkbox" id="w20"><span class="wishFront">20</span><span class="wishText">More happiness that stays.</span></label><label class="wish23"><input type="checkbox" id="w21"><span class="wishFront">21</span><span class="wishText">More moments where you feel beautiful without needing anyone to tell you.</span></label><label class="wish23"><input type="checkbox" id="w22"><span class="wishFront">22</span><span class="wishText">More love than you know what to do with.</span></label><label class="wish23"><input type="checkbox" id="w23"><span class="wishFront">23</span><span class="wishText">And one more year of becoming even more you.</span></label></div>
 <div class="unlock" id="unlock"><p style="color:#eadbfa;font-size:20px">You opened all 23. 💜</p><a class="next" href="#s8">And finally...&nbsp; →</a></div>
 </div></section>
 
@@ -140,92 +168,100 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:90;opa
 <p><strong>Happy Birthday, my love.</strong><br>I hope you see yourself someday the way I see you. 💜</p>
 <div class="sign">Always yours,<br>Me.</div>
 </div>
-<div class="end"><div class="forever">August 2019 → ∞</div><button class="smallBtn" style="margin-top:28px;padding:12px 20px" onclick="window.scrollTo({top:0,behavior:'smooth'})">Start again ↗</button></div>
+<div class="end"><div class="forever">August 2019 → ∞</div><a class="smallBtn" style="margin-top:28px;padding:12px 20px" href="#s1">Start again ↗</a></div>
 </div></section>
 </div>
 
-<div class="lightbox" id="lightbox" aria-hidden="true"><button class="close" id="closeLightbox" aria-label="Close photo">×</button><img id="lightboxImg" alt=""></div>
-<audio id="music" preload="auto" autoplay loop playsinline src="assets/audio/birthday-song.mp3"></audio>
+<div class="lightbox" id="lb1"><a class="close" href="#s3" aria-label="Close photo">×</a><img src="assets/photos/pretty-one.jpg" alt="Khushi smiling in warm lights"></div>
+<div class="lightbox" id="lb2"><a class="close" href="#s3" aria-label="Close photo">×</a><img src="assets/photos/innocent-one.jpg" alt="Khushi in a casual portrait"></div>
+<div class="lightbox" id="lb3"><a class="close" href="#s3" aria-label="Close photo">×</a><img src="assets/photos/elegant-one.jpg" alt="Khushi dressed elegantly in Varanasi"></div>
+<div class="lightbox" id="lb4"><a class="close" href="#s3" aria-label="Close photo">×</a><img src="assets/photos/adventurous-one.jpg" alt="Khushi on an experience by the Ganges"></div>
+<div class="lightbox" id="lb5"><a class="close" href="#s3" aria-label="Close photo">×</a><img src="assets/photos/us-one.jpg" alt="A black and white photo of the two of you"></div>
+<div class="lightbox" id="lb6"><a class="close" href="#s3" aria-label="Close photo">×</a><img src="assets/photos/dressed-up-one.jpg" alt="Khushi dressed up in red"></div>
+<audio id="music" preload="auto" loop playsinline src="assets/audio/birthday-song.mp3"></audio>
 
 <script>
 (() => {
-  const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
-  const stars=$('#stars'),petals=$('#petals');
-  for(let i=0;i<(innerWidth<650?45:85);i++){const e=document.createElement('span');e.className='star';e.style.left=Math.random()*100+'%';e.style.top=Math.random()*100+'%';e.style.setProperty('--d',2+Math.random()*4+'s');e.style.setProperty('--delay',Math.random()*5+'s');stars.appendChild(e)}
-  for(let i=0;i<(innerWidth<650?10:18);i++){const e=document.createElement('span');e.className='petal';e.style.left=(-5+Math.random()*110)+'%';e.style.setProperty('--d',10+Math.random()*10+'s');e.style.setProperty('--delay',Math.random()*13+'s');e.style.setProperty('--drift',(-90+Math.random()*180)+'px');e.style.setProperty('--r',Math.random()*360+'deg');petals.appendChild(e)}
+  const $ = (s) => document.querySelector(s);
+  const $$ = (s) => [...document.querySelectorAll(s)];
 
-  const sections=$$('.section,.screen'), progress=$('#progress');
-  new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){const n=sections.indexOf(e.target)+1;progress.textContent=String(n).padStart(2,'0')+' / 08'}}),{threshold:.5}).observe(document.getElementById('s1'));
-  sections.slice(1).forEach(s=>new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){const n=sections.indexOf(e.target)+1;progress.textContent=String(n).padStart(2,'0')+' / 08'}}),{threshold:.5}).observe(s));
+  // Decorative particles: failure here must never block the rest of the page.
+  try {
+    const stars=$('#stars'), petals=$('#petals');
+    if(stars) for(let i=0;i<(innerWidth<650?45:85);i++){const e=document.createElement('span');e.className='star';e.style.left=Math.random()*100+'%';e.style.top=Math.random()*100+'%';e.style.setProperty('--d',2+Math.random()*4+'s');e.style.setProperty('--delay',Math.random()*5+'s');stars.appendChild(e)}
+    if(petals) for(let i=0;i<(innerWidth<650?10:18);i++){const e=document.createElement('span');e.className='petal';e.style.left=(-5+Math.random()*110)+'%';e.style.setProperty('--d',10+Math.random()*10+'s');e.style.setProperty('--delay',Math.random()*13+'s');e.style.setProperty('--drift',(-90+Math.random()*180)+'px');e.style.setProperty('--r',Math.random()*360+'deg');petals.appendChild(e)}
+  } catch(e) {}
 
-  // Photo lightbox
-  const lb=$('#lightbox'), lbImg=$('#lightboxImg');
-  $$('.photo').forEach(p=>p.addEventListener('click',()=>{lbImg.src=p.dataset.full;lbImg.alt=p.querySelector('img').alt;lb.classList.add('open');lb.setAttribute('aria-hidden','false')}));
-  const close=()=>{lb.classList.remove('open');lb.setAttribute('aria-hidden','true');lbImg.removeAttribute('src')};
-  $('#closeLightbox').addEventListener('click',close);lb.addEventListener('click',e=>{if(e.target===lb)close()});document.addEventListener('keydown',e=>{if(e.key==='Escape')close()});
+  // Section progress is enhancement only.
+  try {
+    const sections=$$('.section,.screen'), progress=$('#progress');
+    if('IntersectionObserver' in window && progress) {
+      const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){const n=sections.indexOf(e.target)+1;progress.textContent=String(n).padStart(2,'0')+' / 08'}}),{threshold:.5});
+      sections.forEach(s=>io.observe(s));
+    }
+  } catch(e) {}
 
-  // Expandable Section 4 cards
-  $$('.note button').forEach(b=>b.addEventListener('click',()=>{const n=b.closest('.note');n.classList.toggle('open');b.querySelector('span:last-child').textContent=n.classList.contains('open')?'−':'+'}));
+  // Wish count enhancement; the actual card reveal + final unlock are CSS-native.
+  try {
+    const cards=$$('#wishes23 input'), wp=$('#wishProgress');
+    const update=()=>{const n=cards.filter(c=>c.checked).length;if(wp)wp.textContent='Tap all 23 cards · '+n+' / 23 opened'};
+    cards.forEach(c=>c.addEventListener('change',update)); update();
+  } catch(e) {}
 
-  // Bouquet
-  $('#flowerBtn').addEventListener('click',()=>{$('#flowerBtn').classList.add('bloom');$('#bouquetReveal').classList.add('show')});
+  // Music: Come in is the explicit Play + Enter gesture.
+  try {
+    const music=$('#music'), sound=$('#sound'), hint=$('#audioHint');
+    let muted=false, started=false;
+    const setIcon=()=>{
+      if(!sound)return;
+      sound.classList.toggle('muted',muted);
+      const sp=sound.querySelector('.speaker');
+      if(sp)sp.textContent=muted?'🔇':'🔊';
+      sound.setAttribute('aria-pressed',String(muted));
+      sound.setAttribute('aria-label',muted?'Unmute birthday music':'Mute birthday music');
+    };
 
-  // 23 birthday wish cards
-  const wishes=[
-    'More adventures that become favourite memories.','More confidence in the person you already are.','More reasons to laugh until your stomach hurts.',
-    'More beautiful photographs you love looking back at.','More spontaneous plans.','More sunsets worth stopping for.',
-    'More delicious food. Obviously.','More courage when things feel uncertain.','More people who genuinely value you.',
-    'More moments where you feel completely at home.','More days where your mind feels peaceful.','More reasons to be proud of yourself.',
-    'More experiences that make you say “I’m glad I did that.”','More kindness from the world around you.','More confidence in your instincts.',
-    'More silly moments.','More things to look forward to.','More dreams becoming plans.',
-    'More plans becoming memories.','More happiness that stays.','More moments where you feel beautiful without needing anyone to tell you.',
-    'More love than you know what to do with.','And one more year of becoming even more you.'
-  ];
-  const grid=$('#wishes23'),wp=$('#wishProgress'),unlock=$('#unlock');let opened=0;
-  wishes.forEach((text,i)=>{const b=document.createElement('button');b.className='wish23';b.textContent=i+1;b.setAttribute('aria-label','Birthday wish '+(i+1));b.addEventListener('click',()=>{if(b.classList.contains('revealed'))return;b.classList.add('revealed');b.textContent=text;opened++;wp.textContent=opened+' / 23 opened';if(opened===23)unlock.classList.add('show')});grid.appendChild(b)});
-
-  // Music starts from the opening "Come in" tap. That tap is a real user
-  // gesture, so Chrome permits audible playback. The floating control only
-  // mutes/unmutes the already-started soundtrack.
-  const music=$('#music'),sound=$('#sound'),hint=$('#audioHint'),enterBtn=$('#enterBtn');
-  let muted=false,started=false;
-
-  function setIcon(){
-    sound.classList.toggle('muted',muted);
-    sound.querySelector('.speaker').textContent=muted?'🔇':'🔊';
-    sound.setAttribute('aria-pressed',String(muted));
-    sound.setAttribute('aria-label',muted?'Unmute birthday music':'Mute birthday music');
-  }
-
-  async function startMusicFromGesture(){
-    try{
+    // No audible autoplay on page load. The user's Come in tap is the
+    // explicit browser gesture that starts the supplied soundtrack.
+    const startFromUserTap=()=>{
+      if(!music)return;
       music.muted=false;
-      await music.play();
-      started=true;
       muted=false;
       setIcon();
-    }catch(err){
-      hint.textContent='Tap again to start the music';
-      hint.classList.add('show');
-      setTimeout(()=>hint.classList.remove('show'),1800);
-    }
-  }
+      const playPromise=music.play();
+      if(playPromise && typeof playPromise.then==='function'){
+        playPromise.then(()=>{
+          started=true;
+          setIcon();
+        }).catch(()=>{
+          started=false;
+          if(hint){
+            hint.textContent='Music could not start — tap 🔊 to try again';
+            hint.classList.add('show');
+            setTimeout(()=>hint.classList.remove('show'),2200);
+          }
+        });
+      } else {
+        started=true;
+        setIcon();
+      }
+    };
 
-  enterBtn.addEventListener('click',()=>{ startMusicFromGesture(); });
+    const enter=$('#enterBtn');
+    if(enter) enter.addEventListener('click',startFromUserTap);
 
-  sound.addEventListener('click',async e=>{
-    e.stopPropagation();
-    if(!started){
-      await startMusicFromGesture();
-      return;
-    }
-    muted=!muted;
-    music.muted=muted;
+    // Floating control is mute/unmute only after the soundtrack has started.
+    if(sound) sound.addEventListener('click',(e)=>{
+      e.preventDefault();
+      e.stopPropagation();
+      if(!started)return;
+      muted=!muted;
+      music.muted=muted;
+      setIcon();
+    });
+    if(music) music.addEventListener('play',()=>{started=true;setIcon()});
     setIcon();
-  });
-
-  music.addEventListener('play',()=>{started=true;setIcon()});
-  setIcon();
+  } catch(e) {}
 })();
 </script>
 </body>
